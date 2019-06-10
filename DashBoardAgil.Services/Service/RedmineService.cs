@@ -98,6 +98,7 @@ namespace DashBoardAgil.Services.Service
             }
 
             #region Atualizar no Redmine
+
             result = _manager.FecharChamados(issues, prazo, Constantes.FaseProducao.ToArray());
             #endregion
 

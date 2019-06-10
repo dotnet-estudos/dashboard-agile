@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Services.Enums;
 using DashBoardAgil.Services.Extensions;
 using Redmine.Net.Api;
@@ -61,23 +62,40 @@ namespace DashBoardAgil.Services.Domain
 
         public List<string> FecharChamados(List<Issue> listaChamados, int prazo, string[] situacoes)
         {
+
+
             List<string> result = new List<string>();
-
-            foreach (var chamado in listaChamados.Where(x => x.Journals.Any()))
+            try
             {
-                Journal ultimoJournal = chamado.Journals.OrderBy(x => x.CreatedOn).LastOrDefault();
-                Journal ultimoJournalComTag = chamado.Journals.OrderBy(x => x.CreatedOn).LastOrDefault(JournalPossuiTag);
-
-                if (ultimoJournalComTag == null || JournalTagsRemovidas(ultimoJournalComTag))
+                foreach (var chamado in listaChamados.Where(x => x.Journals.Any()))
                 {
-                    if (DateTime.Now > ultimoJournal.CreatedOn.Value.AddDiasUteis(prazo))
+                    try
                     {
-                        FecharChamado(chamado);
-                        result.Add(string.Format("[FECHADO] - #{0}: {1}", chamado.Id, chamado.Subject));
+                        Journal ultimoJournal = chamado.Journals.OrderBy(x => x.CreatedOn).LastOrDefault();
+                        Journal ultimoJournalComTag =
+                            chamado.Journals.OrderBy(x => x.CreatedOn).LastOrDefault(JournalPossuiTag);
+
+                        if (ultimoJournalComTag == null || JournalTagsRemovidas(ultimoJournalComTag))
+                        {
+                            if (DateTime.Now > ultimoJournal.CreatedOn.Value.AddDiasUteis(prazo))
+                            {
+                                FecharChamado(chamado);
+                                result.Add(string.Format("[FECHADO] - #{0}: {1}", chamado.Id, chamado.Subject));
+                            }
+                        }
                     }
+                    catch (Exception ex)
+                    {
+                        Debugar.WriteLine(String.Format("#{2} - {3} - FecharChamados Error: {0} inner: {1}", ex.Message, ex.InnerException?.Message ?? "", chamado.Id, chamado.Subject));
+                    }
+
                 }
             }
-
+            catch (Exception ex)
+            {
+                Debugar.WriteLine(String.Format("FecharChamados Error: {0} inner: {1}", ex.Message,
+                    ex.InnerException?.Message ?? ""));
+            }
             return result;
         }
     }
