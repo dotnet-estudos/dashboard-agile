@@ -48,4 +48,5 @@ Senha - Hom5Db4
 * [morris](http://morrisjs.github.io/morris.js/index.html) - Chart
 * [jquerydatatable](https://datatables.net/) - Dependency Management
 * [MVC5](https://www.devmedia.com.br/guia/asp-net-mvc/38190) - asnet.MVC
+* [highcharts](https://highcharts.com) - Highcharts.js
 
