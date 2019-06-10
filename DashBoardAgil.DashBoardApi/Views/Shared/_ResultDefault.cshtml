@@ -1,0 +1,227 @@
+﻿@using System.Text
+@model List<String>
+
+<style>
+    .carousel-caption {
+        color: deepskyblue;
+        text-shadow: #000 2px 3px 2px;
+        font-weight: bold;
+        width: 40%;
+        left: -10%;
+    }
+
+    .carousel-indicators {
+        left: 7%;
+    }
+</style>
+
+<div class="row" id="resultado">
+    <div class="col-lg-12">
+        <div class="panel tabbed-panel panel-primary">
+            <div class="panel-heading clearfix">
+                <div class="panel-title pull-left">Resultado</div>
+                <div class="pull-right active">
+                    <ul class="nav nav-tabs in">
+                        <li class="active"><a href="#tab-grafico" id="i_tab-grafico" data-toggle="tab" aria-expanded="true"><i class="fas fa-chart-pie"></i> Gráfico</a></li>
+                        <li class=""><a href="#tab-dados" id="i_tab-dados" data-toggle="tab" aria-expanded="false"><i class="far fa-list-alt"></i> Dados</a></li>
+                        <li class=""><a href="#tab-cal" id="i_tab-cal" data-toggle="tab" aria-expanded="false"><i class="fas fa-calendar-alt"></i> Calendário</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade active in" id="tab-grafico">
+                        <div id="carregando" class="loading">
+                            <div id="overlay"></div>
+                            <i class="fas fa-cog fa-spin"></i>
+                        </div>
+                        <div class="dados">
+                            <!--dados-->
+                            <div class="">
+                                <div class="row">
+                                    <div class="">
+                                        <div id="render_Grafico" align="center" class="clearable">
+                                            @*@Html.Partial("_defaultCarousel")*@
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div id="render_Grafico_line" class="clearable"></div>
+                                        <div id="legend" class="clearable"></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12">
+                                    <a href="javascript: $('#i_tab-dados').click();" class="btn btn-default btn-block">Ver Detalhes</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="tab-dados">
+
+                        <div id="carregando" class="loading">
+                            <div id="overlay"></div>
+                            <i class="fas fa-cog fa-spin"></i>
+                        </div>
+                        <div class="dados">
+                            <label>Amostra:</label>
+                            <div id="tableConteudo">
+                                <table id="_tableAmostra" class="table table-striped table-bordered">
+                                    <thead>
+                                        @foreach (var item in Model)
+                                        {
+                                        <th>@item</th>
+                                        }
+                                        </thead>
+                                        <tbody class="clearable"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade " id="tab-cal">
+
+                            <div id="carregando" class="loading">
+                                <div id="overlay"></div>
+                                <i class="fas fa-cog fa-spin"></i>
+                            </div>
+                            <div id="tab_cal_dados" class="dados clearable">
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- /.panel -->
+        </div>
+
+    </div>
+
+<script>
+    $(document).ready(function() {
+        $("#resultado").hide();
+        $(".loading").hide();
+
+        renderDatatable("#_tableAmostra");
+    });
+    function limpar() {
+        $(".clearable").html("");
+    }
+
+
+    function renderGrafico(donoutData, elementoHtml) {
+
+        elementoHtml = elementoHtml ? elementoHtml : "#render_Grafico";
+
+        var divCarousel = $("<div />", {
+                "data-ride": 'carousel',
+                "style": 'width:90%;margin:auto;',
+                "id": 'sliderContainer',
+                "class": 'carousel slide'
+
+            }
+        );
+        var linkPrev = $("<a />", {
+            "class": 'left carousel-control',
+            "href": '#sliderContainer',
+            "role": 'button',
+            "data-slide": 'prev'
+        });
+
+        var linkNext = $("<a />", {
+                "class": 'right carousel-control',
+                "href": '#sliderContainer',
+                "role": 'button',
+                "data-slide": 'next'
+            }
+        );
+        var divInner = $("<div />", {
+                "class": 'carousel-inner',
+                "role": 'listbox',
+            }
+        );
+        var olIndi = $("<ol />", {
+                "class": 'carousel-indicators',
+            }
+        );
+
+
+        donoutData.forEach(function(item, index) {
+
+            var li = $('<li />', {
+                "data-target": '#' + 'sliderContainer', //element
+                "data-slide-to": index,
+                "class": ((index == 0) ? 'active' : ''),
+            });
+
+            olIndi.append(li);
+
+            var div = $('<div />', {
+                //"class": 'carousel-item '+ ((index==0)?'active': ''),
+                "class": 'item ' + ((index == 0) ? 'active' : ''),
+                "id": item.element,
+                "alt": '',
+                "style": 'margin: auto; align-content: center;',
+
+            });
+
+            var divLegend = $('<div />', {
+                //"class": 'carousel-item '+ ((index==0)?'active': ''),
+                "class": 'carousel-caption',
+                "html": '<h3>' + item.legend + '</h3>'
+
+            });
+
+            div.append(divLegend);
+            divInner.append(div);
+        });
+
+        divCarousel.append(olIndi);
+        divCarousel.append(divInner);
+        divCarousel.append(linkPrev);
+        divCarousel.append(linkNext);
+        $(elementoHtml).append(divCarousel);
+
+        donoutData.forEach(function(item, index) {
+            Morris.Donut({
+                element: item.element,
+                data: item.data,
+                resize: true
+            });
+        });
+
+    }
+
+    function renderGraficoLines(linesData, arrayKeys, arrayLabls, elementoHtml, elementoHtmlegend) {
+        var lineChart = Morris.Line({
+            element: elementoHtml,
+            data: linesData,
+            //  [
+            //{ y: '2006', a: 100, b: 90 },
+            //{ y: '2007', a: 75,  b: 65 },
+            //{ y: '2008', a: 50,  b: 40 },
+            //{ y: '2009', a: 75,  b: 65 },
+            //{ y: '2010', a: 50,  b: 40 },
+            //{ y: '2011', a: 75,  b: 65 },
+            //{ y: '2012', a: 100, b: 90 }
+            //  ],
+            xLabels: "day",
+            xkey: 'label',
+            xLabelFormat: function (x) {
+                return DateBR(new Date(x)).toString();
+            },
+            dateFormat: function (x) {
+                return DateBR(new Date(x)).toString();
+            },
+            ykeys: arrayKeys,
+            labels: arrayLabls,
+            resize: true
+        });
+
+        var ulLegend = $('<ul></ul>');
+        lineChart.options.labels.forEach(function (label, i) {
+            var legendItem = $('<li></li>').text(label).css('color', lineChart.options.lineColors[i]);//.append($('<i></i>', { "class": 'fas fa-square' }).text(' ' + label));
+            //legendItem.inner('<i class="fas fa-square"></i>').css('color', lineChart.options.lineColors[i]);
+            ulLegend.append(legendItem);
+        });
+        $(elementoHtmlegend).append(ulLegend);
+    }
+</script>

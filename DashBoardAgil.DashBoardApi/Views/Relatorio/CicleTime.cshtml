@@ -1,0 +1,129 @@
+﻿@using DashBoardAgil.CrossCutting
+@using DashBoardAgil.Services.Domain
+@using DashBoardAgil.Services.Util
+@model DashBoardAgil.Services.Domain.Processo
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Consulta @ViewBag.Title
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form role="form" action="JavaScript: return false;">
+                            <div class="form-group col-lg-12">
+                                <label>Time:</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("time", (SelectList)ViewBag.SelectTime, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>Sla: De</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("redmineDe", (SelectList)ViewBag.SelectStatusRedmineDe, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>Para</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("redminePara", (SelectList)ViewBag.SelectStatusRedminePara, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>Prioridade: </label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("prioidade", (SelectList)ViewBag.SelectPrioridadeRedmine, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-3">
+                                <label>Classe Serviço: </label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("tipoChamado", (SelectList)ViewBag.SelectTipoChamado, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Periodo: Inicio</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.AddDays(-30).ToString("yyyy-MM-dd")" required />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Fim</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataFim" name="dataFim" class="form-control" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="@ConstantesCC.CAMPO_OBRIGATORIO" />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <button type="button" id="pesquisar" class="btn btn-primary">Pesquisar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div id="conteudoBoard">
+            <div class="card-group col-12">
+
+                @foreach (var fase in Model.Fluxo.Where(x => x.IdFase == null).OrderBy(x => x.Ordem))
+                {
+                    @Html.Partial("_Fase", fase)
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        function valid(data) {
+            if (time == "" || data.redminieDe == 0 || data.redminiePara == 0 || data.dataIni == "" || data.dataFim == "") {
+                return false;
+            }
+            return true;
+        }
+
+        $("#pesquisar").on("click", function (e) {
+
+            var data = new Object();
+            data.time = $("#time").val();
+            data.prioridade = $("#prioidade").val();
+            data.tipoChamado = $("#tipoChamado").val();
+            data.statusDe = $("#redmineDe").val();
+            data.statusPara = $("#redminePara").val();
+            data.dataIni = $("#dataIni").val();
+            data.dataFim = $("#dataFim").val();
+
+            if (valid(data)) {
+
+                $.ajax({
+                    url: "@Url.Action("", "api/CicleTime")",
+                    data: data,
+                    method: "GET",
+                    beforeSend: function () {
+
+                    },
+                    success: function (result) {
+                        console.log(result);
+
+
+                    },
+                    complete: function () {
+
+                    }
+
+                });
+            } else {
+                dashboard.alertAtencao("Todos Campos são obrigatorios");
+            }
+
+        });
+    });
+</script>

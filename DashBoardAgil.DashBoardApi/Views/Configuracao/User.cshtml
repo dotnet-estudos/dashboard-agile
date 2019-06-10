@@ -1,0 +1,106 @@
+﻿@model DashBoardAgil.DashBoardApi.Models.Usuario
+
+<div>
+    <h4>Usuario</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            Gravatar
+        </dt>
+
+        <dd>
+            <img src="https://www.gravatar.com/avatar/@DashBoardAgil.CrossCutting.Util.GetMd5Hash(Model.Email)?d=monsterid" />
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Login)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Login)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Password)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Password)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FirstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Email)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AuthenticationModeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AuthenticationModeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastLoginOn)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastLoginOn)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ApiKey)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ApiKey)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MustChangePassword)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MustChangePassword)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MailNotification)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MailNotification)
+        </dd>
+
+    </dl>
+</div>
+

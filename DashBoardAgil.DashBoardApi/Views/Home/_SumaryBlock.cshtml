@@ -1,0 +1,165 @@
+﻿@using DashBoardAgil.DashBoardApi.Models
+
+
+@Html.Partial("_Loading", new DivLoading { Id = "_LoadingSumary" })
+
+<div id="_sumary">
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        LoadQauntitativo("time-traiket");
+
+        $("#time").change(function () {
+
+            $("#_LoadingSumary").show();
+            $("#_sumary").html("");
+
+            LoadQauntitativo(this.value);
+        });
+
+        function LoadQauntitativo(time) {
+
+            var dados = new Object();
+            dados.time = time == null ? null : time;
+
+            $.ajax({
+                dataType: "json",
+                url: "@Url.Action("", "api/Sumary")",
+                data: dados,
+                complete: function () {
+                    $("#_LoadingSumary").hide();
+                },
+                success: function (data) {
+                    if (data != null) {
+                        data.forEach(function (item) {
+                            var Conteudo = '<div class="col-lg-3 col-md-6">                                                           ' +
+                                '         <div class="panel panel-' + item.PaneColor + '">                                            ' +
+                                '             <div class="panel-heading">                                                             ' +
+                                '             <div class="row">                                                                       ' +
+                                '                 <div class="col-xs-3">                                                              ' +
+                                '                     <i class="' + item.FaIcon + ' fa-5x"></i>                                       ' +
+                                '                 </div>                                                                              ' +
+                                '                 <div class="col-xs-9 text-right">                                                   ' +
+                                '                     <div class="huge">' + item.Quantidade + '</div>                                 ' +
+                                '                     <div>' + item.Mensagem + '</div>                                                ' +
+                                '                 </div>                                                                              ' +
+                                '             </div>                                                                                  ' +
+                                '         </div>                                                                                      ' +
+                                '         <a href="' + item.UrlRedmine + '" target="_blank">                                                          ' +
+                                '             <div class="panel-footer">                                                              ' +
+                                '                 <span class="pull-left">View Details</span>                                         ' +
+                                '                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>            ' +
+                                '                                                                                                     ' +
+                                '                 <div class="clearfix"></div>                                                        ' +
+                                '             </div>                                                                                  ' +
+                                '         </a>                                                                                        ' +
+                                '     </div>                                                                                          ' +
+                                ' </div>';
+                            $("#_sumary").append(Conteudo);
+                        });
+                    }
+                }
+            });
+
+        }
+    });
+</script>
+
+
+@*<div class="col-lg-3 col-md-6">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <!--<i class="fa fa-comments fa-5x"></i> -->
+                        <i class="fa fa-tasks fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">26</div>
+                        <div>New Comments!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-green">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                        <!--i class="fa fa-tasks fa-5x"></i>--><
+                        <i class="fab fa-dev fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">12</div>
+                        <div>New Tasks!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-yellow">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                      <!--*<i class="fa fa-shopping-cart fa-5x"></i>-->
+                        <i class="fas fa-clipboard-list fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">124</div>
+                        <div>New Orders!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-xs-3">
+                       <!--i class="fa fa-support fa-5x"></i>-->
+                        <i class="fab fa-creative-commons-pd-alt fa-5x"></i>
+                    </div>
+                    <div class="col-xs-9 text-right">
+                        <div class="huge">13</div>
+                        <div>Support Tickets!</div>
+                    </div>
+                </div>
+            </div>
+            <a href="#">
+                <div class="panel-footer">
+                    <span class="pull-left">View Details</span>
+                    <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+
+                    <div class="clearfix"></div>
+                </div>
+            </a>
+        </div>
+    </div>*@

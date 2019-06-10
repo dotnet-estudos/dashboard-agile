@@ -1,0 +1,72 @@
+﻿@using DashBoardAgil.DashBoardApi.Models
+@*<script src="../../code/highcharts.js"></script>
+    <script src="../../code/modules/exporting.js"></script>*@
+
+
+@*<script src="~/Scripts/js/highchart7/highcharts.js"></script>*@
+<script src="~/Scripts/js/highchart7/modules/exporting.js"></script>
+
+
+@Html.Partial("_Loading", new DivLoading { Id = "_LoadingCFD" })
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fas fa-chart-area fa-fw"></i> Diagrama de Gráfico Comulativo <div class="pull-right">Status: <input type="checkbox" id="__fase" value="" /></div>
+</div>
+    <div id="_ComulativeFlowDiagram" class="chartSizeble" ></div>
+</div>
+
+<script type="text/javascript">
+    var DataResult = new Object();
+    var divDados = '_ComulativeFlowDiagram';
+    var _time = '';
+
+    $(document).ready(function () {
+
+        LoadCFD($("#time").val());
+
+        $("#time").change(function () {
+            $("#_LoadingCFD").show();
+            $("#_ComulativeFlowDiagram").html("");
+
+            LoadCFD(this.value);
+        });
+
+        $("#__fase").change(function () {
+            var toggle = $(this).prop('checked');
+
+            renderComulativeFlow(divDados, 'CFD do time: ' + _time, 'Source: redmine.example.com | Year:' + (new Date).getFullYear(), DataResult.Semanas, " Chamado", ' Chamado(s)', toggle ? DataResult.Serie : DataResult.SerieFase);
+        });
+
+        function LoadCFD(time) {
+
+            var data = new Object();
+            data.time = time;
+            data.dataIni = dataIni;//(new Date).getFullYear() + '-01-01';
+            data.dataFim = dataFim;//(new Date).getFullYear() + '-' + parseInt((new Date).getMonth() + 1) + '-' + (new Date).getDate();
+
+            $.ajax({
+                dataType: "json",
+                url: "@Url.Action("", "api/ComulativeFlowDiagram")",
+                data: data,
+                complete: function () {
+                    $("#_LoadingCFD").hide();
+                },
+                success: function (datas) {
+                    if (datas != null) {
+                        DataResult = datas;
+                        _time = time;
+                        var toggle = $("#__fase").prop('checked');
+                        renderComulativeFlow(divDados, 'CFD do time: ' + time, 'Source: redmine.example.com | Year: 2019', datas.Semanas, " Chamado", ' Chamado(s)', toggle ? datas.Serie : datas.SerieFase);
+                    }
+                }
+
+            });
+        }
+
+
+
+    });
+
+
+</script>

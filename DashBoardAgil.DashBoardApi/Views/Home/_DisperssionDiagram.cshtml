@@ -1,0 +1,184 @@
+﻿@using DashBoardAgil.DashBoardApi.Models
+@*<script src="../../code/highcharts.js"></script>
+    <script src="../../code/modules/exporting.js"></script>*@
+
+
+@*<script src="~/Scripts/js/highchart7/highcharts.js"></script>*@
+<script src="~/Scripts/js/highchart7/modules/exporting.js"></script>
+<script src="~/Scripts/js/highchart7/modules/export-data.js"></script>
+
+<div id="_CountAvarage" class="col-lg-12">
+    <div class="form-group col-lg-1">
+        <label>LeadTime:</label>
+        <input class="form-control col-2 lockable searchble" type="number" id="primeiroSalto" name="primeiroSalto" value="5"  />
+    </div>
+    <div class="form-group col-lg-1">
+        <label>Quantidade:</label>
+        <select class="form-control col-2 lockable searchble" id="qtdSaltos" name="qtdSaltos">
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10" selected>10</option>
+        </select>
+
+    </div>
+    <div class="form-group col-lg-1">
+        <label>Cancelados:</label><br/>
+        <input type="checkbox" class="form-control col-2 lockable searchble" id="IssueCanceled" checked="true" />
+    </div>
+    
+</div>
+<div class="col">
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fas fa-chart-line fa-fw"></i> Grafico de Calda
+            </div>
+            <div class="col-6">
+                @Html.Partial("_Loading", new DivLoading { Id = "_LoadingCountAvarage" })
+            </div>
+            <div id="_CountAvarageData" class="chartSizeble"></div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="fas fa-chart-line fa-fw"></i> Grafico de Dispersão
+            </div>
+            @Html.Partial("_Loading", new DivLoading { Id = "_LoadingDisperssion" })
+            <div id="_DisperssionDiagram" class="chartSizeble">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    var divDispersao = '_DisperssionDiagram';
+    var divCountAvarage = '_CountAvarageData';
+    var subTitle = 'Source: redmine.example.com | Year: ' + (new Date).getFullYear();
+
+    $(document).ready(function () {
+
+        LoadDisperssion("time-traiket");
+
+        $("#time").change(function () {
+            LimparTela();
+            LoadDisperssion(this.value);
+        });
+
+        $("#primeiroSalto").change(function () {
+            LoadDisperssion($("#time").val(), divCountAvarage);
+        });
+        $("#qtdSaltos").change(function () {
+            LoadDisperssion($("#time").val(), divCountAvarage);
+        });
+        $('#IssueCanceled').change(function () {
+            LimparTela();
+            LoadDisperssion($("#time").val());
+        });
+        function LoadDisperssion(time, div) {
+
+            var data = new Object();
+            data.time = time;
+            data.dataIni = dataIni; //(new Date).getFullYear() + '-01-01';
+            data.dataFim = dataFim; //(new Date).getFullYear() + '-' + parseInt((new Date).getMonth() + 1) + '-' + (new Date).getDate();
+            data.statusDe = 120;
+            data.statusPara = 5;
+            data.tipoChamado = null;
+            data.prioridade = null;
+            data.primeiroSalto = $("#primeiroSalto").val();
+            data.quantidadeSaltos = $("#qtdSaltos").val();
+            data.leadTime = true;
+            data.issueCanceled = $('#IssueCanceled').prop('checked');
+
+
+
+            $.ajax({
+                dataType: "json",
+                url: "@Url.Action("", "api/CicleTime")",
+                data: data,
+                beforeSend: function() {
+                    LimparTela(div);
+                    blockCampos(true);
+                },
+                complete: function () {
+                    completeHidden();
+                    blockCampos(false);
+                },
+                success: function (datas) {
+                    if (datas != null) {
+                        if (!div) {
+                            renderDispersionDiagram('_DisperssionDiagram', 'Gráfico de Dispersão do time: ' + time, 'Source: redmine.example.com | Year: 2019', datas.GeneralAverageDays, datas.ByProjectWeek, (new Date).getFullYear());
+                            //function renderTaleDiagram(div, _title, _subtitle, _titleBarra, _TitleLine,_year, _avarage, _Categoria, _serieBarra, _SerieLine ) {
+                            renderTaleDiagram('_CountAvarageData', 'Gráfico de Calda do Time: ' + time, 'Source: redmine.example.com | Year: ' + (new Date).getFullYear(), 'Chamado', 'Media', (new Date).getFullYear(), datas.GeneralAverageDays, datas.RangeString, datas.ByRange.ArrayCount, datas.ByRange.ArrayPercent);
+                        } else {
+                            switch (div) {
+                                case divDispersao:
+                                    renderDispersionDiagram(divDispersao, 'Gráfico de Dispersão do time: ' + time, subTitle, datas.GeneralAverageDays, datas.ByProjectWeek, (new Date).getFullYear());
+                                    break;
+                                case divCountAvarage:
+                                    renderTaleDiagram(divCountAvarage, 'Gráfico de Calda do Time: ' + time, subTitle, 'Chamado', 'Media', (new Date).getFullYear(), datas.GeneralAverageDays, datas.RangeString, datas.ByRange.ArrayCount, datas.ByRange.ArrayPercent);
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+
+            });
+        }
+
+        function GetArrayByCampo(data, field, excludeCaracter, decimal) {
+
+            var arr = new Array();
+
+            $.each(data, function (i, value) {
+
+                var val = value[field];
+
+                if (excludeCaracter) {
+                    val = val.replace(excludeCaracter, '');
+                }
+                if (decimal) {
+                    val = parseFloat(val.replace('.', '').replace(',', '.')).toFixed(2);
+                }
+
+                arr[i] = val;
+            });
+
+            return arr;
+        }
+
+        function completeHidden() {
+            $("#_LoadingDisperssion").hide();
+            $("#_LoadingCountAvarage").hide();
+
+        }
+
+        function LimparTela(div) {
+            switch (div) {
+                case divDispersao:
+                    $("#_LoadingDisperssion").show();
+                    $("#_DisperssionDiagram").html("");
+                    break;
+                case divCountAvarage:
+                    $("#_LoadingCountAvarage").show();
+                    $("#_CountAvarageData").html("");
+                    break;
+                default:
+                    $("#_LoadingDisperssion").show();
+                    $("#_DisperssionDiagram").html("");
+                    $("#_LoadingCountAvarage").show();
+                    $("#_CountAvarageData").html("");
+            }
+        }
+
+    });
+
+
+</script>

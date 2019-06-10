@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B707AF39-B51D-4B27-9925-8AB069FC69B9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DashBoardAgil.Services</RootNamespace>
+    <AssemblyName>DashBoardAgil.Services</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="redmine-net45-api, Version=2.0.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\redmine-api.2.0.17\lib\net45\redmine-net45-api.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\Alocacao.cs" />
+    <Compile Include="Domain\CalendarioChamado.cs" />
+    <Compile Include="Domain\Chamado.cs" />
+    <Compile Include="Domain\ChamadoControl.cs" />
+    <Compile Include="Domain\ConfigRedmine.cs" />
+    <Compile Include="Domain\DiaDevControl.cs" />
+    <Compile Include="Domain\Fase.cs" />
+    <Compile Include="Domain\Rejection.cs" />
+    <Compile Include="Domain\RejectionControl.cs" />
+    <Compile Include="Interfaces\Abstracoes\IdentificableIssue.cs" />
+    <Compile Include="Domain\LeadTime.cs" />
+    <Compile Include="Domain\LeadTimeControl.cs" />
+    <Compile Include="Domain\Menu.cs" />
+    <Compile Include="Domain\Parametro.cs" />
+    <Compile Include="Domain\PrazoControl.cs" />
+    <Compile Include="Domain\Processo.cs" />
+    <Compile Include="Domain\Projeto.cs" />
+    <Compile Include="Domain\Sla.cs" />
+    <Compile Include="Domain\SlaControl.cs" />
+    <Compile Include="Domain\SlaProjeto.cs" />
+    <Compile Include="Domain\Throughput.cs" />
+    <Compile Include="Domain\ThroughputControl.cs" />
+    <Compile Include="Domain\Versao.cs" />
+    <Compile Include="Enums\StatusRedmine.cs" />
+    <Compile Include="Domain\Periodo.cs" />
+    <Compile Include="Domain\RedmineExtensions.cs" />
+    <Compile Include="Enums\PrioridadeRedmine.cs" />
+    <Compile Include="Enums\TipoChamadoRedmine.cs" />
+    <Compile Include="Enums\TipoContagem.cs" />
+    <Compile Include="GlobalConfig.cs" />
+    <Compile Include="Interfaces\IRedmineService.cs" />
+    <Compile Include="Service\RedmineService.cs" />
+    <Compile Include="Util\Constantes.cs" />
+    <Compile Include="Util\RedmineUtil.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DashBoardAgil.CrossCutting\DashBoardAgil.CrossCutting.csproj">
+      <Project>{831b3b56-9d25-402b-9106-71c5ac1b02a6}</Project>
+      <Name>DashBoardAgil.CrossCutting</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

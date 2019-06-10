@@ -1,0 +1,16 @@
+﻿[
+  {
+    "IdSla": 1,
+    "Identificador": "NovoAberto",
+    "Descricao": "Chamado Novo para Aberto",
+    "StatusDe": 120,
+    "StatusPara": 119
+  },
+  {
+    "IdSla": 2,
+    "Identificador": "DevAndamentoPronto",
+    "Descricao": "Chamados de Desenvolvimeto Andamento para Pronto",
+    "StatusDe": 114,
+    "StatusPara": 115
+  }
+]

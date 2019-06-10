@@ -1,0 +1,57 @@
+﻿
+@{
+    var Mensagem = "";
+    var Titulo = "";
+    var Tipo = "";
+    if (TempData["Mensagem"] != null)
+    {
+        Mensagem = (TempData["Mensagem"] != null ? TempData["Mensagem"].ToString() : string.Empty);
+        Titulo = (TempData["Titulo"] != null ? TempData["Titulo"].ToString() : "");
+        Tipo = (TempData["Tipo"] != null ? TempData["Tipo"].ToString() : string.Empty);
+    }
+}
+
+@if (!string.IsNullOrWhiteSpace(Mensagem))
+{
+    <script>
+        (function () {
+            'use strict';
+            $(document).ready(function () {
+                var mensagem = '@Html.Raw(Mensagem)';
+                var titulo = '@Html.Raw(Titulo)';
+                var tipo = '@Html.Raw(Tipo)';
+
+                switch (tipo) {
+                    case "sucesso":
+                        dashboard.alertSucesso(mensagem);
+                        break;
+                    case "erro":
+                        dashboard.alertErro(mensagem);
+                        break;
+                    case "atenção":
+                        dashboard.alertAtencao(Mensagem);
+                        break;
+                    default:
+                        dashboard.alert(titulo, mensagem);
+                        break;
+                }
+            });
+        })();
+    </script>
+}
+
+<script>
+
+    function MensagemConfirma(Titulo, Mensagem, Link) {
+        dashboard.confirm(Mensagem, function () {
+            location.href = Link;
+        });
+    }
+
+    function Mensagem(Titulo, Mensagem) {
+        if (Titulo == 'Atenção' || Titulo == "Alerta")
+            dashboard.alertAtencao(Mensagem);
+        else
+            dashboard.alert(Titulo, Mensagem);
+    }
+</script>

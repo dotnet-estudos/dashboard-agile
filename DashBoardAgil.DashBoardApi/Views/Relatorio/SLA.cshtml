@@ -1,0 +1,299 @@
+﻿@using DashBoardAgil.CrossCutting
+@using DashBoardAgil.Services.Domain
+@using DashBoardAgil.Services.Util
+@model SlaControl
+@{
+    ViewBag.title = "SLA";
+
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Consulta Sla
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form role="form" action="JavaScript: return false;">
+                            <div class="form-group col-lg-12">
+                                <label>Time:</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("time", (SelectList)ViewBag.SelectTime, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <label>Sla: De</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("redmineDe", (SelectList)ViewBag.SelectStatusRedmineDe, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <label>Para</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("redminePara", (SelectList)ViewBag.SelectStatusRedminePara, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <label>Tempo:</label>
+                                @*<input class="form-control" >*@
+                                <input type="number" id="tempo_sla" name="tempo_sla" class="form-control" value="12" required />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <label>Tipo Contagem:</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("tipoContagem", (SelectList)ViewBag.SelectTipoContagem, htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <label>Uteis:</label>
+                                @*<input class="form-control" >*@
+                                <div class="form-control">
+                                    @Html.CheckBox("util", htmlAttributes: new { @class = "form-control", @checked = true, required = true })
+                                    @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Periodo: Inicio</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.AddDays(-30).ToString("yyyy-MM-dd")" required />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Fim</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataFim" name="dataFim" class="form-control"  value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="@ConstantesCC.CAMPO_OBRIGATORIO" />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <button type="button" id="pesquisar" class="btn btn-primary">Pesquisar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*@Html.Partial("_defaultCarousel")*@
+
+@Html.Partial("_resultDefault", new List<string> { "#", "Team", "Data Criação", "Status", "Projeto", "Dentro SLA", "Termometro (Dia:Hora:Minuto)" })
+
+
+<script>
+    $(document).ready(function () {
+        $("#resultado").hide();
+        // $("#carregando_local").html($("#divCarregando").html());
+        $(".loading").hide();
+
+
+        function valid(data) {
+            if (time == "" || data.redminieDe == 0 || data.redminiePara == 0 || data.tempo == 0 || data.dataIni == "" || data.dataFim == "") {
+                return false;
+            }
+            return true;
+        }
+
+        function grafico(result) {
+
+            $(".dados").show();
+
+            var donoutsOUt = new Array();
+
+            result.slaControl.forEach(function (slaControl, index) {
+
+                var donuts = new Array();
+                var donut = new Object();
+
+                donut.label = "Fora SLA";
+                donut.value = slaControl.ChamadosOver.length;
+                donuts.push(donut);
+
+                donut = new Object();
+                donut.label = "Dentro SLA";
+                donut.value = slaControl.ChamadosIn.length;
+
+                donuts.push(donut);
+
+                var element = 'donut-' + slaControl.Projeto.Identifier;
+
+                var ret = new Object();
+
+                ret.element = element;
+                ret.data = new Array();
+                ret.data = donuts;
+                ret.legend = slaControl.Projeto.Identifier.replace(/\-/g, ' ');
+                donoutsOUt.push(ret);
+
+            });
+            renderGrafico(donoutsOUt, "#render_Grafico");
+
+          
+        }
+
+        // $('#sliderContainer').carousel();
+
+        function graficoCumulative(result) {
+
+            result.slaControl.forEach(function (slaControl, index) {
+                slaControl.ChamadosPorDia.forEach(function (item, index1) {
+
+                    var table = $(".highchart tbody");
+                    var conteudo = "";
+                    conteudo = conteudo + "<tr>";
+                    conteudo = conteudo + "<td>" + item.Data + "</td>";
+                    conteudo = conteudo + "<td>" + item.Total + "</td>";
+                    conteudo = conteudo + "<td>" + item.TotalOut + "</td>";
+                    conteudo = conteudo + "</tr>";
+                    table.append(conteudo);
+
+                    $('table.highchart').highchartTable();
+                });
+            });
+        }
+
+        function renderTable(result) {
+            //var table = $("#_tableAmostra tbody");
+            var table = $("#_tableAmostra").DataTable();
+
+            table.clear().draw();
+
+            result.slaControl.forEach(function (slaControl, index) {
+                slaControl.ChamadoSemafaro.forEach(function (chamado, index1) {
+
+                    var conteudo = new Array();
+
+                    conteudo.push("<a title='" + chamado.Mensagem + "' target='_blank' href='http://redmine.example.com/issues/" + chamado.Id + "'> #" + chamado.Id + "</a>");
+                    conteudo.push(slaControl.Projeto.Identifier);
+                    conteudo.push(chamado.DataCriacao);
+                    conteudo.push(chamado.StatusRedmine);
+                    conteudo.push(chamado.Project.Identifier);
+                    conteudo.push((chamado.Under == true ? "Sim" : "Não"));
+                    conteudo.push(chamado.TimeTo); //TimeTo //HourTo
+
+                    table.row.add(conteudo);
+
+                    //conteudo = conteudo + "<tr>";
+                    //conteudo = conteudo + "<td><a title='" + chamado.Mensagem + "' target='_blank' href='http://redmine.example.com/issues/" + chamado.Id + "'> #" + chamado.Id + "</a></td>";
+                    //conteudo = conteudo + "<td>" + chamado.Project.Identifier + "</td>";
+                    //conteudo = conteudo + "<td>" + (chamado.Under == true ? "Sim" : "Não") + "</td>";
+                    //conteudo = conteudo + "<td>" + chamado.HourTo + "</td>";
+                    //conteudo = conteudo + "</tr>";
+                    //table.append(conteudo);
+
+                });
+            });
+            // renderDatatable("#_tableAmostra");
+            table.draw();
+
+        }
+
+
+        function renderCalendario(result) {
+
+            var notes = new Array();
+            result.slaControl.forEach(function (slaControl, index) {
+                slaControl.ChamadosPorDia.forEach(function (item, index) {
+
+                    var object = new Object();
+
+                    object.date = item.DataString;
+                    object.note = item.ChamadosArray;
+                    notes.push(object);
+                    //[
+                    //    { "date": "2018-12-25", "note": ["Natal"] },
+                    //    { "date": "2018-12-12", "note": ["Tahun Baru"] }
+                    //]
+                });
+            });
+
+
+            renderCalendar("#tab_cal_dados", notes, result.filtro.dataIni.substring(0, 10), result.filtro.dataFim.substring(0, 10));
+
+        }
+
+        $("#pesquisar").on("click", function (e) {
+
+            $("#resultado").hide();
+            limpar();
+            $('#i_tab-grafico').click();
+
+            var data = new Object();
+            data.slaProjeto = new Object();
+            data.slaProjeto.Sla = new Object();
+
+            //data.time = $("#time").val();
+            ////  data.IdSla = $("#IdSla").val() != "" ? $("#IdSla").val() : 0;
+            //data.slaProjeto.IdSla = 0;
+            //data.slaProjeto.Sla.IdSla = 0;
+            //data.slaProjeto.Sla.Identificador ="";
+            //data.slaProjeto.Sla.Descricao ="";
+            //data.slaProjeto.Sla.StatusDe = $("#redmineDe").val() != "" ? $("#redmineDe").val() : 0;
+            //data.slaProjeto.Sla.StatusPara = $("#redminePara").val() != "" ? $("#redminePara").val() : 0;
+            //data.slaProjeto.Tempo = $("#tempo_sla").val() != "" ? $("#tempo_sla").val() : 0;
+            //data.slaProjeto.TipoContagemTempo = parseInt($("#tipoContagem").val());
+            //data.slaProjeto.TempoUtil = $("#util").is(":checked") ? true : false;
+            //data.dataIni = $("#dataIni").val();
+            //data.dataFim = $("#dataFim").val();
+
+            data.time = $("#time").val();
+            data.redmineDe = $("#redmineDe").val() != "" ? $("#redmineDe").val() : 0;
+            data.redminePara = $("#redminePara").val() != "" ? $("#redminePara").val() : 0;
+            data.tempo = $("#tempo_sla").val() != "" ? $("#tempo_sla").val() : 0;
+            data.tipoContagem = parseInt($("#tipoContagem").val());
+            data.dataIni = $("#dataIni").val();
+            data.dataFim = $("#dataFim").val();
+            data.util = $("#util").is(":checked") ? true : false;
+
+
+
+            if (valid(data)) {
+
+                $.ajax({
+                    url: "@Url.Action("", "api/SlaControl")",
+                    data: data,
+                    method: "GET",
+                    beforeSend: function () {
+                        $("#resultado").show();
+                        $(".loading").show();
+                        $(".dados").hide();
+                    },
+                    error: function (result) {
+                        dashboard.alertErro(result);
+                    },
+                    success: function (result) {
+
+                        if (result.status) {
+                            console.log(result);
+
+                            grafico(result);
+
+                            //graficoCumulative(result);
+                            //  $('table.highchart').highchartTable();
+
+                            renderTable(result);
+
+                            renderCalendario(result);
+                        } else {
+                            dashboard.alertAtencao(result.mensagem);
+                        }
+                        // $("#resultado").show();
+                    },
+                    complete: function () {
+                        $(".loading").hide();
+                    }
+
+                });
+            } else {
+                dashboard.alertAtencao("Todos Campos são obrigatorios");
+            }
+
+
+        });
+    });
+</script>
+@Scripts.Render("~/bundles/jqueryval")

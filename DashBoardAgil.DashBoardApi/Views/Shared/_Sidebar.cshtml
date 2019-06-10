@@ -1,0 +1,158 @@
+﻿@using DashBoardAgil.DashBoardApi.Models
+@{
+
+    var user = (Usuario)Session["User"];
+    bool ableConfig = (bool)(ViewBag.AbleToShowConfig??false);
+
+
+}
+
+
+<div class="navbar-default sidebar" role="navigation">
+    <div class="sidebar-nav navbar-collapse">
+        <ul class="nav" id="side-menu">
+            <li class="sidebar-search">
+                <div class="input-group custom-search-form">
+                    <input type="text" class="form-control" placeholder="Search...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </li>
+            <!-- List de Menus-->
+
+            <li>
+                <a href="/Home/Index"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</a>
+            </li>
+            @if (user.Login.Contains("uhitlei.barbosa") || ableConfig)
+            {
+                <li>
+                    <a href="#"><i class="fas fa-receipt fa-fw "></i> Relatório <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="@Url.Action("SLA", "Relatorio", new {})"> <i class="fas fa-stopwatch"></i> SLA</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("DiaDev", "Relatorio", new {})"> <i class="fas fa-sun"></i> Dia Desenvolvedor</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("PrazoChamado", "Relatorio", new {})"> <i class="far fa-clock"></i> Prazo Chamado</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-chart-line fa-fw"></i> Metricas <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="@Url.Action("Desvios", "Relatorio", new {})"> <i class="fas fa-bezier-curve"></i> Desvio</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("CicleTime", "Relatorio", new {})"> <i class="fas fa-circle-notch"></i> Ciclo Time</a>
+                        </li>
+                        @*<li>
+                                <a href="@Url.Action("DiaDev", "Relatorio", new {})"> <i class="fas fa-sun"></i> Dia Desenvolvedor</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("PrazoChamado","Relatorio", new { })"> <i class="far fa-clock"></i>   Prazo Chamado</a>
+                            </li>*@
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="#"><i class="fas fa-cogs fa-fw"></i> Configuração <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="@Url.Action("Edit", "Configuracao", new {id = 1})"> <i class="fas fa-sliders-h"></i> Parametros Sistema</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("UsuariosMaster", "Configuracao", new {id = 1})"> <i class="fas fa-jedi"></i>  Usuários Master</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ProjetosHabilitados", "Configuracao", new {id = 1})"><i class="fas fa-people-carry"></i> Times</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ProjetosBloqueados", "Configuracao", new {id = 1})"><i class="fas fa-ban"></i> Projetos Bloqueados</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("ChamadoFechados", "Configuracao")"><i class="fas fa-spider"></i> Chamdos Fechados</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("Log", "Configuracao")"><i class="fas fa-bug"></i> Log</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" id="__agent"><i class="fas fa-user-secret"></i> Agente Serviço <input type="" id="_togleAgent" style="display: none" /> </a>
+                        </li>
+                    </ul>
+                </li>
+            }
+            <!--<li> Exemplo
+                <a href="Home" class="active"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</a>
+            </li>
+            <li>
+                <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="#">Second Level Item</a>
+                    </li>
+                    <li>
+                        <a href="#">Third Level <span class="fa arrow"></span></a>
+                        <ul class="nav nav-third-level">
+                            <li>
+                                <a href="#">Third Level Item</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>-->
+            <!-- Fim List de Menus-->
+        </ul>
+
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        $.ajax({
+            url: "@Url.Action("","api/Agente")",
+            beforeSend: function () {
+                // $("#divCarregando").show();
+            },
+            success: function (result) {
+                // $("#divCarregando").hide();
+                $('#_togleAgent').prop('type', "checkbox");
+                $('#_togleAgent').prop('checked', result.status);
+                $.switcher('#_togleAgent');
+                //var pro = $('#_togleAgent').prop('checked'); //, result.status);
+                //console.log(pro);
+            },
+            complete: function () {
+                // $("#divCarregando").hide();
+            }
+        });
+
+        $("#_togleAgent").on("change", function () {
+
+            $.ajax({
+                url: "@Url.Action("99","api/Agente")",
+                data: 1,
+                method: "PUT",
+                success: function (result) {
+                    $('#_togleAgent').prop('checked', result.status);
+                    var msg = result.status ? "A" : "Desa";
+                    dashboard.alertSucesso("Serviço " + msg + "tivado Com Sucesso!");
+                    var pro = $('#_togleAgent').prop('checked'); //, result.status);
+                    console.log(pro);
+                }
+            });
+
+
+        });
+
+    });
+
+
+
+</script>

@@ -1,0 +1,64 @@
+﻿@using DashBoardAgil.DashBoardApi.Models
+@*<script src="../../code/highcharts.js"></script>
+    <script src="../../code/modules/exporting.js"></script>*@
+
+
+@*<script src="~/Scripts/js/highchart7/highcharts.js"></script>*@
+<script src="~/Scripts/js/highchart7/modules/exporting.js"></script>
+
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="fas fa-chart-area fa-fw"></i> Throughput X Rejeição
+    </div>
+    @Html.Partial("_Loading", new DivLoading { Id = "_LoadingThpt" })
+    <div id="_ThroughputRejectionDiagram" class="chartSizeble" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</div>
+
+<script type="text/javascript">
+    var __divDados = '_ThroughputRejectionDiagram';
+    
+    $(document).ready(function () {
+
+        LoadCFD($("#time").val());
+
+        $("#time").change(function () {
+            $("#_LoadingThpt").show();
+            $("#" + __divDados).html("");
+
+            LoadCFD(this.value);
+        });
+
+        function LoadCFD(time) {
+
+            var data = new Object();
+            data.time = time;
+            data.dataIni = dataIni;//(new Date).getFullYear() + '-01-01';
+            data.dataFim = dataFim;//(new Date).getFullYear() + '-' + parseInt((new Date).getMonth() + 1) + '-' + (new Date).getDate();
+            data.throughput = true;
+
+            $.ajax({
+                dataType: "json",
+                url: "@Url.Action("", "api/Rejections")",
+                data: data,
+                complete: function () {
+                    $("#_LoadingThpt").hide();
+                },
+                success: function (datas) {
+                    if (datas != null) {
+                        _time = time;
+                        renderRejectionThroughput(__divDados, 'Throughput X Rejeição do time: ' + time, 'Source: redmine.example.com | Year: 2019', datas.Categoria, datas.Serie, datas.Throughput.Throughput, datas.Rejeicao.RejectionsRate);
+                    }
+                }
+
+            });
+        }
+
+
+
+    });
+
+
+</script>

@@ -1,0 +1,186 @@
+﻿@using DashBoardAgil.DashBoardApi.Common.HtmlHelpers
+@using Redmine.Net.Api.Types
+@{
+    var user = (User)ViewBag.User;//.FirstName
+    
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>@ViewBag.Title - DashBoard Agil</title>
+
+   @Html.Partial("_Style")
+   
+   @Html.Partial("_Scripts")
+ 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    @{Html.RenderPartial("~/Views/Shared/_Mensagem.cshtml");}
+    <div id="wrapper">
+
+        <!-- Navigation -->
+      @Html.Partial("_Menu")
+
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+
+              @Html.Partial("_Title")
+
+                @RenderBody()
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+    
+   @* @Scripts.Render("~/bundles/bootstrap_template")*@
+
+@*@Html.Partial("_Scripts")*@
+
+@RenderSection("scripts", required: false)
+
+
+    <div id="divCarregando" class="progresso">
+        <div id="overlay"></div>
+        <i class="fas fa-yin-yang fa-spin"></i>
+        <br />
+        Carregando...
+    </div>
+    <div class="modal fade" id="dashboardModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+        <div class="modal-dialog" style="width: 96%;">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #3598D8; border-radius: 6px 6px 0 0; color:white;">
+                    <button type="button" id="btnCloseModal" class="close" data-dismiss="modal">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="LabelModal"></h4>
+                </div>
+                <div class="modal-body">
+                    <div id="ModalContent" style="height: 585px; overflow-y: auto; overflow-x:hidden">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+		var maskTelefone = function (val) {
+			return val.replace(/\D/g, '').length === 11 ? '(00) 00000-0000' : '(00) 0000-00009';
+		}, options = {
+			onKeyPress: function (val, e, field, options) {
+				field.mask(maskTelefone.apply({}, arguments), options);
+			},
+			clearIfNotMatch: false
+		};
+
+		var optionsCpf = {
+			onKeyPress: function (doc, e, field, options) {
+				var mask = (doc.length > 14) ? '00.000.000/0000-00' : '000.000.000-000';
+				$('.num-cpfCnpf-field').mask(mask, options);
+			}
+		};
+
+		$(document).ready(function () {
+			//$(".date-format-field").inputmask("99/99/9999", { showMaskOnFocus: false });
+			//$(".time-format-field").inputmask("99:99", { placeholder: "hh:mm" });
+			//$('.num-licitacao-field').inputmask('999/9999');
+			//$('.num-pce-field').inputmask('99.999.9999.9999');
+			//$('.field-decimal').inputmask("9,9");
+			//$('.num-licitacao').inputmask("999", { placeholder: "" });
+			//$('.num-cpf-field').inputmask("999.999.999-99", { showMaskOnFocus: false });
+			//$('.num-cnpj-field').inputmask("99.999.999/9999-99", { showMaskOnFocus: false });
+			//$(".js-example-basic-single").select2();
+			//$('.num-telefone').mask(maskTelefone, options);
+			//$('.num-cpfCnpf-field').mask('000.000.000-00', optionsCpf);
+			//$('.num-itemPce-field').inputmask('99.99.99.99999999-9');
+			//Reseta o conteúdo do modal quando o mesmo é fechado, evitando resquicios de inputs
+			$(".modal").on("hidden.bs.modal", function () {
+				$("#ModalContent").html("");
+			});
+		});
+
+		$(function () {
+			$('[rel=popover]').popover({
+				html: true,
+				content: function () {
+					return $('#content-pop').html();
+				}
+			});
+		});
+    </script>
+@Html.RenderScripts()
+
+
+@*<!-- jQuery -->
+    *@
+
+</body>
+</html>
+
+
+
+
+@*<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>@ViewBag.Title - My ASP.NET Application</title>
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+    </head>
+    <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Application name", "Index", "Home", new {area = ""}, new {@class = "navbar-brand"})
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+
+        <hr/>
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    </body>
+    </html>*@
+
+
+
+
+
+

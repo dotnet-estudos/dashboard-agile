@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.Tests", "DashBoardAgil.Tests\DashBoardAgil.Tests.csproj", "{C28C5AC7-CF1D-4499-8CCD-7903678043F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.Services", "DashBoardAgil.Services\DashBoardAgil.Services.csproj", "{B707AF39-B51D-4B27-9925-8AB069FC69B9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.ConsoleLog", "DashBoardAgil.ConsoleLog\DashBoardAgil.ConsoleLog.csproj", "{4CBFE699-BAE8-49DF-AF4C-C250C1AA306D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.Aplication", "DashBoardAgil.Aplication\DashBoardAgil.Aplication.csproj", "{EE87A5F7-67C8-4CF1-935F-EB2C34089227}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.CrossCutting", "DashBoardAgil.CrossCutting\DashBoardAgil.CrossCutting.csproj", "{831B3B56-9D25-402B-9106-71C5AC1B02A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.DashBoardApi", "DashBoardAgil.DashBoardApi\DashBoardAgil.DashBoardApi.csproj", "{AAA759C3-12F3-4F89-91CE-C52208A88D61}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C28C5AC7-CF1D-4499-8CCD-7903678043F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28C5AC7-CF1D-4499-8CCD-7903678043F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28C5AC7-CF1D-4499-8CCD-7903678043F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28C5AC7-CF1D-4499-8CCD-7903678043F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B707AF39-B51D-4B27-9925-8AB069FC69B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B707AF39-B51D-4B27-9925-8AB069FC69B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B707AF39-B51D-4B27-9925-8AB069FC69B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B707AF39-B51D-4B27-9925-8AB069FC69B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CBFE699-BAE8-49DF-AF4C-C250C1AA306D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CBFE699-BAE8-49DF-AF4C-C250C1AA306D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CBFE699-BAE8-49DF-AF4C-C250C1AA306D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CBFE699-BAE8-49DF-AF4C-C250C1AA306D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE87A5F7-67C8-4CF1-935F-EB2C34089227}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE87A5F7-67C8-4CF1-935F-EB2C34089227}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE87A5F7-67C8-4CF1-935F-EB2C34089227}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE87A5F7-67C8-4CF1-935F-EB2C34089227}.Release|Any CPU.Build.0 = Release|Any CPU
+		{831B3B56-9D25-402B-9106-71C5AC1B02A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{831B3B56-9D25-402B-9106-71C5AC1B02A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{831B3B56-9D25-402B-9106-71C5AC1B02A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{831B3B56-9D25-402B-9106-71C5AC1B02A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAA759C3-12F3-4F89-91CE-C52208A88D61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAA759C3-12F3-4F89-91CE-C52208A88D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAA759C3-12F3-4F89-91CE-C52208A88D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAA759C3-12F3-4F89-91CE-C52208A88D61}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
