@@ -1,0 +1,233 @@
+﻿@using DashBoardAgil.CrossCutting
+@using DashBoardAgil.Services.Domain
+@using DashBoardAgil.Services.Util
+@model SlaControl
+@{
+    ViewBag.title = "Consumo de Horas Projeto";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                @String.Format(ViewBag.title)
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form role="form" action="JavaScript: return false;">
+                            <div class="form-group col-lg-12">
+                                <label>Time:</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("time", (SelectList) ViewBag.SelectTime, "Selecione", htmlAttributes: new {@class = "form-control", required = true})
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Projeto:</label>
+                                @*<input class="form-control" >*@
+                                <select id="projetos"></select>
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Periodo: Inicio</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.AddDays(-30).ToString("yyyy-MM-dd")" required />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Fim</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataFim" name="dataFim" class="form-control" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="" />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <button type="button" id="pesquisar" class="btn btn-primary">Pesquisar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_resultDefault", new List<string> { "Dia", "Projeto", "Desenvolvedor", "Total(Horas)" })
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+    google.charts.load('current', { 'packages': ['gauge'] });
+    google.charts.setOnLoadCallback(drawChart);
+
+    $(document).ready(function () {
+        $("#resultado").hide();
+        $(".loading").hide();
+
+
+        function valid(data) {
+            if (time === "" || data.IdSla === 0 || data.tempo === 0 || data.dataIni === "" || data.dataFim === "") {
+                return false;
+            }
+            return true;
+        }
+
+
+
+        function grafico(result) {
+
+
+            $(".dados").show();
+
+
+            var donoutsOUt = new Array();
+
+            result.PerDay.forEach(function (diaDev, index) {
+
+                var donuts = new Array();
+
+                diaDev.Info.forEach(function (item, index1) {
+                    var donut = new Object();
+                    var line = new Object();
+                    donut.label = item.Quantidade + " Dev(s) \n" + " Dias: ";
+                    donut.value = parseInt(item.TotalDias);
+                    donuts.push(donut);
+
+                });
+
+                var element = 'donut-' + diaDev.Time.Identifier;
+
+                var ret = new Object();
+
+                ret.element = element;
+                ret.data = new Array();
+                ret.data = donuts;
+                ret.legend = diaDev.Time.Identifier.replace(/\-/g, ' ');
+                donoutsOUt.push(ret);
+
+
+
+            });
+
+            renderGrafico(donoutsOUt, "#render_Grafico");
+
+            var linesOutOUt = new Array();
+            var arrayKeys = new Array();
+            var arrayLabels = new Array();
+
+            result.DiaDevUnion.forEach(function(dia, index) {
+                var line = new Object();
+
+                line.label = dia.dia;
+                dia.info.forEach(function(item, index1) {
+                    line[item.Identifier] = item.Quantidade;
+
+                    if ($.inArray(item.Identifier, arrayKeys) === -1) {
+                        arrayKeys.push(item.Identifier);
+                        arrayLabels.push(item.Identifier.replace(/\-/g, ' '));
+                    }
+                });
+                linesOutOUt.push(line);
+            });
+
+            renderGraficoLines(linesOutOUt, arrayKeys, arrayLabels, "render_Grafico_line", "#legend");
+
+        }
+
+
+        function renderTable(result) {
+            //var table = $("#_tableAmostra tbody");
+            var table = $("#_tableAmostra").DataTable();
+
+            table.clear().draw();
+
+            result.DiaDevControl.forEach(function (diaDev, index0) {
+                diaDev.LancamentosDiaDesenvolvedor.forEach(function (chamado, index) {
+
+                    var conteudo = new Array();
+
+                    conteudo.push("<a title='' target='_blank' href='http://redmine.example.com/projects/" + diaDev.Time.Identifier + "/time_entries?spent_on=><" + result.filtro.dataIni.substring(0, 10) + "|" + result.filtro.dataFim.substring(0, 10) + "&user_id=" + chamado.User.Id + "'>" + chamado.DiaString + "</a>");
+                    conteudo.push(diaDev.Time.Identifier);
+                    conteudo.push(chamado.User.FirstName);
+                    conteudo.push(chamado.TotalHoraDia);
+                    table.row.add(conteudo);
+                });
+            });
+
+            table.draw();
+
+        }
+
+
+        function renderCalendario(result) {
+
+            var notes = new Array();
+            result.DiaDevControl.forEach(function (diaDev, index0) {
+                diaDev.LancamentosDia.forEach(function (item, index) {
+
+                    var object = new Object();
+
+                    object.date = item.Dia.substring(0, 10);
+                    object.note = item.Devs;
+                    notes.push(object);
+                    //[
+                    //    { "date": "2018-12-25", "note": ["Natal"] },
+                    //    { "date": "2018-12-12", "note": ["Tahun Baru"] }
+                    //]
+                });
+            });
+
+            renderCalendar("#tab_cal_dados", notes, result.filtro.dataIni.substring(0, 10), result.filtro.dataFim.substring(0, 10));
+
+        }
+
+        $("#pesquisar").on("click", function (e) {
+
+            $("#resultado").hide();
+            limpar();
+            $('#i_tab-grafico').click();
+
+            var data = new Object();
+
+            data.time = $("#time").val();
+            data.dataIni = $("#dataIni").val();
+            data.dataFim = $("#dataFim").val();
+
+            if (valid(data)) {
+
+                $.ajax({
+                    url: "@Url.Action("", "api/DiaDev")",
+                    data: data,
+                    method: "GET",
+                    beforeSend: function () {
+                        $("#resultado").show();
+                        $(".loading").show();
+                        $(".dados").hide();
+                    },
+                    success: function (result) {
+                        console.log(result);
+
+                        if (result.status) {
+
+                            grafico(result);
+
+                            //graficoCumulative(result);
+                            //  $('table.highchart').highchartTable();
+
+                            renderTable(result);
+
+                            renderCalendario(result);
+                        } else {
+                            dashboard.alertErro(result.mensagem);
+                        }
+                        // $("#resultado").show();
+                    },
+                    complete: function () {
+                        $(".loading").hide();
+                    }
+
+                });
+            } else {
+                dashboard.alertAtencao("Todos Campos são obrigatorios");
+            }
+
+        });
+    });
+</script>
+@Scripts.Render("~/bundles/jqueryval")

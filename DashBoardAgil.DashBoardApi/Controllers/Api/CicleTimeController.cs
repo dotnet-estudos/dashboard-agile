@@ -16,7 +16,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 {
     public class CicleTimeController : BaseApiController
     {
-        [CacheOutput(ServerTimeSpan = 1 * (60*60))]
+       [CacheOutput(ServerTimeSpan = 1 * (60*60))]
         public Object Get(string time, DateTime? dataIni, DateTime? dataFim,  StatusRedmine statusDe, StatusRedmine statusPara, TipoChamadoRedmine? tipoChamado=null, PrioridadeRedmine? prioridade=null, int primeiroSalto=5, int quantidadeSaltos = 10, bool leadTime =false, bool issueCanceled = true)
         {
             var parm = new NameValueCollection(_defaultTipoChamados);
@@ -58,11 +58,8 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                 parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", time));
             }
             #endregion
-
             
-
             var projectosAnalise = _RedmineService.GetCicleTimeTeam(parm, statusDe, statusPara, primeiroSalto, quantidadeSaltos, leadTime);
-
 
             return projectosAnalise;
         }

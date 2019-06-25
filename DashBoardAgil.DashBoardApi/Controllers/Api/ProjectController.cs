@@ -4,8 +4,10 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 using System.Web.Mvc;
+using DashBoardAgil.Services;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 
@@ -15,7 +17,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
     {
 
 
-        
+
         // GET: api/Project
         public IEnumerable<string> Get()
         {
@@ -23,16 +25,43 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         }
 
         // GET: api/Project/5
-        public IEnumerable<Project> Get(string id)
+        public List<Project> Get(string id, int parent = 0, int customField = 0)
         {
-            var param = new NameValueCollection
-            {
-                //{ RedmineKeys.PROJECT_ID, id },
-                //{ RedmineKeys.INCLUDE, RedmineKeys.SUBJECT }
-            };
+            var param = new NameValueCollection();
+
+            param.Add(RedmineKeys.ID, id);
+
             var retorno = _Redmine.GetObjects<Project>(param);
-           
-            return retorno;
+
+
+
+            //if (parent)
+            //{
+
+            //    var ret = from proj in retorno.ToList()
+            //              where
+            //                  proj.Parent != null &&
+            //                  GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Select(x => x.Id)
+            //                      .ToList()
+            //                      .Contains(proj.Parent.Id.ToString())
+            //              group proj by proj.Parent
+            //        into grp
+            //              select
+            //                  new
+            //                  {
+            //                      grp.Key.Id,
+            //                      grp.Key.Name,
+            //                      projetos =
+            //                          grp.Select(x => new { id = x.Id, name = x.Name, identifier = x.Identifier }).ToList()
+            //                  };
+            //}
+
+
+
+            return retorno.Where(x => ((parent == 0      || x.Parent != null && x.Parent.Id == parent)) &&
+                                       (customField == 0 || x.CustomFields != null && x.CustomFields.Any(y=>y.Id == customField) )
+                                        ).ToList();
+                                        
         }
 
         // POST: api/Project

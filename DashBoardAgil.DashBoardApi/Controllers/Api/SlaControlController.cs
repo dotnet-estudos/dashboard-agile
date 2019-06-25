@@ -86,7 +86,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
         }
 
-        [CacheOutput(ServerTimeSpan = 60*60)]
+       [CacheOutput(ServerTimeSpan = 60*60)]
         public Object Get(string time, StatusRedmine redmineDe, StatusRedmine redminePara, int tempo, TipoContagem tipoContagem, DateTime dataIni, DateTime dataFim, bool util) //SlaProjeto slaProjeto, DateTime dataIni, DateTime dataFim) //
         {
             try
@@ -101,10 +101,10 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
                 var retorno = new List<SlaControl>();
 
-                GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().Where(x => x.Identifier.Equals(time) || time.Equals("0")).ForEach(
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Identifier.Equals(time) || time.Equals("0")).ForEach(
                     (team) =>
                     {
-                        var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().FirstOrDefault(x => x.Identifier.Equals(team.Identifier));
+                       // var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().FirstOrDefault(x => x.Identifier.Equals(team.Identifier));
 
                         var slaProjeto = new SlaProjeto() { IdSla = 0, Tempo = tempo, TempoUltil = util, TipoContagemTempo = tipoContagem, Sla = new Sla() { StatusDe = redmineDe, StatusPara = redminePara } };
 
@@ -112,7 +112,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                         
                         parametro.Add(RedmineKeys.PROJECT_ID, team.Identifier);
                         
-                        var slaControl = _RedmineService.GetSla(projeto, slaProjeto, parametro);
+                        var slaControl = _RedmineService.GetSla(team, slaProjeto, parametro);
 
                         retorno.Add(slaControl);
                     });

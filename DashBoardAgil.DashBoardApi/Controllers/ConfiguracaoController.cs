@@ -81,5 +81,53 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             ViewBag.usuariosMaster = GlobalConfig.Instance.ConfiguracaoRedmine.UsuariosMaster;
             return View();
         }
+
+
+        
+        public ActionResult UsuarioMasterCreate()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UsuarioMasterCreate(Usuario user)
+        {
+            GlobalConfig.Instance.CarregarConfig();
+            if (!user.Login.IsNullOrWhiteSpace() && !GlobalConfig.Instance.ConfiguracaoRedmine.UsuariosMaster.Any(x => x.Equals(user.Login.Trim())))
+            {
+                GlobalConfig.Instance.ConfiguracaoRedmine.UsuariosMaster.Add(user.Login.Trim());
+                GlobalConfig.Instance.GravarConfig();
+            }
+
+            GlobalConfig.Instance.CarregarConfig();
+            ViewBag.usuariosMaster = GlobalConfig.Instance.ConfiguracaoRedmine.UsuariosMaster;
+
+            return View("UsuariosMaster").Mensagem("Usuario Adicionado com Sucesso!");
+        }
+
+        
+        public ActionResult UsuarioMasterDelete(string user)
+        {
+            var _user = new Usuario() {Login = user};
+            return View(_user);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UsuarioMasterDelete(string user, string delete)
+        {
+            GlobalConfig.Instance.CarregarConfig();
+            if (!user.IsNullOrWhiteSpace() && GlobalConfig.Instance.ConfiguracaoRedmine.UsuariosMaster.Any(x => !x.Equals(user.Trim())))
+            {
+                var del  = GlobalConfig.Instance.ConfiguracaoRedmine.UsuariosMaster.FirstOrDefault(x=>x.Equals(user.Trim()));
+                GlobalConfig.Instance.ConfiguracaoRedmine.UsuariosMaster.Remove(del);
+                GlobalConfig.Instance.GravarConfig();
+            }
+
+            return RedirectToAction("UsuariosMaster").Mensagem("Usuario Removido com Sucesso!");
+        }
     }
 }

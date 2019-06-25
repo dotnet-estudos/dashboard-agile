@@ -34,7 +34,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             var diaDevControl = new List<DiaDevControl>();
             var lancamentoTotais = new List<Alocacao>();
 
-            GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().Where(x => x.Identifier.Equals(time) || time.Equals("0")).ForEach(
+            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Identifier.Equals(time) || time.Equals("0")).ForEach(
                     (team) =>
                     {
                         var parm = new NameValueCollection(_parametros);

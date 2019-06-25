@@ -18,7 +18,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
     public class ComulativeFlowDiagramController : BaseApiController
     {
 
-       // [CacheOutput(ServerTimeSpan = 1 * (60))]
+       [CacheOutput(ServerTimeSpan = 1 * (60))]
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool dashboard = true)
         {
 
