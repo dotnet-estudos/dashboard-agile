@@ -18,7 +18,7 @@ namespace DashBoardAgil.Services.Interfaces
         TimeSpan? LeadTime();
 	    SlaControl GetSla(Projeto time, SlaProjeto slaProjeto, NameValueCollection chamados);
 	    PrazoControl GetPrazo(NameValueCollection parms, bool efetiva, StatusRedmine statusRedmine);
-	    object GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto, int quantidadeSaltos, bool leadtime=false);
+	    LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto, int quantidadeSaltos, bool leadtime=false);
         RejectionControl GetRejectionRate(NameValueCollection parms);
         ThroughputControl GetThroughputRate(NameValueCollection parms);
 	    object GetComparativeObject(NameValueCollection parms);

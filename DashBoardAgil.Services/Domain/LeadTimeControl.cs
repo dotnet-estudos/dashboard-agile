@@ -7,27 +7,63 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DashBoardAgil.Services.Enums;
 using DashBoardAgil.Services.Extensions;
+using DashBoardAgil.Services.Interfaces.Abstracoes;
+using Redmine.Net.Api.Types;
 
 namespace DashBoardAgil.Services.Domain
 {
     public class LeadTimeControl
     {
-        public LeadTimeControl(int primeiroSalto = 5, int quantidadeSalto = 10)
+        public LeadTimeControl(int primeiroSalto = 5, int quantidadeSalto = 10, List<Issue> universo = null)
         {
             this.LeadTimes = new List<LeadTime>();
             this.PrimeiroSalto = primeiroSalto;
             this.QuantidadeSaltos = quantidadeSalto;
+
+            #region teste
+            if (universo != null)
+            {
+                UniversoChamados = new List<LeadTime>();
+                universo.ForEach(x=>
+                {
+                    var lead = new LeadTime()
+                    {
+                        IdChamado = x.Id,
+                        Tipo = (TipoChamadoRedmine)x.Tracker.Id,
+                        Prioridade = (PrioridadeRedmine)x.Priority.Id,
+                        //LeadDiaUtil = ((DateTime)dateStatusPara).Diferenca((DateTime)dateStatusDe, TipoContagem.Dia, true),
+                        Projeto = x.Project.Name,
+                        CreatedOn = (DateTime)x.CreatedOn,
+                        // ClosedOn = (DateTime) chamado.ClosedOn,
+                        Versao = CrossCutting.Util.ReflectObjec(x.FixedVersion, new IdentificableName()),
+                        Status = CrossCutting.Util.ReflectObjec(x.Status, new IdentificableName())
+
+                        //Tempo = (int)((DateTime)dateStatusDe).Diferenca((DateTime)dateStatusPara, TipoContagem.Hora, true)  
+                    };
+                    if (x.ClosedOn != null) lead.ClosedOn = (DateTime)x.ClosedOn;
+
+                    UniversoChamados.Add(lead);
+                });
+            }
+            #endregion
+
         }
 
-        private int PrimeiroSalto { get; set; }
-        private int QuantidadeSaltos { get; set; }
+        private int PrimeiroSalto { get; }
+        private int QuantidadeSaltos { get; }
+        public List<LeadTime> UniversoChamados { get; set; }
         public List<LeadTime> LeadTimes { get; set; }
         public int TotalChamados => LeadTimes.Count();
         private double TotalChamadosDouble => Double.Parse(this.TotalChamados.ToString());
         public double GeneralAverageHours => Math.Round(LeadTimes.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero);
         public double GeneralAverageDays => Math.Round((GeneralAverageHours/24), 2, MidpointRounding.AwayFromZero);
         public string GeneralAverageDaysString => TimeSpan.FromHours(GeneralAverageHours).ToString(@"dd\.hh\:mm\:ss");
+
+        public double GeneralAverageHoursUtil => Math.Round(LeadTimes.Average(x => x.LeadUtil), 2, MidpointRounding.AwayFromZero);
+        public double GeneralAverageDaysUtil => Math.Round(GeneralAverageHoursUtil/7.2, 2, MidpointRounding.AwayFromZero);
+        public string GeneralAverageDaysUtilString => TimeSpan.FromHours(GeneralAverageHoursUtil).ToString(@"dd\.hh\:mm\:ss");
         public int[] Range => CrossCutting.Util.GerarArraySalto(this.PrimeiroSalto, this.QuantidadeSaltos);
 
         public string[] RangeString

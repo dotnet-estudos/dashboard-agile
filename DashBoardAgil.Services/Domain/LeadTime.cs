@@ -35,7 +35,7 @@ namespace DashBoardAgil.Services.Domain
         {
             get
             {
-                var intLead = int.Parse(this.LeadUtil.ToString(new CultureInfo("pt-br")));
+                var intLead = Convert.ToInt32(this.LeadUtil);// int.Parse(this.LeadUtil.ToString(new CultureInfo("pt-br")));
                 return _Tempo ?? intLead;
             }
             set { _Tempo = value; }

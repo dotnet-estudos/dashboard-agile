@@ -12,6 +12,7 @@ using DashBoardAgil.Services.Domain;
 using DashBoardAgil.Services.Enums;
 using DashBoardAgil.Services.Extensions;
 using DashBoardAgil.Services.Interfaces;
+using DashBoardAgil.Services.Interfaces.Abstracoes;
 using DashBoardAgil.Services.Util;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
@@ -531,7 +532,7 @@ namespace DashBoardAgil.Services.Service
             return retorno;
         }
 
-        public object GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false)
+        public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false)
         {
             var chamados = leadTime ? _manager.GetObjects<Issue>(parms) : _manager.GetObjectsWithJournals(parms);
             var LeadsTimes = new List<LeadTime>();
@@ -544,27 +545,34 @@ namespace DashBoardAgil.Services.Service
                 {
                     if (dateStatusPara != null)
                     {
-                        LeadsTimes.Add(new LeadTime()
+                        var lead = new LeadTime()
                         {
                             IdChamado = chamado.Id,
                             StatusDe = statusDe,
                             StatusPara = statusPara,
-                            Tipo = (TipoChamadoRedmine)chamado.Tracker.Id,
-                            Prioridade = (PrioridadeRedmine)chamado.Priority.Id,
-                            //LeadUtil = RedmineUtil.CountDifHorasUteis((DateTime)dateStatusDe, (DateTime)dateStatusPara),
-                            LeadBruto = Math.Round(((DateTime)dateStatusPara).Subtract((DateTime)dateStatusDe).TotalHours, 2),
-                            LeadDiaUtil = ((DateTime)dateStatusPara).Diferenca((DateTime)dateStatusDe, TipoContagem.Dia, true),
+                            Tipo = (TipoChamadoRedmine) chamado.Tracker.Id,
+                            Prioridade = (PrioridadeRedmine) chamado.Priority.Id,
+                            LeadUtil = Math.Round(RedmineUtil.CountDifHorasUteis((DateTime) dateStatusDe, (DateTime) dateStatusPara),2),
+                            LeadBruto = Math.Round(((DateTime) dateStatusPara).Subtract((DateTime) dateStatusDe).TotalHours, 2),
+                            //LeadDiaUtil = ((DateTime)dateStatusPara).Diferenca((DateTime)dateStatusDe, TipoContagem.Dia, true),
                             Projeto = chamado.Project.Name,
-                            CreatedOn = (DateTime)chamado.CreatedOn
+                            CreatedOn = (DateTime) chamado.CreatedOn,
+                           // ClosedOn = (DateTime) chamado.ClosedOn,
+                            Versao = CrossCutting.Util.ReflectObjec(chamado.FixedVersion, new IdentificableName()),
+                            Status = CrossCutting.Util.ReflectObjec(chamado.Status, new IdentificableName())
+
                             //Tempo = (int)((DateTime)dateStatusDe).Diferenca((DateTime)dateStatusPara, TipoContagem.Hora, true)  
-                        });
+                        };
+                        if (chamado.ClosedOn != null) lead.ClosedOn = (DateTime) chamado.ClosedOn;
+
+                        LeadsTimes.Add(lead);
                     }
                 }
 
 
             });
 
-            var LeadsControl = new LeadTimeControl(primeiroSalto, quantidadeSaltos);
+            var LeadsControl = new LeadTimeControl(primeiroSalto, quantidadeSaltos, chamados);
             LeadsControl.LeadTimes = LeadsTimes.ToList();
 
 
