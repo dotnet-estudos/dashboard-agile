@@ -8,7 +8,7 @@ namespace DashBoardAgil.Services.Interfaces.Abstracoes
     {
         public int IdChamado { get; set; }
         public DateTime CreatedOn { get; set; }
-        public DateTime ClosedOn { get; set; }
+        public DateTime? ClosedOn { get; set; }
         public string Projeto { get; set; }
         public StatusRedmine? StatusDe { get; set; }
         public string StatusDeString => StatusDe!=null? StatusDe.GetDisplayName():String.Empty;
@@ -18,5 +18,7 @@ namespace DashBoardAgil.Services.Interfaces.Abstracoes
         public string TipoString => this.Tipo.GetDisplayName();
         public PrioridadeRedmine Prioridade { get; set; }
         public string PrioridadeString => this.Prioridade.GetDisplayName();
+        public IdentificableName Versao { get; set; }
+        public IdentificableName Status { get; set; }
     }
 }

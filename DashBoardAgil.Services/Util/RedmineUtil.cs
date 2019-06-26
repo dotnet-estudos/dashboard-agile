@@ -147,6 +147,12 @@ namespace DashBoardAgil.Services.Extensions
                 }
             }
 
+            if (datePara < dataRef && tipoRetorno == TipoContagem.Hora)
+            {
+                dataRef = dataRef.AddHours(-1);
+                valorReturn += datePara.Subtract(dataRef).TotalHours;
+            }
+
             return valorReturn;
         }
 
@@ -274,7 +280,7 @@ namespace DashBoardAgil.Services.Extensions
 
         public static double CountDifHorasUteis(this DateTime dateIni, DateTime dataFim)
         {
-            var retorno = 0;
+            var retorno = 0.0;
             var dataHoraExp = dateIni.Date.AddHours(ConstantesCC.HORA_INI_EXP);
             var dataHoraFim = dateIni.Date.AddHours(ConstantesCC.HORA_FIM_EXP);
             var dateRef = dateIni;
@@ -333,10 +339,18 @@ namespace DashBoardAgil.Services.Extensions
 
             while (dateRef < dataFimRef)
             {
-                retorno += 1;
+                retorno += 1.0;
                 do { dateRef = dateRef.AddHours(1); }
                 while (!DateUnderExpPeriod(dateRef));
             }
+
+
+            if (dataFimRef < dateRef )
+            {
+                dateRef = dateRef.AddHours(-1);
+                retorno += dateRef.Subtract(dataFimRef).TotalHours;
+            }
+
 
             return retorno;
         }

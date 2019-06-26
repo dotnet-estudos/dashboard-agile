@@ -38,7 +38,6 @@ namespace DashBoardAgil.Services.Domain
             }
 
         }
-
         public List<object> ByType
         {
             get
@@ -50,7 +49,6 @@ namespace DashBoardAgil.Services.Domain
                 return new List<object>() { chamadosDiaTipo};
             }
         }
-
         public List<object> ByTypeWeek
         {
             get
@@ -85,6 +83,21 @@ namespace DashBoardAgil.Services.Domain
                 });
                 
                 return retorno;
+            }
+        }
+
+        public List<object> ByVersion
+        {
+            get
+            {
+                var byVersion = (from chamado in Throughputs
+                    orderby chamado.ClosedOn descending
+                    group chamado by chamado.Versao
+                    into grp
+                    select new {Versao = grp.Key, Total = grp.Count(), Chamados = grp.Select(x => x)}).ToList();
+
+                return new List<object>(byVersion.Select(x=>new {version = x}));
+
             }
         }
     }
