@@ -106,18 +106,17 @@
         $(".clearable").html("");
     }
 
-
-    function renderGrafico(donoutData, elementoHtml) {
+    function renderCarousel(datas, elementoHtml) {
 
         elementoHtml = elementoHtml ? elementoHtml : "#render_Grafico";
 
         var divCarousel = $("<div />", {
-                "data-ride": 'carousel',
-                "style": 'width:90%;margin:auto;',
-                "id": 'sliderContainer',
-                "class": 'carousel slide'
+            "data-ride": 'carousel',
+            "style": 'width:90%;margin:auto;',
+            "id": 'sliderContainer',
+            "class": 'carousel slide'
 
-            }
+        }
         );
         var linkPrev = $("<a />", {
             "class": 'left carousel-control',
@@ -127,24 +126,24 @@
         });
 
         var linkNext = $("<a />", {
-                "class": 'right carousel-control',
-                "href": '#sliderContainer',
-                "role": 'button',
-                "data-slide": 'next'
-            }
+            "class": 'right carousel-control',
+            "href": '#sliderContainer',
+            "role": 'button',
+            "data-slide": 'next'
+        }
         );
         var divInner = $("<div />", {
-                "class": 'carousel-inner',
-                "role": 'listbox',
-            }
+            "class": 'carousel-inner',
+            "role": 'listbox',
+        }
         );
         var olIndi = $("<ol />", {
-                "class": 'carousel-indicators',
-            }
+            "class": 'carousel-indicators',
+        }
         );
 
 
-        donoutData.forEach(function(item, index) {
+        datas.forEach(function(item, index) {
 
             var li = $('<li />', {
                 "data-target": '#' + 'sliderContainer', //element
@@ -179,6 +178,11 @@
         divCarousel.append(linkPrev);
         divCarousel.append(linkNext);
         $(elementoHtml).append(divCarousel);
+}
+
+    function renderGrafico(donoutData, elementoHtml) {
+
+        renderCarousel(donoutData, elementoHtml);
 
         donoutData.forEach(function(item, index) {
             Morris.Donut({

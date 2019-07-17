@@ -206,6 +206,7 @@
     <Compile Include="Controllers\Api\CicleTimeController.cs" />
     <Compile Include="Controllers\Api\ComparativeController.cs" />
     <Compile Include="Controllers\Api\ComulativeFlowDiagramController.cs" />
+    <Compile Include="Controllers\Api\ConsumptionHoursController.cs" />
     <Compile Include="Controllers\Api\CookieController.cs" />
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Controllers\Api\PrazoChamadoController.cs" />
@@ -217,6 +218,7 @@
     <Compile Include="Controllers\Api\SumaryController.cs" />
     <Compile Include="Controllers\Api\ThroughputController.cs" />
     <Compile Include="Controllers\Api\TimesController.cs" />
+    <Compile Include="Controllers\Api\TimesEntryController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CloseController.cs" />
     <Compile Include="Controllers\ConfiguracaoController.cs" />
@@ -679,7 +681,7 @@
     <Content Include="Views\Configuracao\UsuariosMaster.cshtml" />
     <Content Include="Views\Configuracao\UsuarioMasterCreate.cshtml" />
     <Content Include="Views\Configuracao\UsuarioMasterDelete.cshtml" />
-    <Content Include="Views\Relatorio\ConsumoHorasView.cshtml" />
+    <Content Include="Views\Relatorio\ConsumoHorasProjeto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
