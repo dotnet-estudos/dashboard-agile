@@ -76,18 +76,20 @@
             var elemnts = [];
 
             result.ConsumoHoras.ByProject.forEach(function(iten, index) {
-                var element = 'Gauge-' + iten.Time.Identifier;
+                var element = 'Gauge-' + iten.GaugeGoogle.data.Label;
 
                 var ret = new Object();
 
                 ret.element = element;
-                ret.GaugeGoogle = new Array();
-                ret.GaugeGoogle = iten.GaugeGoogle
-                ret.legend = diaDev.Time.Identifier.replace(/\-/g, ' ');
+                ret.GaugeGoogle = new Object();
+                ret.GaugeGoogle = iten.GaugeGoogle;
+                ret.legend = iten.GaugeGoogle.data.Label.replace(/\-/g, ' ');
                 elemnts.push(ret);
 
             });
-           // renderGaugeGoogle("render_Grafico", result.ConsumoHoras.ByProject[0].GaugeGoogle.data, result.ConsumoHoras.ByProject[0].GaugeGoogle.options);
+            renderCarousel(elemnts, "#render_Grafico");
+            renderGaugeGoogleAll(elemnts);
+            // renderGaugeGoogle("render_Grafico", result.ConsumoHoras.ByProject[0].GaugeGoogle.data, result.ConsumoHoras.ByProject[0].GaugeGoogle.options);
         }
 
         function renderTable(result) {

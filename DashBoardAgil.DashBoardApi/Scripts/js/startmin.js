@@ -502,6 +502,12 @@ function renderGaugeGoogle(div, data, options) {
 
 }
 
+function renderGaugeGoogleAll(elemnts) {
+    elemnts.forEach(function(iten, index) {
+        renderGaugeGoogle(iten.element, iten.GaugeGoogle.data, iten.GaugeGoogle.options);
+    });
+}
+
 function blockCampos(block) {
     $(".lockable").each(function () {
         $(this).prop("disabled", block);
