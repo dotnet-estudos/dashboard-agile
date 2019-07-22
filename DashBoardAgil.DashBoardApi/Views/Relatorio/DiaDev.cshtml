@@ -43,7 +43,7 @@
     </div>
 </div>
 
-@Html.Partial("_resultDefault", new List<string> { "Dia", "Time", "Desenvolvedor", "Total(Horas)" })
+@Html.Partial("_resultDefault", new DashBoardAgil.DashBoardApi.Models.ResultDefaultModel( new List<string> { "Dia", "Time", "Desenvolvedor", "Total(Horas)" }))
 
 <script>
     $(document).ready(function () {

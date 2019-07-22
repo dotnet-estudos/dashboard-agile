@@ -238,6 +238,7 @@
     <Compile Include="Models\ParameterDefault.cs" />
     <Compile Include="Models\Perfil.cs" />
     <Compile Include="Models\PerfilMenu.cs" />
+    <Compile Include="Models\ResultDefaultModel.cs" />
     <Compile Include="Models\SumaryChamdo.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
