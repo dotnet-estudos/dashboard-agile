@@ -482,6 +482,32 @@ function renderRejectionThroughput(div, _title, _subtitle, _Categoria, _serie, _
 });
 }
 
+function renderGaugeGoogle(div, data, options) {
+
+    var ArrayData = [];
+    var arrAux = [];
+    var arrAux1 = [];
+    $.each(data, function (chave, valor) {
+        arrAux.push(chave);
+        arrAux1.push(data[chave]);
+    })
+
+    ArrayData.push(arrAux);
+    ArrayData.push(arrAux1);
+   
+    var chart = new google.visualization.Gauge(document.getElementById(div));
+    var dataTableData = new google.visualization.arrayToDataTable(ArrayData);
+    console.log(dataTableData);
+    chart.draw(dataTableData, options);
+
+}
+
+function renderGaugeGoogleAll(elemnts) {
+    elemnts.forEach(function(iten, index) {
+        renderGaugeGoogle(iten.element, iten.GaugeGoogle.data, iten.GaugeGoogle.options);
+    });
+}
+
 function blockCampos(block) {
     $(".lockable").each(function () {
         $(this).prop("disabled", block);

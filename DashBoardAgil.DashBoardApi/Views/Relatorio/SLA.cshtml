@@ -81,7 +81,7 @@
 
 @*@Html.Partial("_defaultCarousel")*@
 
-@Html.Partial("_resultDefault", new List<string> { "#", "Team", "Data Criação", "Status", "Projeto", "Dentro SLA", "Termometro (Dia:Hora:Minuto)" })
+@Html.Partial("_resultDefault", new DashBoardAgil.DashBoardApi.Models.ResultDefaultModel(new List<string> { "#", "Team", "Data Criação", "Status", "Projeto", "Dentro SLA", "Termometro (Dia:Hora:Minuto)" }))
 
 
 <script>

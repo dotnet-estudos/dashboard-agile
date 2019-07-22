@@ -54,6 +54,8 @@
     <Compile Include="Domain\Chamado.cs" />
     <Compile Include="Domain\ChamadoControl.cs" />
     <Compile Include="Domain\ConfigRedmine.cs" />
+    <Compile Include="Domain\ConsumoHoras.cs" />
+    <Compile Include="Domain\ConsumoHorasControl.cs" />
     <Compile Include="Domain\DiaDevControl.cs" />
     <Compile Include="Domain\Fase.cs" />
     <Compile Include="Domain\Rejection.cs" />

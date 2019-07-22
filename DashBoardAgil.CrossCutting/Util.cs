@@ -782,6 +782,10 @@ namespace DashBoardAgil.CrossCutting
             return ret;
         }
 
+        public static double GetPercentFrom(double percent, double From)
+        {
+            return (percent * From / 100);
+        }
 
     }
 }

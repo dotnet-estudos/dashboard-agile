@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using DashBoardAgil.CrossCutting;
@@ -730,6 +731,90 @@ namespace DashBoardAgil.Services.Service
 
 
             return new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
+        }
+
+        public ConsumoHorasControl ConsumptionHoursByProject(NameValueCollection parms, string project, string time)
+        {
+            var retorno = new ConsumoHorasControl();
+            var paramProj = new NameValueCollection { { RedmineKeys.ID, "todos" } };
+            var projetcosRedmine = _manager.GetObjects<Project>(paramProj);
+            var projetoHoraContradata = projetcosRedmine.Where(x => x.Parent !=null && (x.CustomFields != null && x.CustomFields.Any(y => y.Id == 143 && y.Values != null && y.Values.Any(z => z.Info != ""))));
+
+
+            if (time != null && !time.Equals("") )
+            {
+            
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x=> time.Equals("0") || x.Identifier.Equals(time)).ToList().ForEach(_time =>
+                {
+                    var listProjTime = projetoHoraContradata.Where(proj => (project==null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) &&   proj.Parent.Id.ToString().Equals(_time.Id)).Select(
+                        pro =>
+                            new Projeto()
+                            {
+                                Id = pro.Id.ToString(),
+                                Identifier = pro.Identifier,
+                                HorasContratadas = int.Parse(pro.CustomFields.FirstOrDefault(cus => cus.Id == 143)?.Values.FirstOrDefault()?.Info ?? "0")
+                            }
+                        );
+                    retorno.Projetos.AddRange(listProjTime.ToList());
+
+                    var lst = GetListAlocacoes(parms, _time, listProjTime.ToList());
+                    lst.ForEach(x => x.Team = new IdentificableName() { Id = int.Parse(_time.Id ?? "0"), Name = _time.Identifier });
+                    retorno.HorasAlocadas.AddRange(lst);
+                });
+            }
+
+            return retorno;
+        }
+
+
+        private List<ConsumoHoras> GetListAlocacoes(NameValueCollection _parametros, Projeto projeto, List<Projeto> listProjetos = null)
+        {
+            var lancamentos = new List<TimeEntry>();
+
+            if (listProjetos != null && listProjetos.Any())
+            {
+
+                listProjetos.ForEach(pr =>
+                {
+                    var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, pr.Id } };
+                    lancamentos.AddRange(_manager.GetObjects<TimeEntry>(parm));
+                });
+            }
+            else
+            {
+                var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, projeto.Id } };
+                lancamentos.AddRange(_manager.GetObjects<TimeEntry>(parm));
+            }
+
+            List<ConsumoHoras> ConsumoH = new List<ConsumoHoras>(lancamentos
+                .Select(x => new ConsumoHoras()
+                {
+                    Id = x.Id,
+                    Chamado = Global.ReflectObjec(x.Issue, new IdentificableName()),
+                    Projeto = Global.ReflectObjec(x.Project, new IdentificableName()),
+                   // Team = new IdentificableName() {Id = int.Parse(team.Parent.Id??"0"), Name = team.Parent.Identifier},
+                    Usuario = Global.ReflectObjec(x.User, new IdentificableName()),
+                    Comentario = x.Comments,
+                    Horas = (double) x.Hours,
+                    DataAlocacao = (DateTime)x.SpentOn,
+                    DataCriacao = (DateTime)x.CreatedOn
+                }));
+
+            if (listProjetos != null)
+                ConsumoH.AddRange(listProjetos.Where(x=>!ConsumoH.Any(y=>y.Projeto.Id.ToString().Equals(x.Id))).ToList().Select(item =>
+                    new ConsumoHoras()
+                    {
+                        Id = 0,
+                        Chamado = new IdentificableName() {Id=0, Name = "Sem Chamado"},
+                        Projeto = new IdentificableName() { Id = int.Parse(item.Id), Name = item.Identifier },
+                        // Team = new IdentificableName() {Id = int.Parse(team.Parent.Id??"0"), Name = team.Parent.Identifier},
+                        Usuario =  new IdentificableName() { Id = 0, Name = "Sem Usuário" },
+                        Comentario = string.Empty,
+                        Horas = 0,
+                        DataAlocacao = DateTime.Now.Date,
+                        DataCriacao = DateTime.Now.Date,
+                    }));
+            return ConsumoH;
         }
     }
 }

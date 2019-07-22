@@ -1,5 +1,6 @@
 ﻿@using System.Text
-@model List<String>
+@model DashBoardAgil.DashBoardApi.Models.ResultDefaultModel
+
 
 <style>
     .carousel-caption {
@@ -22,53 +23,58 @@
                 <div class="panel-title pull-left">Resultado</div>
                 <div class="pull-right active">
                     <ul class="nav nav-tabs in">
-                        <li class="active"><a href="#tab-grafico" id="i_tab-grafico" data-toggle="tab" aria-expanded="true"><i class="fas fa-chart-pie"></i> Gráfico</a></li>
-                        <li class=""><a href="#tab-dados" id="i_tab-dados" data-toggle="tab" aria-expanded="false"><i class="far fa-list-alt"></i> Dados</a></li>
-                        <li class=""><a href="#tab-cal" id="i_tab-cal" data-toggle="tab" aria-expanded="false"><i class="fas fa-calendar-alt"></i> Calendário</a></li>
+                       @if (Model.RenderGrafico){    <li class="active"><a href="#tab-grafico" id="i_tab-grafico" data-toggle="tab" aria-expanded="true"><i class="fas fa-chart-pie"></i> Gráfico</a></li>}
+                       @if (Model.RenderDados){      <li class=""><a href="#tab-dados" id="i_tab-dados" data-toggle="tab" aria-expanded="false"><i class="far fa-list-alt"></i> Dados</a></li>}
+                       @if (Model.RenderCalendario){ <li class=""><a href="#tab-cal" id="i_tab-cal" data-toggle="tab" aria-expanded="false"><i class="fas fa-calendar-alt"></i> Calendário</a></li>}
                     </ul>
                 </div>
             </div>
             <div class="panel-body">
                 <div class="tab-content">
-                    <div class="tab-pane fade active in" id="tab-grafico">
-                        <div id="carregando" class="loading">
-                            <div id="overlay"></div>
-                            <i class="fas fa-cog fa-spin"></i>
-                        </div>
-                        <div class="dados">
-                            <!--dados-->
-                            <div class="">
-                                <div class="row">
-                                    <div class="">
-                                        <div id="render_Grafico" align="center" class="clearable">
-                                            @*@Html.Partial("_defaultCarousel")*@
+                    @if (Model.RenderGrafico)
+                    {
+                        <div class="tab-pane fade active in" id="tab-grafico">
+                            <div id="carregando" class="loading">
+                                <div id="overlay"></div>
+                                <i class="fas fa-cog fa-spin"></i>
+                            </div>
+                            <div class="dados">
+                                <!--dados-->
+                                <div class="">
+                                    <div class="row">
+                                        <div class="">
+                                            <div id="render_Grafico" align="center" class="clearable">
+                                                @*@Html.Partial("_defaultCarousel")*@
+                                            </div>
+                                        </div>
+                                        <div class="">
+                                            <div id="render_Grafico_line" class="clearable"></div>
+                                            <div id="legend" class="clearable"></div>
                                         </div>
                                     </div>
-                                    <div class="">
-                                        <div id="render_Grafico_line" class="clearable"></div>
-                                        <div id="legend" class="clearable"></div>
+                                    <div class="col-lg-12">
+                                        <a href="javascript: $('#i_tab-dados').click();" class="btn btn-default btn-block">Ver Detalhes</a>
                                     </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <a href="javascript: $('#i_tab-dados').click();" class="btn btn-default btn-block">Ver Detalhes</a>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="tab-pane fade" id="tab-dados">
+                    }
+                    @if (Model.RenderDados)
+                    {
+                        <div class="tab-pane fade" id="tab-dados">
 
-                        <div id="carregando" class="loading">
-                            <div id="overlay"></div>
-                            <i class="fas fa-cog fa-spin"></i>
-                        </div>
-                        <div class="dados">
-                            <label>Amostra:</label>
-                            <div id="tableConteudo">
-                                <table id="_tableAmostra" class="table table-striped table-bordered">
-                                    <thead>
-                                        @foreach (var item in Model)
+                            <div id="carregando" class="loading">
+                                <div id="overlay"></div>
+                                <i class="fas fa-cog fa-spin"></i>
+                            </div>
+                            <div class="dados">
+                                <label>Amostra:</label>
+                                <div id="tableConteudo">
+                                    <table id="_tableAmostra" class="table table-striped table-bordered">
+                                        <thead>
+                                        @foreach (var item in Model.ColunasDataTable)
                                         {
-                                        <th>@item</th>
+                                            <th>@item</th>
                                         }
                                         </thead>
                                         <tbody class="clearable"></tbody>
@@ -76,6 +82,9 @@
                                 </div>
                             </div>
                         </div>
+                    } 
+                    @if (Model.RenderCalendario)
+                    {
                         <div class="tab-pane fade " id="tab-cal">
 
                             <div id="carregando" class="loading">
@@ -86,8 +95,9 @@
 
                             </div>
                         </div>
+                    }
 
-                    </div>
+                </div>
                 </div>
             </div>
             <!-- /.panel -->
@@ -106,18 +116,17 @@
         $(".clearable").html("");
     }
 
-
-    function renderGrafico(donoutData, elementoHtml) {
+    function renderCarousel(datas, elementoHtml) {
 
         elementoHtml = elementoHtml ? elementoHtml : "#render_Grafico";
 
         var divCarousel = $("<div />", {
-                "data-ride": 'carousel',
-                "style": 'width:90%;margin:auto;',
-                "id": 'sliderContainer',
-                "class": 'carousel slide'
+            "data-ride": 'carousel',
+            "style": 'width:90%;margin:auto;',
+            "id": 'sliderContainer',
+            "class": 'carousel slide'
 
-            }
+        }
         );
         var linkPrev = $("<a />", {
             "class": 'left carousel-control',
@@ -127,24 +136,24 @@
         });
 
         var linkNext = $("<a />", {
-                "class": 'right carousel-control',
-                "href": '#sliderContainer',
-                "role": 'button',
-                "data-slide": 'next'
-            }
+            "class": 'right carousel-control',
+            "href": '#sliderContainer',
+            "role": 'button',
+            "data-slide": 'next'
+        }
         );
         var divInner = $("<div />", {
-                "class": 'carousel-inner',
-                "role": 'listbox',
-            }
+            "class": 'carousel-inner',
+            "role": 'listbox',
+        }
         );
         var olIndi = $("<ol />", {
-                "class": 'carousel-indicators',
-            }
+            "class": 'carousel-indicators',
+        }
         );
 
 
-        donoutData.forEach(function(item, index) {
+        datas.forEach(function(item, index) {
 
             var li = $('<li />', {
                 "data-target": '#' + 'sliderContainer', //element
@@ -179,6 +188,11 @@
         divCarousel.append(linkPrev);
         divCarousel.append(linkNext);
         $(elementoHtml).append(divCarousel);
+}
+
+    function renderGrafico(donoutData, elementoHtml) {
+
+        renderCarousel(donoutData, elementoHtml);
 
         donoutData.forEach(function(item, index) {
             Morris.Donut({

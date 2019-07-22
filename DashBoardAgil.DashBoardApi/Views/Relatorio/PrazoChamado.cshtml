@@ -64,7 +64,7 @@
 
 
 
-@Html.Partial("_resultDefault", new List<string> { "#", "Data Criação", "Status", "Projeto", "Dentro Prazo","Observação", "Termometro (Dia:Hora:Minuto)" })
+@Html.Partial("_resultDefault", new DashBoardAgil.DashBoardApi.Models.ResultDefaultModel(new List<string> { "#", "Data Criação", "Status", "Projeto", "Dentro Prazo","Observação", "Termometro (Dia:Hora:Minuto)" }))
 
 <script>
     $(document).ready(function () {
