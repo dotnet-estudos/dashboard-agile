@@ -63,7 +63,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         public ActionResult ConsumoHorasProjeto()
         {
             ViewBag.title = "Consumo de Horas Projeto";
-            GetSelectTime(null, true);
+            GetSelectTime(null, false);
             ViewBag.SelectStatusRedmineDe = GetSelectStatusRedmine(StatusRedmine.BacklogNovo);
             ViewBag.SelectStatusRedminePara = GetSelectStatusRedmine(StatusRedmine.BacklogAberto);
             GetSelectTipoChamado(null, true);

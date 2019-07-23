@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<SonarQubeAnalysisProperties  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <Property Name="sonar.host.url">http://sonar.example.com:9000</Property>
+  <Property Name="sonar.login">9322c582a261bbae2d211397cba5608258e033b4</Property>
+  <Property Name="sonar.exclusions">.git/**/*,**/*.js,**/*.html,**/*.cshtml,**/*.xml,**/*.sql,**/*.css,**/*.map,bootstrap/**/*,config/*,bin/**/*,packages/**/*,/ComprasNet/Client Scripts/**/*,/ComprasNet/Content/**/*,/ComprasNet/fonts/**/*,/ComprasNet/Scripts/**/*,ReverserEngineer/**/*,**/obj/Debug/**/*,**/obj/Release/**/*</Property>
+  <Property Name="sonar.javascript.globals"></Property>
+</SonarQubeAnalysisProperties>
