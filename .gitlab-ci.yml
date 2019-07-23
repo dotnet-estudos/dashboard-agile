@@ -40,7 +40,7 @@ sonar:
     - run-sonar-no-test.bat  
 
 deploy:
-  - stage: deploy-homologacao
+  stage: deploy-homologacao
   tags:
     - windows
   only:    
