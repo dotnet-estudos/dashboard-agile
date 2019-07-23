@@ -2,7 +2,8 @@ stages:
   - build
   - test
   - sonar
-  - deploy
+  - deploy-homologacao
+  - deploy-producao
 
 cache:
    key: default
@@ -37,6 +38,16 @@ sonar:
     
   script:    
     - run-sonar-no-test.bat  
+
+deploy:
+  - stage: deploy-homologacao
+  tags:
+    - windows
+  only:    
+    - develop
+  script:    
+    - msbuild \DashBoardAgil.DashBoardApi\DashBoardAgil.DashBoardApi.csproj /p:DeployOnBuild=true /p:Password=$DEPLOY_PASSWORD /p:PublishProfile=hml /p:VisualStudioVersion=11.0
+
 
 
 
