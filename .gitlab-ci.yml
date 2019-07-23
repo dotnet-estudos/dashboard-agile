@@ -1,27 +1,28 @@
 stages:
   - build
-  - quality
+  - test
   - sonar
-  - sonar-front-end
+  - deploy
 
 cache:
    key: default
    paths:
-    - \packages
+    - \packages\
 
 build:
   stage: build
   tags:
     - windows
   only:    
-    - projeto/CadastroFornecedores/develop
+    - develop
+    - master
 
   script:
     - .nuget\NuGet.exe restore
     - msbuild  /m /t:Rebuild /nodereuse:false
 
 quality:
-  stage: quality
+  stage: test
   tags:
     - windows
   script: echo 'not implemented'
@@ -31,24 +32,13 @@ sonar:
   tags:
     - windows
   only:    
-    - projeto/CadastroFornecedores/develop    
-
+    - develop
+    - master
+    
   script:    
-    - run-sonar-no-test.bat   
+    - run-sonar-no-test.bat  
 
-sonar-front:
-  stage: sonar-front-end
-  tags:
-    - linux
-  image: ciricihq/gitlab-sonar-scanner
-  only:
-    - projeto/CadastroFornecedores/develop
-  
-  variables:
-    SONAR_URL: $SONAR_URL
-    SONAR_ANALYSIS_MODE: publish
-  script:
-  - cd CadastroFornecedorCliente
-  - gitlab-sonar-scanner -Dsonar.login=$SONAR_KEY
+
+
 
 
