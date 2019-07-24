@@ -67,7 +67,11 @@ var dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sab
 var dayNomeShort = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 
 Number.prototype.padLeft = function (n, str) {
-    return Array(n - String(this).length + 1).join(str || '0') + this;
+    if (n && str) {
+        return Array(n - String(this).length + 1).join(str || '0') + this
+    } else {
+        return this;
+    };
 }
 
 function renderDatatable(table) {

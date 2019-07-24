@@ -42,18 +42,18 @@
 
 <script type="text/javascript">
 
-    //var dataIni = (new Date).getFullYear() + '-01-01';
-   // var dataFim = (new Date).getFullYear() + '-' + (parseInt((new Date).getMonth() + 1)).padLeft(2) + '-' + ((new Date).getDate()).padLeft(2);
+    var dataIni = (new Date).getFullYear() + '-01-01';
+    var dataFim = (new Date).getFullYear() + '-' + (parseInt((new Date).getMonth() + 1)).padLeft(2) + '-' + ((new Date).getDate()).padLeft(2);
 
     $(document).ready(function () {
 
         $(".iniDate").each(function () {
-            //$(this).prop("min", dataIni);
-            //$(this).prop("max", dataFim);
+            $(this).prop("min", dataIni);
+            $(this).prop("max", dataFim);
         });
 
-        //$("#dateIni").prop("value",dataIni);
-        //$("#dateFim").prop("value",dataFim);
+        $("#dateIni").prop("value",dataIni);
+        $("#dateFim").prop("value",dataFim);
 
     });
 </script>
