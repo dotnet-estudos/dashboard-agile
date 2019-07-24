@@ -333,6 +333,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <None Include="Properties\PublishProfiles\hml.pubxml" />
+    <None Include="Properties\PublishProfiles\hml_system.pubxml" />
     <None Include="Properties\PublishProfiles\prd.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\DashBoard.js" />
