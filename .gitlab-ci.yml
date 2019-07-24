@@ -47,8 +47,9 @@ deploy:
     - develop
   script:
     - .nuget\NuGet.exe restore
-    - msbuild  /m /t:Rebuild /nodereuse:false    
-    - msbuild \DashBoardAgil.DashBoardApi\DashBoardAgil.DashBoardApi.csproj /p:DeployOnBuild=true /p:Password=$DEPLOY_PASSWORD /p:PublishProfile=hml /p:VisualStudioVersion=11.0
+    - msbuild  /m /t:Rebuild /nodereuse:false 
+    - cd DashBoardAgil.DashBoardApi
+    - msbuild DashBoardAgil.DashBoardApi.csproj /p:DeployOnBuild=true /p:Password=$DEPLOY_PASSWORD /p:PublishProfile=hml /p:VisualStudioVersion=11.0
 
 
 
