@@ -145,7 +145,7 @@
             weeks.push(tempWeek);
       }
 
-      //console.log("numDays", numDays);
+      console.log("numDays", numDays);
 
       return weeks;
     }
@@ -367,8 +367,8 @@
                     colLeft--;
                   }
 
-                  //console.log("newArrCol", newArrCol);
-                  //console.log("colLeft", colLeft);
+                  console.log("newArrCol", newArrCol);
+                  console.log("colLeft", colLeft);
             }
 
             return newArr;
@@ -391,17 +391,17 @@
                 for (var j = 0; j < dates[i].length; j++) {
                       string += dates[i][j] + " ";
                 }
-                //console.log(i + " => " + string);
+                console.log(i + " => " + string);
           }
 
-          //console.log("--------------------------------");
+          console.log("--------------------------------");
           dates = sortingBySelectedDay(dates, m, y);
           for (var i = 0; i < dates.length; i++) {
                 var string = "";
                 for (var j = 0; j < dates[i].length; j++) {
                       string += dates[i][j] + " ";
                 }
-                //console.log(i + " => " + string);
+                console.log(i + " => " + string);
           }
 
           // get month name
@@ -412,7 +412,7 @@
 
           // create header label
           var headerGroup = $("<div id='dncalendar-header' class='dncalendar-header'></div>");
-          headerGroup.append("<h2>"+ headerMonth +" "+ y +"</h2>");
+          headerGroup.append("<h2>"+ headerMonth + "</h2>"  + "<h5>"+ y +"</h5>" );
 
           // determine prev link as false
           var prevInactive = false;
@@ -448,8 +448,8 @@
 
           // create link group
           var calendarLinksGroup = $("<div id='dncalendar-links' class='dncalendar-links'></div>");
-          var prevLinkGroup = $("<div id='dncalendar-prev-month' class='dncalendar-prev-month'></div>");
-          var nextLinkGroup = $("<div id='dncalendar-next-month' class='dncalendar-next-month'></div>");
+          var prevLinkGroup = $("<div id='dncalendar-prev-month' class='triangle-right'> </div>");
+          var nextLinkGroup = $("<div id='dncalendar-next-month' class='triangle-left'></div>");
 
           // disable prev link
           if (prevInactive) {
@@ -497,7 +497,7 @@
 
                 weekNamesHasAlreadySorted = true
           }
-          //console.log("week after", weekName);
+          console.log("week after", weekName);
 
           var sundayIndex = (dayIndex == 0) ? 0 : 7 - dayIndex;
           var saturdayIndex = 6 - dayIndex; 
@@ -512,7 +512,7 @@
 
           var tableBodyGroup = $("<tbody></tbody>");
           var totalWeeks = weekCount(y, m + 1);
-          //console.log("totalWeeks", totalWeeks);
+          console.log("totalWeeks", totalWeeks);
           var totalDaysInWeeks = 7;
           var startDate = 1;
 
@@ -550,8 +550,8 @@
           var sundayIndex = (dayIndex == 0) ? 0 : 7 - dayIndex;
           var saturdayIndex = (dayIndex == 0) ? 7 - 1 : 7 - (dayIndex + 1);
 
-          //console.log("sundayIndex", sundayIndex);
-          //console.log("saturdayIndex", saturdayIndex);
+          console.log("sundayIndex", sundayIndex);
+          console.log("saturdayIndex", saturdayIndex);
 
           var nDates = dates.length;
           for (var i = 0; i < nDates; i++) {
@@ -644,7 +644,7 @@
           if (settings.showNotes) {
                 var notes = getNotesThisMonth();
                 var notesLength = notes.length;
-
+				console.log(notes);
                 if (notesLength > 0) {
                       notesGroup = $("<ul class='dncalendar-note-list'></ul>");
 
@@ -690,7 +690,6 @@
           for (var i = 0; i < notesLength; i++) {
                 var dateNote = settings.notes[i].date.split('-');
                 var nDate = new Date(dateNote[0], dateNote[1] - 1, dateNote[2]);
-
                 if ( nDate.getFullYear() == date.getFullYear() && nDate.getMonth() == date.getMonth() && nDate.getDate() == date.getDate() ) {
                       return true;
                 }
@@ -714,10 +713,12 @@
                       result.push(temp);
                 }
           }
-
+	
           return result;
     }
 
+		
+		
 		var nextMonth = function() {
 			var firstDateOfNextMonth = new Date(currDate.getFullYear(), currDate.getMonth() + 1, 1); // get fist day of next month
 			var date = firstDateOfNextMonth.getDate();
@@ -788,6 +789,19 @@
 	}
 
   // plugin defaults 
+  $.fn.insertAlert = function (day){
+			var text = "";
+			var notes = getNotesThisMonth()
+			for(var i =0;i < notes.length ; i++){
+				if (i.date = day) {
+					for(var j = 0; j < i.notes.length ;j++){
+						text += i.notes[j] + "<br>";
+					}
+				}
+			}
+			alert(text);
+		}
+		
   $.fn.dnCalendar.defaults = { 
         monthNames: [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ], 
         monthNamesShort: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dec' ],
@@ -798,6 +812,7 @@
         showNotes: false,
         startWeek: 'sunday',
         dayClick: function(date, view) {}
+		
   }; 
 
-} ( jQuery ));
+ }(jQuery));

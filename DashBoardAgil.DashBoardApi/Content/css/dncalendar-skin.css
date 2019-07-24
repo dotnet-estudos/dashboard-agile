@@ -3,16 +3,37 @@
 }
 
 .dncalendar-header {
-	margin: 20px 0;
-    position: relative;
+    position: sticky;
+	padding: 4px;
+	width: 46%;
+	margin: 140px auto 0 auto;	
 }
 
-.dncalendar-header h2 {
-	color: #434343;
-    font-size: 20px;
-    line-height: 1;
+.dncalendar-header h2{
+    color: #FFfF;
+    font-size: 25px;
+    line-height: 2;
     text-align: center;
+    width: 224%;
+    margin-left: -61.5%;
+    background: #ef4f69;
+    margin-bottom: -19px;
+    border-radius: 5px;
+    margin-top: -129px;
+	
 }
+.dncalendar-header h5{
+    color: #FFfF;
+    font-size: 15px;
+    line-height: 2;
+    text-align: center;
+    width: 224%;
+    margin-left: -61.5%;
+    background: #ef4f69;
+    margin-bottom: 0;
+
+}
+
 
 .dncalendar-header .dncalendar-links {
 	height: 19px;
@@ -31,29 +52,39 @@
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
-.dncalendar-header .dncalendar-links .dncalendar-next-month {
-	position: absolute;
-    right: -6px;
-    background: url('../img/arrow.png') no-repeat -111px 0px;
-    background-size: 148px 31px;
+.dncalendar-header .dncalendar-links .triangle-right  {
+    border-top: 22px solid transparent;
+    border-right: 30px solid #F7FEFF;
+    border-bottom: 17px solid transparent;
+    margin-top: -120px;
+    margin-left: -59%;
+ 
+	
 }
 
-.dncalendar-header .dncalendar-links .dncalendar-prev-month {
-	position: absolute;
-    left: 10px;
-    background: url('../img/arrow.png') no-repeat 0px 0px;
-    background-size: 148px 31px;
+.dncalendar-header .dncalendar-links .triangle-left {
+    border-top: 17px solid transparent;
+    border-left: 34px solid #F7FEFF;
+    border-bottom: 17px solid transparent;
+    margin: -10% 0 auto 91%;
+    margin-left: 144%;
+
 }
 
 .dncalendar-body {
-	margin: 0 0 10px;
+	margin: -63px auto 0;
+    background-color: whitesmoke;
+    width: 100.5%;
+    padding: 3%;
 }
 
 .dncalendar-body table {
-	width: 100%;
-    text-align: center;
-    border-collapse: collapse;
-    font-size: 15px;
+	width: 91%;
+    border-collapse: inherit;
+    font-size: 24px;
+	margin: auto;
+
+
 }
 
 .dncalendar-body table th, td {
@@ -61,16 +92,15 @@
 	margin: 0;
     padding: 0;
     border: 0;
-    font-size: 100%;
     font: inherit;
-    vertical-align: baseline;
 }
 
 .dncalendar-body thead td {
-	color: #727272;
+	color: #ef4f69;
     font-size: 11px;
     text-transform: uppercase;
-    padding: 10px 0;
+    padding: 10px 0	;
+	font-weight: bold;
 }
 
 .dncalendar-body tbody tr td {
@@ -87,13 +117,14 @@
 }
 
 .dncalendar-body tbody td.calendarClick {
-	color: #434343;
-	background: #fff;
+	color: #686a6e;
+	background: #FFF;
 }
 	
 .dncalendar-body tbody td .entry {
 	padding: 11px 0 13px;
 	position: relative
+	border-left: ridge;
 }
 
 .dncalendar-body tbody td.calendarClick:active {
@@ -181,7 +212,8 @@
 	margin-left: 4.5%;
 	margin-bottom: 20px;
 	padding: 0;
-	color: #999
+	color: #999;
+	display: none;
 }
 
 .dncalendar-note-list .date {
