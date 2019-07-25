@@ -116,14 +116,28 @@ function renderCalendar(div, notes, ini, fim) {
         //]
         ,
         showNotes: true,
-        startWeek: 'sunday',
+        startWeek: 'monday',
         dayClick: function (date, view) {
-            //alert(date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear());
+         console.log(date.getDate());
+            getCalendarNote(date.getDate());
         }
+
+
     });
 
     // init calendar
     my_calendar.build();
+
+    function getCalendarNote(day) {
+        notes = $(".dncalendar-note-list .date");
+        for (var i = 0; i < notes.length; i++) {
+            console.log(notes[i].firstChild.innerText);
+            if (day == notes[i].firstChild.innerText) {
+                alert(notes[i].lastChild.data)
+                break;
+            }
+        }
+    }
 
 }
 
