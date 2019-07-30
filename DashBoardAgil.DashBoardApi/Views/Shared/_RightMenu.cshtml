@@ -1,7 +1,7 @@
 ﻿@using Redmine.Net.Api.Types
 @{
     var user = (User)ViewBag.User;//.FirstName
-    var AbleToShowConfig = (bool)ViewBag.AbleToShowConfig;
+    var AbleToShowConfig = (bool)(ViewBag.AbleToShowConfig??false);
 }
 
 <ul class="nav navbar-right navbar-top-links">

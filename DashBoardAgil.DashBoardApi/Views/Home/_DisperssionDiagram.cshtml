@@ -4,8 +4,8 @@
 
 
 @*<script src="~/Scripts/js/highchart7/highcharts.js"></script>*@
-<script src="~/Scripts/js/highchart7/modules/exporting.js"></script>
-<script src="~/Scripts/js/highchart7/modules/export-data.js"></script>
+@*<script src="~/Scripts/js/highchart7/modules/exporting.js"></script>
+<script src="~/Scripts/js/highchart7/modules/export-data.js"></script>*@
 
 <div id="_CountAvarage" class="col-lg-12">
     <div class="form-group col-lg-1">
@@ -26,7 +26,11 @@
     </div>
     <div class="form-group col-lg-1">
         <label>Cancelados:</label><br/>
-        <input type="checkbox" class="form-control col-2 lockable searchble" id="IssueCanceled" checked="true" />
+        <input type="checkbox" class="form-control col-2 lockable searchble" id="IssueCanceled" checked="true"/>
+    </div>
+    <div class="form-group col-lg-1">
+        <label>Programadas:</label><br />
+        <input type="checkbox" class="form-control col-2 lockable searchble" id="IssueScheduled" />
     </div>
     
 </div>
@@ -81,6 +85,12 @@
             LimparTela();
             LoadDisperssion($("#time").val());
         });
+
+        $('#IssueScheduled').change(function () {
+            LimparTela();
+            LoadDisperssion($("#time").val());
+        });
+
         function LoadDisperssion(time, div) {
 
             var data = new Object();
@@ -95,6 +105,7 @@
             data.quantidadeSaltos = $("#qtdSaltos").val();
             data.leadTime = true;
             data.issueCanceled = $('#IssueCanceled').prop('checked');
+            data.issueCanceled = $('#IssueScheduled').prop('checked');
 
 
 

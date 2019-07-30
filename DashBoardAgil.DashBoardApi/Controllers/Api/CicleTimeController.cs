@@ -17,7 +17,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
     public class CicleTimeController : BaseApiController
     {
        [CacheOutput(ServerTimeSpan = 1 * (60*60))]
-        public Object Get(string time, DateTime? dataIni, DateTime? dataFim,  StatusRedmine statusDe, StatusRedmine statusPara, TipoChamadoRedmine? tipoChamado=null, PrioridadeRedmine? prioridade=null, int primeiroSalto=5, int quantidadeSaltos = 10, bool leadTime =false, bool issueCanceled = true)
+        public Object Get(string time, DateTime? dataIni, DateTime? dataFim,  StatusRedmine statusDe, StatusRedmine statusPara, TipoChamadoRedmine? tipoChamado=null, PrioridadeRedmine? prioridade=null, int primeiroSalto=5, int quantidadeSaltos = 10, bool leadTime =false, bool issueCanceled = true, bool  programada=false)
         {
             var parm = new NameValueCollection(_defaultTipoChamados);
 
@@ -53,6 +53,11 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             {
                 parm.Add(RedmineKeys.PRIORITY_ID, String.Format("{0}", prioridade.GetDisplayName()));
             }
+            else if (!programada)
+            {
+                parm.Add(new NameValueCollection { { RedmineKeys.PRIORITY, Global.Instance.ConcatenarLista("|", _lsitPrioridae.Where(x => !x.Equals(PrioridadeRedmine.Programada.GetHashCode().ToString())).ToList()) } });
+            }
+
             if (!time.IsNullOrWhiteSpace())
             {
                 parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", time));

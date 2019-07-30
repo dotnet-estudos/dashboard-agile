@@ -27,6 +27,8 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         protected RedmineManager _Redmine = null;
         protected IRedmineService _RedmineService = null;
         protected NameValueCollection _defaultTipoChamados = null;
+        protected NameValueCollection _defaultPrioridade { get; set; }
+        protected List<string> _lsitPrioridae { get; set; }
         protected Usuario _user = null;
 
         public BaseApiController()
@@ -64,6 +66,15 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             };
             var lststr = lsitTipo.Select(x => x.Id.ToString()).ToList();
             _defaultTipoChamados = new NameValueCollection { {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)} };
+
+            var lststrPrt = from PrioridadeRedmine e in Enum.GetValues(typeof(PrioridadeRedmine))
+                           select new
+                           {
+                               Id = e.GetHashCode(),
+                               Nome = e.ToString()
+                           };
+            _lsitPrioridae = lststrPrt.Select(x => x.Id.ToString()).ToList();
+            _defaultPrioridade = new NameValueCollection { { RedmineKeys.PRIORITY, Global.Instance.ConcatenarLista("|", _lsitPrioridae) } };
 
         }
 

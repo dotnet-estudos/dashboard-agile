@@ -199,7 +199,16 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             base.OnActionExecuting(filterContext);
 
         }
-        
 
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            Debugar.WriteLine(String.Format("[Error]:[Controller: {0}][ExceptionType:{1} ][ErrorMessage: {2}][Inner:{3}] ",
+                filterContext.Controller?.ToString()??"",
+                filterContext.Exception?.ToString()??"",
+                filterContext.Exception?.Message ?? "",
+                filterContext.Exception?.InnerException?.Message?? ""
+                ), "OnException");
+            base.OnException(filterContext);
+        }
     }
 }
