@@ -124,13 +124,13 @@
                 success: function (datas) {
                     if (datas != null) {
                         if (!div) {
-                            renderDispersionDiagram('_DisperssionDiagram', 'Gráfico de Dispersão do time: ' + time, 'Source: redmine.example.com | Year: 2019', datas.GeneralAverageDays, datas.ByProjectWeek, (new Date).getFullYear());
+                            renderDispersionDiagram('_DisperssionDiagram', 'Gráfico de Dispersão do time: ' + time, 'Source: redmine.example.com | Year: 2019', datas.GeneralAverageDays, datas.GeneralMedianaDays, datas.ByProjectWeek, (new Date).getFullYear());
                             //function renderTaleDiagram(div, _title, _subtitle, _titleBarra, _TitleLine,_year, _avarage, _Categoria, _serieBarra, _SerieLine ) {
                             renderTaleDiagram('_CountAvarageData', 'Gráfico de Calda do Time: ' + time, 'Source: redmine.example.com | Year: ' + (new Date).getFullYear(), 'Chamado', 'Media', (new Date).getFullYear(), datas.GeneralAverageDays, datas.RangeString, datas.ByRange.ArrayCount, datas.ByRange.ArrayPercent);
                         } else {
                             switch (div) {
                                 case divDispersao:
-                                    renderDispersionDiagram(divDispersao, 'Gráfico de Dispersão do time: ' + time, subTitle, datas.GeneralAverageDays, datas.ByProjectWeek, (new Date).getFullYear());
+                                    renderDispersionDiagram(divDispersao, 'Gráfico de Dispersão do time: ' + time, subTitle, datas.GeneralAverageDays, datas.GeneralMedianaDays, datas.ByProjectWeek, (new Date).getFullYear());
                                     break;
                                 case divCountAvarage:
                                     renderTaleDiagram(divCountAvarage, 'Gráfico de Calda do Time: ' + time, subTitle, 'Chamado', 'Media', (new Date).getFullYear(), datas.GeneralAverageDays, datas.RangeString, datas.ByRange.ArrayCount, datas.ByRange.ArrayPercent);

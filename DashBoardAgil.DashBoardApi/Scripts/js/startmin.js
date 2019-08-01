@@ -216,7 +216,7 @@ function dateFromDay(year, day) {
     return GetFormattedDate(new Date(date.setDate(day))); // add the number of days
 }
 
-function renderDispersionDiagram(div, _title, _subtitle, _avarage, _serie, _year) {
+function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMediana, _serie, _year) {
     
 
     Highcharts.chart(div, {
@@ -255,6 +255,7 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage, _serie, _year
                 value: parseInt(_avarage),
                 label: {
                     rotation: 0,
+                    align: 'left',
                     y: 15,
                     style: {
                         fontStyle: 'italic',
@@ -263,7 +264,25 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage, _serie, _year
                     text: 'Lead Time Médio: ' + _avarage
                 },
                 zIndex: 1000
-            }]
+            },
+            {
+                color: 'purple',
+                dashStyle: 'line', //dot, line
+                width: 2,
+                value: parseInt(_avarageMediana),
+                label: {
+                    rotation: 0,
+                    align: 'right',
+                    y: 15,
+                    style: {
+                        fontStyle: 'italic',
+                        color: 'purple'
+                    },
+                    text: 'Mediana: ' + _avarageMediana
+                },
+                zIndex: 1000
+            }
+            ]
         },
         legend: {
             layout: 'vertical',
