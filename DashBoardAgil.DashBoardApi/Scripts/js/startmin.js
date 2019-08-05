@@ -219,7 +219,15 @@ function dateFromDay(year, day) {
 }
 
 function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMediana, _serie, _year) {
-    
+
+    var yValueAvarage = 15;
+    var yValueAvarageMediana = 15;
+
+    if (_avarage > _avarageMediana) {
+        yValueAvarage = (yValueAvarage-10) * -1;
+    } else {
+        yValueAvarageMediana = (yValueAvarageMediana-10) * -1;
+    }
 
     Highcharts.chart(div, {
         chart: {
@@ -258,7 +266,7 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMedian
                 label: {
                     rotation: 0,
                     align: 'left',
-                    y: 15,
+                    y: yValueAvarage,
                     style: {
                         fontStyle: 'italic',
                         color: 'blue'
@@ -275,7 +283,8 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMedian
                 label: {
                     rotation: 0,
                     align: 'right',
-                    y: 15,
+                    y: yValueAvarageMediana,
+                    x: -15,
                     style: {
                         fontStyle: 'italic',
                         color: 'purple'
