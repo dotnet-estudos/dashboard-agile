@@ -54,7 +54,9 @@ $(function() {
 function chartSizeble() {
    
     $(".chartSizeble").each(function () {
-        $(this).highcharts().reflow();
+        if ($(this).highcharts()) {
+            $(this).highcharts().reflow();
+        }
     });
 }
 
