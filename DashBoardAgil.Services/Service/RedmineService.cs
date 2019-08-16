@@ -542,6 +542,8 @@ namespace DashBoardAgil.Services.Service
                 var dateStatusDe = leadTime ? chamado.CreatedOn : GetDateByStatus(chamado, statusDe);
                 var dateStatusPara = leadTime ? chamado.ClosedOn : GetDateByStatus(chamado, statusPara);
 
+               // dateStatusPara = dateStatusPara?? GetDateByStatus(chamado, StatusRedmine.ProducaoAvaliar);
+
                 if (dateStatusDe != null)
                 {
                     if (dateStatusPara != null)
@@ -573,10 +575,10 @@ namespace DashBoardAgil.Services.Service
 
             });
 
-            var LeadsControl = new LeadTimeControl(primeiroSalto, quantidadeSaltos, chamados);
+            var LeadsControl = new LeadTimeControl(primeiroSalto, quantidadeSaltos);
             LeadsControl.LeadTimes = LeadsTimes.ToList();
-
-
+            LeadsControl.UniversoChamados = chamados;
+            //var max = LeadsTimes.Max(x=>x.LeadBrutoDays);
 
             return LeadsControl;
         }
@@ -613,8 +615,8 @@ namespace DashBoardAgil.Services.Service
             throughputControl.Throughputs.Add(new Throughput()
             {
                 IdChamado = x.Id,
-                ClosedOn = (DateTime)x.CreatedOn,
-                CreatedOn = (DateTime)x.ClosedOn,
+                ClosedOn = (DateTime)x.ClosedOn,
+                CreatedOn = (DateTime)x.CreatedOn,
                 Prioridade = (PrioridadeRedmine)x.Priority.Id,
                 Projeto = x.Project.Name,
                 Tipo = (TipoChamadoRedmine)x.Tracker.Id,

@@ -14,14 +14,17 @@ namespace DashBoardAgil.Services.Domain
         public ThroughputControl()
         {
             Throughputs = new List<Throughput>();
+            //this.WeekList = new List<int>();
         }
 
         public DateTime? DataIni { get; set; }
         public DateTime? DataFim { get; set; }
         public List<Throughput> Throughputs { get; set; }
-        public int TotalDias => int.Parse(((TimeSpan) (Throughputs.Max(x => x.ClosedOn) - Throughputs.Min(x => x.ClosedOn))).TotalDays.ToString("####"));
+        public int TotalDias => Throughputs.Count>0? int.Parse(((TimeSpan) (Throughputs.Max(x => x.ClosedOn) - Throughputs.Min(x => x.ClosedOn))).TotalDays.ToString("####")): 0;
         public int TotalChamados => Throughputs.Count;
+        public List<int> WeekList => CrossCutting.Util.GetWeekList(DataIni ?? new DateTime(DateTime.Now.Year, 1, 1), DataFim ?? DateTime.Now.Date);
         public string Throughput => string.Format("{0:##.##}", double.Parse(this.TotalChamados.ToString())/double.Parse(this.TotalDias.ToString()));
+        public string ThroughputWeek => string.Format("{0:##.##}", double.Parse(this.TotalChamados.ToString()) / double.Parse(this.WeekList.Count.ToString()));
         public object ByDay
         {
             get
@@ -55,7 +58,7 @@ namespace DashBoardAgil.Services.Domain
             {
                 var retorno = new List<object>();
 
-                var week = CrossCutting.Util.GetWeekList(DataIni?? new DateTime(DateTime.Now.Year, 1, 1), DataFim?? DateTime.Now.Date);
+                var week = WeekList;
 
                 var tipoChamado = from TipoChamadoRedmine e in Enum.GetValues(typeof(TipoChamadoRedmine))
                                    select new
@@ -85,7 +88,6 @@ namespace DashBoardAgil.Services.Domain
                 return retorno;
             }
         }
-
         public List<object> ByVersion
         {
             get

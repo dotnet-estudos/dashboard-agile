@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Linq;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Services.Enums;
 using DashBoardAgil.Services.Extensions;
 using DashBoardAgil.Services.Interfaces.Abstracoes;
@@ -16,57 +18,30 @@ namespace DashBoardAgil.Services.Domain
 {
     public class LeadTimeControl
     {
-        public LeadTimeControl(int primeiroSalto = 5, int quantidadeSalto = 10, List<Issue> universo = null)
+        public LeadTimeControl(int primeiroSalto = 5, int quantidadeSalto = 10)
         {
             this.LeadTimes = new List<LeadTime>();
             this.PrimeiroSalto = primeiroSalto;
             this.QuantidadeSaltos = quantidadeSalto;
 
-            #region teste
-            if (universo != null)
-            {
-                UniversoChamados = new List<LeadTime>();
-                universo.ForEach(x=>
-                {
-                    var lead = new LeadTime()
-                    {
-                        IdChamado = x.Id,
-                        Tipo = (TipoChamadoRedmine)x.Tracker.Id,
-                        Prioridade = (PrioridadeRedmine)x.Priority.Id,
-                        //LeadDiaUtil = ((DateTime)dateStatusPara).Diferenca((DateTime)dateStatusDe, TipoContagem.Dia, true),
-                        Projeto = x.Project.Name,
-                        CreatedOn = (DateTime)x.CreatedOn,
-                        // ClosedOn = (DateTime) chamado.ClosedOn,
-                        Versao = CrossCutting.Util.ReflectObjec(x.FixedVersion, new IdentificableName()),
-                        Status = CrossCutting.Util.ReflectObjec(x.Status, new IdentificableName())
-
-                        //Tempo = (int)((DateTime)dateStatusDe).Diferenca((DateTime)dateStatusPara, TipoContagem.Hora, true)  
-                    };
-                    if (x.ClosedOn != null) lead.ClosedOn = (DateTime)x.ClosedOn;
-
-                    UniversoChamados.Add(lead);
-                });
-            }
-            #endregion
-
         }
 
         private int PrimeiroSalto { get; }
         private int QuantidadeSaltos { get; }
-        public List<LeadTime> UniversoChamados { get; set; }
+        public List<Issue> UniversoChamados { get; set; }
         public List<LeadTime> LeadTimes { get; set; }
         public int TotalChamados => LeadTimes.Count();
         private double TotalChamadosDouble => Double.Parse(this.TotalChamados.ToString());
         public double GeneralAverageHours => Math.Round(LeadTimes.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero);
-        public double GeneralMedianaHours => Math.Round(LeadTimes.Select(x => new {x.LeadBruto}).OrderBy(x=>x.LeadBruto).Skip(LeadTimes.Count()/2).First().LeadBruto, 2, MidpointRounding.AwayFromZero);
-        public double GeneralAverageDays => Math.Round((GeneralAverageHours/24), 2, MidpointRounding.AwayFromZero);
+        public double GeneralMedianaHours => Math.Round(LeadTimes.Select(x => new { x.LeadBruto }).OrderBy(x => x.LeadBruto).Skip(LeadTimes.Count() / 2).First().LeadBruto, 2, MidpointRounding.AwayFromZero);
+        public double GeneralAverageDays => Math.Round((GeneralAverageHours / 24), 2, MidpointRounding.AwayFromZero);
         public double GeneralMedianaDays => Math.Round((GeneralMedianaHours / 24), 2, MidpointRounding.AwayFromZero);
         public string GeneralAverageDaysString => TimeSpan.FromHours(GeneralAverageHours).ToString(@"dd\.hh\:mm\:ss");
         public string GeneralMedianaDaysString => TimeSpan.FromHours(GeneralMedianaHours).ToString(@"dd\.hh\:mm\:ss");
         public double GeneralAverageHoursUtil => Math.Round(LeadTimes.Average(x => x.LeadUtil), 2, MidpointRounding.AwayFromZero);
-        public double GeneralAverageDaysUtil => Math.Round(GeneralAverageHoursUtil/7.2, 2, MidpointRounding.AwayFromZero);
+        public double GeneralAverageDaysUtil => Math.Round(GeneralAverageHoursUtil / 7.2, 2, MidpointRounding.AwayFromZero);
         public string GeneralAverageDaysUtilString => TimeSpan.FromHours(GeneralAverageHoursUtil).ToString(@"dd\.hh\:mm\:ss");
-        public double GeneralMedianaHoursUtil => Math.Round(LeadTimes.Select(x => new { x.LeadUtil}).OrderBy(x => x.LeadUtil).Skip(LeadTimes.Count() / 2).First().LeadUtil, 2, MidpointRounding.AwayFromZero);
+        public double GeneralMedianaHoursUtil => Math.Round(LeadTimes.Select(x => new { x.LeadUtil }).OrderBy(x => x.LeadUtil).Skip(LeadTimes.Count() / 2).First().LeadUtil, 2, MidpointRounding.AwayFromZero);
         public double GeneralMedianaDaysUtil => Math.Round(GeneralMedianaHoursUtil / 7.2, 2, MidpointRounding.AwayFromZero);
         public string GeneralMedianaDaysUtilString => TimeSpan.FromHours(GeneralMedianaHoursUtil).ToString(@"dd\.hh\:mm\:ss");
         public int[] Range => CrossCutting.Util.GerarArraySalto(this.PrimeiroSalto, this.QuantidadeSaltos);
@@ -79,26 +54,26 @@ namespace DashBoardAgil.Services.Domain
                 var ret = new List<string>();
                 rang.ToList().ForEach(x =>
                 {
-                    ret.Add(string.Format("{0}",x));
+                    ret.Add(string.Format("{0}", x));
                 });
 
-                ret.RemoveAt(ret.Count-1);
+                ret.RemoveAt(ret.Count - 1);
                 ret.Add(string.Format("{0}+", last));
 
                 return ret.ToArray();
 
             }
-           
+
         }
         public object ByLead
         {
             get
             {
                 var leeds = from lead in LeadTimes
-                    orderby lead.Tempo
-                    group lead by Math.Round(lead.LeadBrutoDays, 2, MidpointRounding.AwayFromZero)
+                            orderby lead.Tempo
+                            group lead by Math.Round(lead.LeadBrutoDays, 2, MidpointRounding.AwayFromZero)
                     into temp
-                    select new {Tempo = temp.Key, Quantidade = temp.Count(), Percent = (temp.Count() / TotalChamadosDouble).ToString("P") };
+                            select new { Tempo = temp.Key, Quantidade = temp.Count(), Percent = (temp.Count() / TotalChamadosDouble).ToString("P") };
 
 
                 return leeds;
@@ -128,7 +103,7 @@ namespace DashBoardAgil.Services.Domain
                                 )
                             );
 
-                        var percent = Math.Round((Count/TotalChamadosDouble)*100, 2, MidpointRounding.ToEven);
+                        var percent = Math.Round((Count / TotalChamadosDouble) * 100, 2, MidpointRounding.ToEven);
 
                         arrayCount.Add(Count);
                         arrayPercent.Add(percent);
@@ -136,14 +111,14 @@ namespace DashBoardAgil.Services.Domain
                         ret.Add(new
                         {
                             LeadBrutoDays = r,
-                            Count ,
+                            Count,
                             Percent = percent
                         });
 
 
                     });
 
-                return new {Range = ret, ArrayCount = arrayCount.ToArray(), ArrayPercent = arrayPercent.ToArray()};
+                return new { Range = ret, ArrayCount = arrayCount.ToArray(), ArrayPercent = arrayPercent.ToArray() };
             }
         }
         public object ByType
@@ -154,11 +129,14 @@ namespace DashBoardAgil.Services.Domain
                             orderby lead.IdChamado
                             group lead by lead.TipoString
                             into temp
-                            select new { Tipo = temp.Key,
-                                         Quantidade = temp.Count(),
-                                         Dias = TimeSpan.FromHours(Math.Round(temp.Average(x => x.LeadBruto) / 24, 2, MidpointRounding.AwayFromZero)).ToString(@"dd\.hh\:mm\:ss"),
-                                         LeadBruto = Math.Round(temp.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero),
-                                         Percent = (temp.Count()/TotalChamadosDouble).ToString("P")  };
+                            select new
+                            {
+                                Tipo = temp.Key,
+                                Quantidade = temp.Count(),
+                                Dias = TimeSpan.FromHours(Math.Round(temp.Average(x => x.LeadBruto) / 24, 2, MidpointRounding.AwayFromZero)).ToString(@"dd\.hh\:mm\:ss"),
+                                LeadBruto = Math.Round(temp.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero),
+                                Percent = (temp.Count() / TotalChamadosDouble).ToString("P")
+                            };
 
 
                 return leeds;
@@ -172,12 +150,14 @@ namespace DashBoardAgil.Services.Domain
                             orderby lead.IdChamado
                             group lead by lead.PrioridadeString
                     into temp
-                            select new { Prioridade = temp.Key,
-                                         Quantidade = temp.Count(),
-                                         Dias = TimeSpan.FromHours(Math.Round(temp.Average(x => x.LeadBruto) / 24, 2, MidpointRounding.AwayFromZero)).ToString(@"dd\.hh\:mm\:ss"),
-                                         LeadBruto = Math.Round(temp.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero),
-                                         Percent = (temp.Count() / TotalChamadosDouble).ToString("P")
-                                        };
+                            select new
+                            {
+                                Prioridade = temp.Key,
+                                Quantidade = temp.Count(),
+                                Dias = TimeSpan.FromHours(Math.Round(temp.Average(x => x.LeadBruto) / 24, 2, MidpointRounding.AwayFromZero)).ToString(@"dd\.hh\:mm\:ss"),
+                                LeadBruto = Math.Round(temp.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero),
+                                Percent = (temp.Count() / TotalChamadosDouble).ToString("P")
+                            };
 
 
                 return leeds;
@@ -189,7 +169,7 @@ namespace DashBoardAgil.Services.Domain
             {
                 var leeds = from lead in LeadTimes
                             orderby lead.IdChamado
-                            group lead by new { lead.PrioridadeString , lead.TipoString}
+                            group lead by new { lead.PrioridadeString, lead.TipoString }
                             into temp
                             select new
                             {
@@ -209,17 +189,54 @@ namespace DashBoardAgil.Services.Domain
             get
             {
                 var retorno = from lead in LeadTimes
-                    orderby lead.IdChamado
-                    group lead by new { lead.TipoString, lead.Tipo}
+                              orderby lead.IdChamado
+                              group lead by new { lead.TipoString, lead.Tipo }
                     into tipo
-                    select new
-                    {
-                        name = tipo.Key.TipoString,
-                        color = string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tipo.Key.Tipo, true)),
-                        data = tipo.Select(x => new {x= x.CreatedOn.DayOfYear, y= x.LeadBrutoDays, name= x.IdChamado })
-                    };
-                              
+                              select new
+                              {
+                                  name = tipo.Key.TipoString,
+                                  color = string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tipo.Key.Tipo, true)),
+                                  data = tipo.Select(x => new { x = x.CreatedOn.DayOfYear, y = x.LeadBrutoDays, name = x.IdChamado })
+                              };
+
                 return retorno;
+            }
+        }
+        public object ByLeadAnalyze
+        {
+            get
+            {
+
+                try
+                {
+                    var data = new List<object>
+                    {
+                        new {name = "Min", y = this.LeadTimes.Where(x => x.LeadBrutoDays > 0).Min(x => x.LeadBrutoDays), drilldown= ""},
+                        new {name = "Média", y = this.GeneralAverageDays, drilldown= ""},
+                         new {name = "Mediana", y = this.GeneralMedianaDays, drilldown= ""},
+                        new {name = "Percentil 75", y =  Math.Round(LeadTimes.Select(x => new { x.LeadBrutoDays }).OrderBy(x => x.LeadBrutoDays).Skip(Convert.ToInt32((LeadTimes.Count() * 0.75))).First().LeadBrutoDays, 2, MidpointRounding.AwayFromZero), drilldown = ""},
+                        new {name = "Percentil 90", y =  Math.Round(LeadTimes.Select(x => new { x.LeadBrutoDays }).OrderBy(x => x.LeadBrutoDays).Skip(Convert.ToInt32((LeadTimes.Count() * 0.9))).First().LeadBrutoDays, 2, MidpointRounding.AwayFromZero), drilldown = ""},
+                        new {name = "Max", y = this.LeadTimes.Max(x => x.LeadBrutoDays), drilldown= ""},
+
+
+                    };
+
+                    var serie = new
+                    {
+                        name = "Lead Time",
+                        colorByPoint = true,
+                        data = data.ToArray()
+                    };
+
+                    return new { series = new List<object> { serie }, drilldown = new { serie = new List<object>() } };
+                }
+                catch (Exception ex)
+                {
+                    Debugar.WriteLine(ex.Message, "LeadTimeControl.ByLeadAnalyze");
+                    return null;
+                }
+
+
             }
         }
     }
