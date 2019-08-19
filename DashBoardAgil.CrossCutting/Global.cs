@@ -228,17 +228,17 @@ namespace DashBoardAgil.CrossCutting
 
         public static T ReflectObjec<T>(object origem, T destino)
         {
-
-            foreach (var propertyIbj in origem.GetType()
-                .GetProperties()
-                .Where(
-                    x =>
-                        destino.GetType().GetProperty(x.Name) != null &&
-                        destino.GetType().GetProperty(x.Name).PropertyType.FullName == x.PropertyType.FullName))
+            if (origem != null)
             {
+                foreach (var propertyIbj in origem.GetType()
+                    .GetProperties().Where(x =>
+                        destino?.GetType().GetProperty(x.Name)  != null &&
+                        destino?.GetType().GetProperty(x.Name).PropertyType.FullName == x.PropertyType.FullName))
+                {
 
 
-                destino.GetType().GetProperty(propertyIbj.Name).SetValue(destino, propertyIbj.GetValue(origem));
+                    destino.GetType().GetProperty(propertyIbj.Name).SetValue(destino, propertyIbj.GetValue(origem));
+                }
             }
 
             return destino;

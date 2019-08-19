@@ -150,7 +150,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
                     leads.Add(new
                     {
-                        Team = string.Format("{0} - {1}", team.Id, team.Identifier),
+                        Team = team.ToString(),
                         dataIni = ((DateTime)data.dataIni).ToString("dd/MM/yyyy"),
                         dataFim = ((DateTime)data.dataFim).ToString("dd/MM/yyyy"),
                         CicleTimeDiaString = projectosAnalise.GeneralAverageDaysString,

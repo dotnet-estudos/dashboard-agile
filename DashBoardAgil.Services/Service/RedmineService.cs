@@ -740,7 +740,7 @@ namespace DashBoardAgil.Services.Service
             var retorno = new ConsumoHorasControl();
             var paramProj = new NameValueCollection { { RedmineKeys.ID, "todos" } };
             var projetcosRedmine = _manager.GetObjects<Project>(paramProj);
-            var projetoHoraContradata = projetcosRedmine.Where(x => x.Parent !=null && (x.CustomFields != null && x.CustomFields.Any(y => y.Id == 143 && y.Values != null && y.Values.Any(z => z.Info != ""))));
+            var projetoHoraContradata = projetcosRedmine.Where(x => (x.Parent !=null || GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Any(y=>y.Id.Equals(x.Id.ToString()))) && (x.CustomFields != null && x.CustomFields.Any(y => y.Id == 143 && y.Values != null && y.Values.Any(z => z.Info != ""))));
 
 
             if (time != null && !time.Equals("") )
@@ -748,7 +748,7 @@ namespace DashBoardAgil.Services.Service
             
                 GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x=> time.Equals("0") || x.Identifier.Equals(time)).ToList().ForEach(_time =>
                 {
-                    var listProjTime = projetoHoraContradata.Where(proj => (project==null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) &&   proj.Parent.Id.ToString().Equals(_time.Id)).Select(
+                    var listProjTime = projetoHoraContradata.Where(proj => (project==null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.Id.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.Id)??false))).Select(
                         pro =>
                             new Projeto()
                             {
