@@ -4,7 +4,7 @@
 
 
 @*<script src="~/Scripts/js/highchart7/highcharts.js"></script>*@
-<script src="~/Scripts/js/highchart7/modules/exporting.js"></script>
+@*<script src="~/Scripts/js/highchart7/modules/exporting.js"></script>*@
 
 
 
@@ -49,7 +49,7 @@
                 success: function (datas) {
                     if (datas != null) {
                         _time = time;
-                        renderRejectionThroughput(__divDados, 'Throughput X Rejeição do time: ' + time, 'Source: redmine.example.com | Year: 2019', datas.Categoria, datas.Serie, datas.Throughput.Throughput, datas.Rejeicao.RejectionsRate);
+                        renderRejectionThroughput(__divDados, 'Throughput X Rejeição do time: ' + time, 'Source: redmine.example.com | Year: 2019', datas.Categoria, datas.Serie, (datas.Throughput.ThroughputWeek ? datas.Throughput.ThroughputWeek : datas.Throughput.Throughput), (datas.Rejeicao.RejectionsRate ? datas.Rejeicao.RejectionsRate : datas.Rejeicao.RejectionsRateWeek));
                     }
                 }
 

@@ -55,9 +55,9 @@ namespace DashBoardAgil.CrossCutting
 
         public static Regex REGEX_VALIDA_EMAIL = new Regex(@"^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$");
 
-        public static string PATH_THROUGHPUT_REJECT_DIAGRAM = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp", "DashBoard", "ThrptReject");
+        public static string PATH_THROUGHPUT_REJECT_DIAGRAM => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp", "DashBoard", "ThrptReject", DateTime.Now.Date.ToString("yyyyMMdd"));
 
-        public static string PATH_CFD_DIAGRAM = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp", "DashBoard", "CFD");
+        public static string PATH_CFD_DIAGRAM => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp", "DashBoard", "CFD", DateTime.Now.Date.ToString("yyyyMMdd"));
 
         #endregion
     }

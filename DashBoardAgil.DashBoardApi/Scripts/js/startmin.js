@@ -54,7 +54,9 @@ $(function() {
 function chartSizeble() {
    
     $(".chartSizeble").each(function () {
-        $(this).highcharts().reflow();
+        if ($(this).highcharts()) {
+            $(this).highcharts().reflow();
+        }
     });
 }
 
@@ -67,7 +69,11 @@ var dayName = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sab
 var dayNomeShort = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab']
 
 Number.prototype.padLeft = function (n, str) {
-    return Array(n - String(this).length + 1).join(str || '0') + this;
+    if (n && str) {
+        return Array(n - String(this).length + 1).join(str || '0') + this
+    } else {
+        return this;
+    };
 }
 
 function renderDatatable(table) {
@@ -212,8 +218,16 @@ function dateFromDay(year, day) {
     return GetFormattedDate(new Date(date.setDate(day))); // add the number of days
 }
 
-function renderDispersionDiagram(div, _title, _subtitle, _avarage, _serie, _year) {
-    
+function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMediana, _serie, _year) {
+
+    var yValueAvarage = 15;
+    var yValueAvarageMediana = 15;
+
+    if (_avarage > _avarageMediana) {
+        yValueAvarage = (yValueAvarage-10) * -1;
+    } else {
+        yValueAvarageMediana = (yValueAvarageMediana-10) * -1;
+    }
 
     Highcharts.chart(div, {
         chart: {
@@ -251,7 +265,8 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage, _serie, _year
                 value: parseInt(_avarage),
                 label: {
                     rotation: 0,
-                    y: 15,
+                    align: 'left',
+                    y: yValueAvarage,
                     style: {
                         fontStyle: 'italic',
                         color: 'blue'
@@ -259,7 +274,26 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage, _serie, _year
                     text: 'Lead Time Médio: ' + _avarage
                 },
                 zIndex: 1000
-            }]
+            },
+            {
+                color: 'purple',
+                dashStyle: 'line', //dot, line
+                width: 2,
+                value: parseInt(_avarageMediana),
+                label: {
+                    rotation: 0,
+                    align: 'right',
+                    y: yValueAvarageMediana,
+                    x: -15,
+                    style: {
+                        fontStyle: 'italic',
+                        color: 'purple'
+                    },
+                    text: 'Mediana: ' + _avarageMediana
+                },
+                zIndex: 1000
+            }
+            ]
         },
         legend: {
             layout: 'vertical',
@@ -467,14 +501,16 @@ function renderRejectionThroughput(div, _title, _subtitle, _Categoria, _serie, _
     tooltip: {
         formatter: function () {
             return '<b> Semana: ' + this.x + '</b><br/>' +
-               this.series.userOptions.stack+': '+ this.series.name + ': ' + this.y + '<br/>' +
-                'Total: ' + this.point.stackTotal;
-        }
-    },
+              '<b>' + this.series.userOptions.stack + ': <span style="color:' + this.series.color + '"> ∎ </span><i><b>' + this.series.name + ':</b></i> ' + this.y + ' (<b>' + this.percentage.toFixed(1) + '%</b>)<br/>' +
+                '<b>Total:</b> ' + this.point.stackTotal;
+        },
+        //pointFormat: '<b> Semana: {point.x}</b><br/>'+'<span style="color:{series.color}"></span> {series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y})<br/>',
+        //pointformat: '<b> Semana: {point.x}</b><br/><b> {point.series.userOptions.stack} : <span style="color:{series.color};">{point.series.name}:</span>{point.y}(<b>{point.percentage:.1f} %</b>)<br/><b>Total:</b> {point.point.stackTotal}'
 
+    },
     plotOptions: {
         column: {
-            stacking: 'normal'
+            stacking: 'normal',
         }
     },
 
@@ -482,10 +518,85 @@ function renderRejectionThroughput(div, _title, _subtitle, _Categoria, _serie, _
 });
 }
 
+function renderGaugeGoogle(div, data, options) {
+
+    var ArrayData = [];
+    var arrAux = [];
+    var arrAux1 = [];
+    $.each(data, function (chave, valor) {
+        arrAux.push(chave);
+        arrAux1.push(data[chave]);
+    })
+
+    ArrayData.push(arrAux);
+    ArrayData.push(arrAux1);
+   
+    var chart = new google.visualization.Gauge(document.getElementById(div));
+    var dataTableData = new google.visualization.arrayToDataTable(ArrayData);
+    console.log(dataTableData);
+    chart.draw(dataTableData, options);
+
+}
+
+function renderDrildownChart(_div, _title, _subtitle, _yTitle, _serie, _drilldrown) {
+    
+    Highcharts.chart(_div, {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: _title
+        },
+        subtitle: {
+            text: _subtitle
+        },
+        xAxis: {
+            type: 'category'
+        },
+        yAxis: {
+            title: {
+                text: _yTitle
+            }
+
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            series: {
+                borderWidth: 0,
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.y:.2f}' //'{point.y:.1f}'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.3f}</b> <br/>'
+        },
+
+        series: _serie,
+        drilldown: _drilldrown
+    });
+
+}
+
+function renderGaugeGoogleAll(elemnts) {
+    elemnts.forEach(function(iten, index) {
+        renderGaugeGoogle(iten.element, iten.GaugeGoogle.data, iten.GaugeGoogle.options);
+    });
+}
+
 function blockCampos(block) {
     $(".lockable").each(function () {
         $(this).prop("disabled", block);
     });
+}
+
+function getWeekByWeekNum(weekNum) {
+    
 }
 
 $(document).ready(function () {

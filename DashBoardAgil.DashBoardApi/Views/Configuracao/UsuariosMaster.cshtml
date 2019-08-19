@@ -4,7 +4,7 @@
 <h1> Usuarios Master</h1>
 <p>
    @* @Html.ActionLink("Adicionar", "Create", "Projeto", new { tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "btn btn-primary" })*@
-    <input id="Add" name="add" value="Adicionar" class = "btn btn-primary"/>
+   @Html.ActionLink("Adicionar", "UsuarioMasterCreate", "Configuracao", new { tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "btn btn-primary" })
 </p>
 
 
@@ -25,24 +25,10 @@
                     @String.Format(item)
                 </td>
                 <td>
-                    @Html.ActionLink(" ", "Edit", "Projeto", new { id = item}, htmlAttributes: new { @class = "fas fa-edit" }) |
-                    @Html.ActionLink(" ", "Details", "Projeto", new { id = item, }, htmlAttributes: new { @class = "fas fa-info" }) |
-                    @Html.ActionLink(" ", "Delete", "Projeto", new { id = item}, htmlAttributes: new { @class = "fas fa-trash-alt" })
+                    @Html.ActionLink(" ", "UsuarioMasterDelete", "Configuracao", new { user = item}, htmlAttributes: new { @class = "fas fa-trash-alt" })
                 </td>
             </tr>
         }
     </tbody>
 
 </table>
-
-
-<script>
-    $(document).ready(function () {
-        $("#Add").click(function() {
-            dashboard.alertInputDataCallback("teste", "add usuarios", function (valor) {
-                alert(valor);
-            });
-        });
-
-    });
-</script>

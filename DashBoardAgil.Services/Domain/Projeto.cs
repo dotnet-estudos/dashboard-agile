@@ -18,6 +18,7 @@ namespace DashBoardAgil.Services.Domain
         [Required]
         public string Identifier { get; set; }
         public bool Ativo { get; set; }
+        public int HorasContratadas { get; set; }
         public List<SlaProjeto> Slas { get; set; }
         public Projeto Parent { get; set; }
 

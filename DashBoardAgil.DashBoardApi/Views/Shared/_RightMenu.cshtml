@@ -1,10 +1,12 @@
 ﻿@using Redmine.Net.Api.Types
 @{
-    var user = (User) ViewBag.User;//.FirstName
+    var user = (User)ViewBag.User;//.FirstName
+    var AbleToShowConfig = (bool)(ViewBag.AbleToShowConfig??false);
 }
 
 <ul class="nav navbar-right navbar-top-links">
-    <li class="dropdown navbar-inverse" style="background-color: #def7f2;"> <!--FORÇANDO A COR-->
+    <li class="dropdown navbar-inverse" style="background-color: #def7f2;">
+        <!--FORÇANDO A COR-->
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
             <i class="fa fa-bell fa-fw"></i> <b class="caret"></b>
         </a>
@@ -28,15 +30,17 @@
     </li>
     <li class="dropdown">
         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            @*<i class="fa fa-user fa-fw"></i>*@ <img src="https://www.gravatar.com/avatar/@DashBoardAgil.CrossCutting.Util.GetMd5Hash((user!= null? user.Email: "") )?d=monsterid&s=15" /> @(user!= null? user.FirstName: "") <b class="caret"></b>
+            @*<i class="fa fa-user fa-fw"></i>*@ <img src="https://www.gravatar.com/avatar/@DashBoardAgil.CrossCutting.Util.GetMd5Hash((user!= null? user.Email: "") )?d=monsterid&s=15" /> @(user != null ? user.FirstName : "") <b class="caret"></b>
         </a>
         <ul class="dropdown-menu dropdown-user">
             <li>
-                <a href="@Url.Action("User","Configuracao", new { id = 1})"><i class="fa fa-user fa-fw"></i> User Profile</a>
+                <a href="@Url.Action("User", "Configuracao", new {id = 1})"><i class="fa fa-user fa-fw"></i> User Profile</a>
             </li>
+            @if(AbleToShowConfig){
             <li>
-                <a href="@Url.Action("Edit","Configuracao", new { id = 1})"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                <a href="@Url.Action("Edit", "Configuracao", new {id = 1})"><i class="fa fa-gear fa-fw"></i> Settings</a>
             </li>
+            }
             <li class="divider"></li>
             <li>
                 <a href="@Url.Action("Logout","Home", new { id = 1})"><i class="fa fa-sign-out fa-fw"></i> Logout</a>

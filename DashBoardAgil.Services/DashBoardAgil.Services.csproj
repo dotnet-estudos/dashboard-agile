@@ -54,6 +54,9 @@
     <Compile Include="Domain\Chamado.cs" />
     <Compile Include="Domain\ChamadoControl.cs" />
     <Compile Include="Domain\ConfigRedmine.cs" />
+    <Compile Include="Domain\ConsumoHoras.cs" />
+    <Compile Include="Domain\ConsumoHorasControl.cs" />
+    <Compile Include="Domain\CreatedPerClosedControl.cs" />
     <Compile Include="Domain\DiaDevControl.cs" />
     <Compile Include="Domain\Fase.cs" />
     <Compile Include="Domain\Rejection.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="Enums\TipoChamadoRedmine.cs" />
     <Compile Include="Enums\TipoContagem.cs" />
     <Compile Include="GlobalConfig.cs" />
+    <Compile Include="Interfaces\Abstracoes\IdentificableName.cs" />
     <Compile Include="Interfaces\IRedmineService.cs" />
     <Compile Include="Service\RedmineService.cs" />
     <Compile Include="Util\Constantes.cs" />

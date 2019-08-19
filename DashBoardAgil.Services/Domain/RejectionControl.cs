@@ -20,8 +20,11 @@ namespace DashBoardAgil.Services.Domain
         public DateTime? DataIni { get; set; }
         public DateTime? DataFim { get; set; }
         public List<Rejection> Rejections { get; set; }
+        public List<int> WeekList => CrossCutting.Util.GetWeekList(DataIni ?? new DateTime(DateTime.Now.Year, 1, 1), DataFim ?? DateTime.Now.Date);
         public int TotalChamados => Rejections.Count;
-        public string RejectionsRate => Rejections.Any(x=>x.HasRejection) ? (double.Parse(this.Rejections.Count(x=>x.HasRejection).ToString()) / double.Parse(this.Rejections.Count.ToString())).ToString("P") : "0.0 %";
+        public string RejectionsRate => Rejections.Any(x => x.HasRejection) ? (double.Parse(this.Rejections.Count(x => x.HasRejection).ToString()) / double.Parse(this.Rejections.Count.ToString())).ToString("P") : "0.0 %";
+        public string RejectionsRateWeek => Rejections.Any(x => x.HasRejection) ? (double.Parse(this.Rejections.Count(x => x.HasRejection).ToString()) / double.Parse(this.WeekList.Count.ToString())).ToString("P") : "0.0 %";
+
         public object ByDay
         {
             get
@@ -42,7 +45,7 @@ namespace DashBoardAgil.Services.Domain
             {
                 var retorno = new List<object>();
 
-                var week = CrossCutting.Util.GetWeekList(DataIni ?? new DateTime(DateTime.Now.Year, 1, 1), DataFim ?? DateTime.Now.Date);
+                var week = this.WeekList;
 
                 var tipoChamado = from TipoChamadoRedmine e in Enum.GetValues(typeof(TipoChamadoRedmine))
                                   select new
@@ -72,7 +75,6 @@ namespace DashBoardAgil.Services.Domain
                 return retorno;
             }
         }
-
         public List<object> ByType
         {
             get

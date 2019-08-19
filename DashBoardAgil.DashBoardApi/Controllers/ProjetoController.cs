@@ -10,7 +10,7 @@ using WebGrease.Css.Extensions;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
 {
-    public class ProjetoController : Controller
+    public class ProjetoController : BaseController
     {
         // GET: Projeto
         public ActionResult Index()
@@ -52,8 +52,9 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                 
                 return RedirectToAction(String.Format("Projetos{0}s", Tipo), "Configuracao").MensagemSucesso("Salvo Com Sucesso!");
             }
-            catch
+            catch(Exception ex)
             {
+                Debugar.WriteLine(string.Format("Error [Create projetc]: Exceptiion: {0}, inner {1}", ex.Message, ex.InnerException?.Message??""));
                 return View().MensagemErro("Erro na tentativa de execução"); ;
             }
         }
@@ -76,20 +77,35 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                 if (Tipo.Equals("Habilitado"))
                 {
                     var edit = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id == id);
-                    GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Remove(edit);
-                    GlobalConfig.Instance.GravarConfig();
-                    edit.Identifier = collection.Identifier;
-                    edit.Ativo = collection.Ativo;
-                    GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Add(edit);
+                    if (edit != null)
+                    {
+                        GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Remove(edit);
+                        GlobalConfig.Instance.GravarConfig();
+
+                        edit.Identifier = collection.Identifier;
+                        edit.Ativo = collection.Ativo;
+                        GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Add(edit);
+                    }
+                    else
+                    {
+                        Debugar.WriteLine(String.Format("[Error:] edit {0} não encontrado;", id??"NULL"));
+                    }
                 }
                 else
                 {
                     var edit = GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.FirstOrDefault(x => x.Id == id);
-                    GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Remove(edit);
+                    if (edit != null)
+                    {
+                        GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Remove(edit);
                     GlobalConfig.Instance.GravarConfig();
                     edit.Identifier = collection.Identifier;
                     edit.Ativo = collection.Ativo;
                     GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Add(edit);
+                    }
+                    else
+                    {
+                        Debugar.WriteLine(String.Format("[Error:] edit {0} não encontrado;", id ?? "NULL"));
+                    }
                 }
 
                 GlobalConfig.Instance.GravarConfig();
