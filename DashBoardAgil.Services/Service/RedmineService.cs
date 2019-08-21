@@ -767,8 +767,7 @@ namespace DashBoardAgil.Services.Service
 
             return retorno;
         }
-
-
+        
         private List<ConsumoHoras> GetListAlocacoes(NameValueCollection _parametros, Projeto projeto, List<Projeto> listProjetos = null)
         {
             var lancamentos = new List<TimeEntry>();
@@ -817,6 +816,54 @@ namespace DashBoardAgil.Services.Service
                         DataCriacao = DateTime.Now.Date,
                     }));
             return ConsumoH;
+        }
+
+        public CreatedClosedControl GetCreatedClosed(NameValueCollection parms, DateTime DataIni, DateTime DataFim)
+        {
+           
+            var parmCreated = new NameValueCollection(parms)
+            {
+                {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", DataIni.ToString("yyyy-MM-dd"),DataFim.ToString("yyyy-MM-dd"))},
+                {RedmineKeys.STATUS_ID, "*"}
+            };
+            var parmClosed = new NameValueCollection(parms)
+            {
+                {RedmineKeys.CLOSED_ON, String.Format("><{0}|{1}", DataIni.ToString("yyyy-MM-dd"),DataFim.ToString("yyyy-MM-dd"))},
+                {RedmineKeys.STATUS_ID, "closed"}
+            };
+
+            
+            var created = _manager.GetObjects<Issue>(parmCreated);
+            var ListCreated = created.Select(x => new CreatedClosed()
+            {
+                ClosedOn= x.ClosedOn??null,
+                CreatedOn =(DateTime)x.CreatedOn,
+                Flag = Flag.Created,
+                IdChamado = x.Id,
+                Prioridade = (PrioridadeRedmine)x.Priority.Id,
+                Projeto = x.Project.Name,
+                Status = new IdentificableName() { Id = x.Status.Id, Name = x.Status.Name},
+                Tipo = (TipoChamadoRedmine)x.Tracker.Id,
+                Versao = new IdentificableName() { Id = x.FixedVersion?.Id??0, Name = x.FixedVersion?.Name??""}
+            }).ToList();
+            var closed = _manager.GetObjects<Issue>(parmClosed);
+            var ListClosed = closed.Select(x => new CreatedClosed()
+            {
+                ClosedOn = x.ClosedOn??null,
+                CreatedOn = (DateTime)x.CreatedOn,
+                Flag = Flag.Closed,
+                IdChamado = x.Id,
+                Prioridade = (PrioridadeRedmine)x.Priority.Id,
+                Projeto = x.Project.Name,
+                Status = new IdentificableName() { Id = x.Status.Id, Name = x.Status.Name },
+                Tipo = (TipoChamadoRedmine)x.Tracker.Id,
+                Versao = new IdentificableName() { Id = x.FixedVersion?.Id ?? 0, Name = x.FixedVersion?.Name ?? "" }
+            }).ToList();
+
+           var retorno =  new CreatedClosedControl(ListCreated,ListClosed) ;
+            var lllala = retorno.GetByDay;
+
+            return retorno;
         }
     }
 }

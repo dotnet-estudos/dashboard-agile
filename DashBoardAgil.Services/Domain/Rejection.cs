@@ -10,6 +10,7 @@ namespace DashBoardAgil.Services.Domain
     public class Rejection : IdentificableIssue
     {
         public bool HasRejection { get; set; }
+        public DateTime? RejectedDate { get; set; }
         
     }
 }

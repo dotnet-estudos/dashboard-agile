@@ -208,6 +208,7 @@
     <Compile Include="Controllers\Api\ComulativeFlowDiagramController.cs" />
     <Compile Include="Controllers\Api\ConsumptionHoursController.cs" />
     <Compile Include="Controllers\Api\CookieController.cs" />
+    <Compile Include="Controllers\Api\CreatedClosedController.cs" />
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Controllers\Api\PrazoChamadoController.cs" />
     <Compile Include="Controllers\Api\DiaDevController.cs" />
