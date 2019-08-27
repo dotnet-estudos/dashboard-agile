@@ -29,14 +29,29 @@ namespace DashBoardAgil.Services.Domain
 
                 var listDays = union.Where(x => x.Flag == Flag.Created).Select(x => x.CreatedOn.Date).Union(union.Where(x => x.Flag == Flag.Closed).Select(y => y.ClosedOn?.Date ?? new DateTime()));
 
-                var serie = new List<Object>();
+                var seriesData = new List<Object>();
+                var serieClosed = new List<int>();
+                var serieCreated = new List<int>();
+                var serieChart = new List<object>();
 
-                listDays.OrderBy(x=>x).ToList().ForEach(day=>
+
+                var dateTimes = listDays as DateTime[] ?? listDays.ToArray();
+
+                dateTimes.OrderBy(x=>x).ToList().ForEach(day=>
                 {
-                    serie.Add(new { Dia = day.ToString("yyyy-MM-dd"), Criados= union.Count(x=>x.Flag == Flag.Created && x.CreatedOn.Date == day), Fechados = union.Count(x => x.ClosedOn != null && (x.Flag == Flag.Closed && ((DateTime)x.ClosedOn).Date == day)) });
+                    var totalCrd = union.Count(x => x.Flag == Flag.Created && x.CreatedOn.Date == day);
+                    var totalCld = union.Count(x => x.ClosedOn != null && (x.Flag == Flag.Closed && ((DateTime) x.ClosedOn).Date == day));
+
+                    seriesData.Add(new { Dia = day.ToString("yyyy-MM-dd"), Criados= totalCrd, Fechados = totalCld });
+                    serieClosed.Add(totalCld);
+                    serieCreated.Add(totalCrd);
+
                 });
-                
-                return serie;
+
+                serieChart.Add(new { name = "Abertos", data= serieCreated });
+                serieChart.Add(new { name = "Fechados", data = serieClosed });
+
+                return new { data= seriesData,  chart = new { categoria = dateTimes.Select(x=>x.ToString("dd/MM/yyyy")).ToArray(), serie = serieChart } };
             }
         }
     }

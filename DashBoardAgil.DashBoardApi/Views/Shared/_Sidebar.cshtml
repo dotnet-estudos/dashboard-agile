@@ -44,7 +44,7 @@
                     </li>
                 </ul>
             </li>
-            @if (user.Login.Contains("uhitlei.barbosa") || ableConfig)
+            @if (user?.Login?.Contains("uhitlei.barbosa")?? false  || ableConfig)
             {
                 <li>
 

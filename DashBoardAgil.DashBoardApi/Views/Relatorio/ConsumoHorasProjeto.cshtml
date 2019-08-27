@@ -145,8 +145,8 @@
             data.id = $(this).val();
 
             if (data.id) {
-                data.parent = true;
-                data.customField = 143;
+                data.parent = false;
+                data.customField = 0;
                 $.ajax({
                     url: "@Url.Action("", "api/Project")",
                     data: data,

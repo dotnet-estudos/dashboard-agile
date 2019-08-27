@@ -583,6 +583,74 @@ function renderDrildownChart(_div, _title, _subtitle, _yTitle, _serie, _drilldro
 
 }
 
+function renderLineChart(_div, _title, _subtitle, _serie, _categories) {
+    Highcharts.chart(_div, {
+
+        chart: {
+            scrollablePlotArea: {
+                minWidth: 700
+            }
+        },
+
+        title: {
+            text: _title
+        },
+
+        subtitle: {
+            text: _subtitle
+        },
+
+        xAxis: {
+            categories: _categories
+        },
+
+        yAxis: {
+            title: {
+                text: 'Quantidade'
+            }
+        },
+
+        legend: {
+            align: 'left',
+            verticalAlign: 'top',
+            borderWidth: 0
+        },
+
+        tooltip: {
+            shared: true,
+            crosshairs: true
+        },
+
+        plotOptions: {
+            series: {
+                cursor: 'pointer',
+                point: {
+                    events: {
+                        click: function (e) {
+                            hs.htmlExpand(null, {
+                                pageOrigin: {
+                                    x: e.pageX || e.clientX,
+                                    y: e.pageY || e.clientY
+                                },
+                                headingText: this.series.name,
+                                maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+                                    this.y + ' sessions',
+                                width: 200
+                            });
+                            console.log(this.y);
+                        }
+                    }
+                },
+                marker: {
+                    lineWidth: 1
+                }
+            }
+        },
+
+        series: _serie
+    });
+}
+
 function renderGaugeGoogleAll(elemnts) {
     elemnts.forEach(function(iten, index) {
         renderGaugeGoogle(iten.element, iten.GaugeGoogle.data, iten.GaugeGoogle.options);

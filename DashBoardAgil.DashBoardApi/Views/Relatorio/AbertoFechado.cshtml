@@ -1,0 +1,199 @@
+﻿@using DashBoardAgil.CrossCutting
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Consulta @ViewBag.Title
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form role="form" action="JavaScript: return false;">
+                            <div class="form-group col-lg-12">
+                                <label>Time:</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("time", (SelectList)ViewBag.SelectTime, "Selecione", htmlAttributes: new { @class = "form-control lockable", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Projeto:</label>
+                                @*<input class="form-control" >*@
+                                <select class="form-control lockable" id="projetos">
+                                    <option value="0">Selecione</option>
+                                </select>
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Prioridade: </label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("prioridade", (SelectList) ViewBag.SelectPrioridadeRedmine, "Selecione", htmlAttributes: new {@class = "form-control", required = true})
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Classe Serviço: </label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("tipoChamado", (SelectList) ViewBag.SelectTipoChamado, "Selecione", htmlAttributes: new {@class = "form-control", required = true})
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Periodo: Inicio</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.AddDays(-30).ToString("yyyy-MM-dd")" required/>
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Fim</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataFim" name="dataFim" class="form-control" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="@ConstantesCC.CAMPO_OBRIGATORIO"/>
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <button type="button" id="pesquisar" class="btn btn-primary">Pesquisar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_resultDefault", new DashBoardAgil.DashBoardApi.Models.ResultDefaultModel(new List<string> { "Data", "Abertos", "Fechados" }, true,true, false))
+
+<script>
+    $(document).ready(function () {
+        $("#resultado").hide();
+        // $("#carregando_local").html($("#divCarregando").html());
+        $(".loading").hide();
+
+
+        function valid(data) {
+            if (data.time == "" || data.dataIni == "" || data.dataFim == "") {
+                return false;
+            }
+            return true;
+        }
+
+        function limpar() {
+            $("#render_Grafico").html("");
+            $("#_tableAmostra tbody").html("");
+
+        }
+
+        function grafico(result) {
+            renderLineChart("render_Grafico", "Aberto X Fechado ", "", result.GetByDay.chart.serie, result.GetByDay.chart.categoria);
+        }
+
+
+        function renderTable(result) {
+            //var table = $("#_tableAmostra tbody");
+            var table = $("#_tableAmostra").DataTable();
+
+            table.clear().draw();
+
+
+            result.GetByDay.data.forEach(function (chamado, index) {
+
+                var conteudo = new Array();
+
+                conteudo.push(chamado.Dia);
+                conteudo.push(chamado.Criados);
+                conteudo.push(chamado.Fechados);
+                table.row.add(conteudo);
+
+            });
+
+            table.draw();
+
+        }
+
+        $("#time").on("change", function (e) {
+
+            var data = new Object();
+
+            data.id = $(this).val();
+
+            if (data.id) {
+                data.parent = true;
+                data.customField = 0;
+                $.ajax({
+                    url: "@Url.Action("", "api/Project")",
+                data: data,
+                method: "GET",
+                beforeSend: function () {
+                    $("#projetos").html("");
+                    $("#projetos").append('<option value="0">Selecione</option>');
+                    blockCampos(true);
+                },
+                success: function (result) {
+                    console.log(result);
+                    result.forEach(function (item, index) {
+                        $("#projetos").append('<option value="' + item.Identifier + '">' + item.Name + '</option>');
+                    });
+                },
+                complete: function () {
+                    blockCampos(false);
+                   
+                }
+            });
+        }
+        });
+
+        $("#pesquisar").on("click", function (e) {
+
+            $("#resultado").hide();
+            limpar();
+            $('#i_tab-grafico').click();
+
+            var parameters = new Object();
+
+            parameters.time = $("#time").val();
+            parameters.dataIni = $("#dataIni").val();
+            parameters.dataFim = $("#dataFim").val();
+           // data.statusDe = $("#Status").val();
+            parameters.tipoChamado = $("#tipoChamado").val();
+            parameters.prioridade = $("#prioridade").val();
+            //parameters.primeiroSalto = 0;
+            //parameters.QuantidadeSaltos = 0;
+            //parameters.leadTime = 0;
+            //parameters.throughput = 0;
+            //parameters.issueCanceled = 0;
+
+            if (valid(parameters)) {
+
+                $.ajax({
+                    url: "@Url.Action("", "api/CreatedClosed/")",
+                    data: parameters,//JSON.stringify(parameters),
+                    method: "GET",
+                    dataType: 'json',
+                    beforeSend: function () {
+                        $("#resultado").show();
+                        $(".loading").show();
+                        $(".dados").hide();
+                    },
+                    success: function (result) {
+                        console.log(result);
+
+                        grafico(result);
+
+                        renderTable(result);
+
+                      //  renderCalendario(result);
+
+                    },
+                    complete: function () {
+                        $(".loading").hide();
+                        $(".dados").show();
+                    }
+
+                });
+            } else {
+                dashboard.alertAtencao("Todos Campos são obrigatorios");
+            }
+
+
+        });
+    });
+</script>
+@Scripts.Render("~/bundles/jqueryval")
