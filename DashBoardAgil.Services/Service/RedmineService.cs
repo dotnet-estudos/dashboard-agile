@@ -860,9 +860,7 @@ namespace DashBoardAgil.Services.Service
                 Versao = new IdentificableName() { Id = x.FixedVersion?.Id ?? 0, Name = x.FixedVersion?.Name ?? "" }
             }).ToList();
 
-           var retorno =  new CreatedClosedControl(ListCreated,ListClosed) ;
-            var lllala = retorno.GetByDay;
-
+           var retorno =  new CreatedClosedControl(ListCreated,ListClosed);
             return retorno;
         }
     }

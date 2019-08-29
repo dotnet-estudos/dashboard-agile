@@ -42,6 +42,9 @@
                     <li>
                         <a href="@Url.Action("ConsumoHorasProjeto", "Relatorio", new {})"> <i class="fas fa-hourglass-half"></i> Consumo Horas Projeto</a>
                     </li>
+                    <li>
+                        <a href="@Url.Action("AbertoFechado", "Relatorio", new {})"> <i class="fas fa-chart-line"></i> Abertos Vs Fechados</a>
+                    </li>
                 </ul>
             </li>
             @if (user?.Login?.Contains("uhitlei.barbosa")?? false  || ableConfig)
