@@ -11,6 +11,7 @@ using DashBoardAgil.Services;
 using DashBoardAgil.Services.Domain;
 using DashBoardAgil.Services.Enums;
 using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json;
 using Redmine.Net.Api;
 using WebApi.OutputCache.V2;
 
@@ -84,7 +85,6 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         public Object Get(string time, DateTime? dataIni, DateTime? dataFim, StatusRedmine statusDe, StatusRedmine statusPara, bool rel)
         {
             var parm = new NameValueCollection(_defaultTipoChamados);
-
 
             var datas = new List<ParameterDefault>()
            {

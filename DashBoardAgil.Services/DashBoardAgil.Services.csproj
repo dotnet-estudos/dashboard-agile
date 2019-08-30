@@ -56,11 +56,13 @@
     <Compile Include="Domain\ConfigRedmine.cs" />
     <Compile Include="Domain\ConsumoHoras.cs" />
     <Compile Include="Domain\ConsumoHorasControl.cs" />
-    <Compile Include="Domain\CreatedPerClosedControl.cs" />
+    <Compile Include="Domain\CreatedClosed.cs" />
+    <Compile Include="Domain\CreatedClosedControl.cs" />
     <Compile Include="Domain\DiaDevControl.cs" />
     <Compile Include="Domain\Fase.cs" />
     <Compile Include="Domain\Rejection.cs" />
     <Compile Include="Domain\RejectionControl.cs" />
+    <Compile Include="Enums\Flag.cs" />
     <Compile Include="Interfaces\Abstracoes\IdentificableIssue.cs" />
     <Compile Include="Domain\LeadTime.cs" />
     <Compile Include="Domain\LeadTimeControl.cs" />
