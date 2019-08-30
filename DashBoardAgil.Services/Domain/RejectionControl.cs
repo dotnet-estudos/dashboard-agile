@@ -32,7 +32,7 @@ namespace DashBoardAgil.Services.Domain
             {
                 var returno =   from rejc in Rejections.Where(x=>x.HasRejection).ToList()
                                 orderby rejc.CreatedOn
-                                group rejc by ((DateTime) rejc.CreatedOn).Date
+                                group rejc by ((DateTime) rejc.RejectedDate).Date
                                 into grp
                                 select new { Dia = grp.Key.ToString("d"), total = grp.Count()};
 
@@ -58,7 +58,7 @@ namespace DashBoardAgil.Services.Domain
 
                 var chamadosDiaTipo = (from chamado in Rejections.Where(x=>x.HasRejection)
                                        orderby chamado.ClosedOn descending
-                                       group chamado by new { chamado.Tipo, ((DateTime)chamado.CreatedOn).Date } into grp
+                                       group chamado by new { chamado.Tipo, ((DateTime)chamado.RejectedDate).Date } into grp
                                        select new { Dia = grp.Key.Date, Tipo = grp.Key.Tipo, Total = grp.Count() });
 
 
@@ -82,7 +82,7 @@ namespace DashBoardAgil.Services.Domain
             {
                 var chamadosDiaTipo = (from chamado in Rejections.Where(x => x.HasRejection)
                                        orderby chamado.ClosedOn descending
-                                       group chamado by new { chamado.Tipo, ((DateTime)chamado.CreatedOn).Date } into grp
+                                       group chamado by new { chamado.Tipo, ((DateTime)chamado.RejectedDate).Date } into grp
                                        select new { Dia = grp.Key.Date, Tipo = grp.Key.Tipo, Total = grp.Count(), chamados = grp.Select(x=>x.IdChamado) });
 
                 return new List<object> {chamadosDiaTipo};

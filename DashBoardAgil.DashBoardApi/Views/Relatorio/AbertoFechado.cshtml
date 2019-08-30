@@ -123,7 +123,7 @@
                 method: "GET",
                 beforeSend: function () {
                     $("#projetos").html("");
-                    $("#projetos").append('<option value="0">Selecione</option>');
+                    $("#projetos").append('<option value=>Selecione</option>');
                     blockCampos(true);
                 },
                 success: function (result) {
@@ -148,7 +148,7 @@
 
             var parameters = new Object();
 
-            parameters.time = $("#time").val();
+            parameters.time =  $("#projetos").val()? $("#projetos").val() : $("#time").val();
             parameters.dataIni = $("#dataIni").val();
             parameters.dataFim = $("#dataFim").val();
            // data.statusDe = $("#Status").val();

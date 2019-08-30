@@ -74,7 +74,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                                Nome = e.ToString()
                            };
             _lsitPrioridae = lststrPrt.Select(x => x.Id.ToString()).ToList();
-            _defaultPrioridade = new NameValueCollection { { RedmineKeys.PRIORITY, Global.Instance.ConcatenarLista("|", _lsitPrioridae) } };
+            _defaultPrioridade = new NameValueCollection { { RedmineKeys.PRIORITY_ID, Global.Instance.ConcatenarLista("|", _lsitPrioridae) } };
 
         }
 

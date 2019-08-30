@@ -74,11 +74,11 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         public ActionResult AbertoFechado()
         {
             ViewBag.title = "Abertos X Fechados";
-            GetSelectTime(null, true);
+            GetSelectTime(null, false);
             ViewBag.SelectStatusRedmineDe = GetSelectStatusRedmine(StatusRedmine.BacklogNovo);
             ViewBag.SelectStatusRedminePara = GetSelectStatusRedmine(StatusRedmine.BacklogAberto);
-            GetSelectTipoChamado(null, true);
-            GetSelectPrioridadeRedmine(null, true);
+            GetSelectTipoChamado(null, false);
+            GetSelectPrioridadeRedmine(null, false);
             return View();
         }
 

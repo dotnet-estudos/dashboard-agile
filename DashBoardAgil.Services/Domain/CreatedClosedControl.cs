@@ -31,7 +31,7 @@ namespace DashBoardAgil.Services.Domain
             }
         }
         private List<DateTime> Dates => this.UnionAll.Where(x => x.Flag == Flag.Created).Select(x => x.CreatedOn.Date).Union(this.UnionAll.Where(x => x.Flag == Flag.Closed).Select(y => y.ClosedOn?.Date ?? new DateTime())).ToList();
-        private List<int> WeekList => CrossCutting.Util.GetWeekList(this.Dates.Min(), this.Dates.Max());  
+        private List<int> WeekList => Dates.Count > 0? CrossCutting.Util.GetWeekList(this.Dates.Min(), this.Dates.Max()): new List<int>();  
 
         public object GetByDay
         {

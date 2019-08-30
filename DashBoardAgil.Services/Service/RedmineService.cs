@@ -595,8 +595,9 @@ namespace DashBoardAgil.Services.Service
                         IdChamado = chamado.Id,
                         Tipo = (TipoChamadoRedmine)chamado.Tracker.Id,
                         Prioridade = (PrioridadeRedmine)chamado.Priority.Id,
-                        HasRejection = ((!(chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(x => x.Info?.Equals("Sim") ?? false)) ?? false) && chamado.Journals.Any(x => x.Details.Any(y => y.Name == Constantes.Details.Name_Tag && (y.NewValue.Contains(Constantes.Details.Value_Rejeitado)))))),
-                        ClosedOn = chamado.ClosedOn ?? new DateTime(1900, 1, 1),
+                        //HasRejection = ((!(chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(x => x.Info?.Equals("Sim") ?? false)) ?? false) && chamado.Journals.Any(x => x.Details.Any(y => y.Name == Constantes.Details.Name_Tag && (y.NewValue.Contains(Constantes.Details.Value_Rejeitado)))))),
+                        RejectedDate = chamado.Journals?.FirstOrDefault(x => x.Details.Any(y => y.Name == Constantes.Details.Name_Tag && (y.NewValue.Contains(Constantes.Details.Value_Rejeitado))) && (!(chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(val => val.Info?.Equals("Sim") ?? false)) ?? false)) )?.CreatedOn ?? null,
+                        ClosedOn = chamado.ClosedOn ?? null,
                         CreatedOn = chamado.CreatedOn ?? new DateTime(1900, 1, 1),
                         Projeto = chamado.Project.Name
 
