@@ -158,9 +158,10 @@ namespace DashBoardAgil.Services.Util
         public static readonly Func<Issue, bool> ChamadosRejeitados = chamad => 
                                                                      (chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.NewValue.Contains(Details.Value_Rejeitado) && !det.OldValue.Contains(Details.Value_Rejeitado))) !=
                                                                       chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.OldValue.Contains(Details.Value_Rejeitado) && !det.NewValue.Contains(Details.Value_Rejeitado))));
-        public static Func<Detail, bool> GetDetail(string newvalue, string Name, string prop)
+        public static Func<Detail, bool> GetDetail(string newvalue, string Name, string prop, bool old = false)
         {
-            Func<Detail, bool> retorno = det => det.Property.Equals(prop) && det.Name.Equals(Name) && det.NewValue.Equals(newvalue);
+
+            Func<Detail, bool> retorno = det => det.Property.Equals(prop) && det.Name.Equals(Name) && ( !old && det.NewValue.Equals(newvalue) || (old && det.OldValue.Equals(newvalue))  );
             return retorno;
         }
 

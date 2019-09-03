@@ -498,16 +498,15 @@ namespace DashBoardAgil.Services.Service
             return retorno;
         }
 
-        private DateTime? GetDateByStatus(Issue chamado, StatusRedmine status)
+        public DateTime? GetDateByStatus(Issue chamado, StatusRedmine status, bool oldValue = false)
         {
             switch (status)
             {
                 case StatusRedmine.BacklogNovo:
                 case StatusRedmine.Novo:
                     {
-                        return chamado.CreatedOn;
+                        return oldValue? (GetFristJournalByStatus(status, chamado, true)?.CreatedOn?? null) :  chamado.CreatedOn;
                     }
-                    break;
                 case StatusRedmine.Cancelado:
                 case StatusRedmine.Fechado:
                     {
@@ -515,28 +514,27 @@ namespace DashBoardAgil.Services.Service
                     }
                 default:
                     {
-                        var retorno = GetFristJournalByStatus(status, chamado);
+                        var retorno = GetFristJournalByStatus(status, chamado, oldValue);
                         return retorno?.CreatedOn ?? null;
                     }
             }
-
-            return null;
         }
 
-        private Journal GetFristJournalByStatus(StatusRedmine status, Issue chamado)
+        private Journal GetFristJournalByStatus(StatusRedmine status, Issue chamado, bool oldValue = false)
         {
-            var retorno = chamado.Journals.FirstOrDefault(x =>
+            var retorno = chamado?.Journals?.FirstOrDefault(x =>
             x.Details.Any(Constantes.GetDetail(status.GetHashCode().ToString(), //new Value
                                                  RedmineKeys.STATUS_ID, //Name Pardao status
-                                                 Constantes.Details.Name_Attr //property 
-                                               )));
+                                                 Constantes.Details.Name_Attr, //property 
+                                                 oldValue //Verificar a Saida do Status
+                                               )))??null;
             return retorno;
         }
 
         public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false)
         {
             var chamados = leadTime ? _manager.GetObjects<Issue>(parms) : _manager.GetObjectsWithJournals(parms);
-            var LeadsTimes = new List<LeadTime>();
+            var leadsTimes = new List<LeadTime>();
             chamados.ForEach(chamado =>
             {
                 var dateStatusDe = leadTime ? chamado.CreatedOn : GetDateByStatus(chamado, statusDe);
@@ -568,19 +566,19 @@ namespace DashBoardAgil.Services.Service
                         };
                         if (chamado.ClosedOn != null) lead.ClosedOn = (DateTime) chamado.ClosedOn;
 
-                        LeadsTimes.Add(lead);
+                        leadsTimes.Add(lead);
                     }
                 }
 
 
             });
 
-            var LeadsControl = new LeadTimeControl(primeiroSalto, quantidadeSaltos);
-            LeadsControl.LeadTimes = LeadsTimes.ToList();
-            LeadsControl.UniversoChamados = chamados;
+            var leadsControl = new LeadTimeControl(primeiroSalto, quantidadeSaltos);
+            leadsControl.LeadTimes = leadsTimes.ToList();
+            leadsControl.UniversoChamados = chamados;
             //var max = LeadsTimes.Max(x=>x.LeadBrutoDays);
 
-            return LeadsControl;
+            return leadsControl;
         }
 
         public RejectionControl GetRejectionRate(NameValueCollection parms)

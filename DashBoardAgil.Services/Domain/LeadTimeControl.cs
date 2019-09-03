@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Net.Sockets;
@@ -12,6 +13,8 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Services.Enums;
 using DashBoardAgil.Services.Extensions;
 using DashBoardAgil.Services.Interfaces.Abstracoes;
+using DashBoardAgil.Services.Service;
+using Newtonsoft.Json;
 using Redmine.Net.Api.Types;
 
 namespace DashBoardAgil.Services.Domain
@@ -237,6 +240,33 @@ namespace DashBoardAgil.Services.Domain
                 }
 
 
+            }
+        }
+        public object ByProcess
+        {
+            get
+            {
+                var processo = JsonConvert.DeserializeObject<Processo>(Global.Instance.LerArquivo(String.Format(@"{0}\{1}",Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Json"), "processo.json")));
+
+                var dicClicleTime = new Dictionary<int, List<double>>();
+
+                var subfases = new List<Fase>();
+                processo.Fluxo.Where(fluxo => fluxo.FasePai == null).ToList().ForEach((flux) =>
+                {
+                    flux.SubFases.ForEach(x => subfases.Add(x));
+                });
+
+                var redserv = new RedmineService("", "", "");
+                subfases.Where(x=>!x.StatusFechamento).ToList().ForEach((flux) =>
+                {
+                    var datesFase = UniversoChamados.Select(uni => new { chamado= uni.Id,  fase = flux, dateIn = redserv.GetDateByStatus(uni, (StatusRedmine)flux.EStatusRedmine), dateFim = redserv.GetDateByStatus(uni, (StatusRedmine)flux.EStatusRedmine, true) });
+                    var resultDic = datesFase.Where(x => x.dateIn != null).Select(dic => Math.Round(((DateTime)(dic.dateFim??DateTime.Now)).Subtract((DateTime)dic.dateIn).TotalHours, 2));
+                    dicClicleTime.Add(flux.GetHashCode(), resultDic.ToList());
+                });
+
+
+
+                    return null;
             }
         }
     }

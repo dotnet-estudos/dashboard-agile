@@ -70,7 +70,6 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
             return View();
         }
-
         public ActionResult AbertoFechado()
         {
             ViewBag.title = "Abertos X Fechados";
