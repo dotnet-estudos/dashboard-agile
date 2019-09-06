@@ -41,6 +41,7 @@ namespace DashBoardAgil.InfraData.Contexto
         public virtual DbSet<Processo> Processos { get; set; }
         public virtual DbSet<Fase> Fases { get; set; }
         public virtual DbSet<SubFase> SubFases { get; set; }
+        public virtual DbSet<PFS> PFS { get; set; }
         public virtual DbSet<Log> Logs { get; set; }
 
         private string GetPrimaryKeyValue(object entry)

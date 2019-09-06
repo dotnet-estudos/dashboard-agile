@@ -56,6 +56,7 @@
     <Compile Include="Domain\CalendarioChamado.cs" />
     <Compile Include="Domain\Chamado.cs" />
     <Compile Include="Domain\ChamadoControl.cs" />
+    <Compile Include="Domain\PFS.cs" />
     <Compile Include="Domain\Log.cs" />
     <Compile Include="Domain\SubFase.cs" />
     <Compile Include="Domain\ConfigRedmine.cs" />

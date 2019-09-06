@@ -13,7 +13,7 @@ namespace DashBoardAgil.InfraData.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201909041454235_Initial"; }
+            get { return "201909061850505_Initial"; }
         }
         
         string IMigrationMetadata.Source

@@ -20,21 +20,53 @@ namespace DashBoardAgil.InfraData.Migrations
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
             //  to avoid creating duplicate seed data.
             SeedProcessos(context);
+            SeedFases(context);
         }
 
         private void SeedProcessos(Contexto.Contexto context)
         {
-            context.Processos.AddOrUpdate(p => p.ProcessoId,
+            if(!context.Processos.Any())
+            {
+                context.Processos.AddOrUpdate(p => p.ProcessoId,
                 new Processo
                 {
                     Nome = "Sustentação"
                 });
 
-            context.SaveChangesSeed();
+                context.SaveChangesSeed();
+            }
         }
 
         private void SeedFases(Contexto.Contexto context)
         {
+            if(!context.Fases.Any())
+            {
+                context.Fases.AddOrUpdate(f => f.FaseId,
+                new Fase
+                {
+                    Descricao = "Backlog",
+                },
+                new Fase
+                {
+                    Descricao = "Desenvolvimento",
+                },
+                new Fase
+                {
+                    Descricao = "Pré-Homologação",
+                },
+                new Fase
+                {
+                    Descricao = "Homologação",
+                },
+                new Fase
+                {
+                    Descricao = "Produção",
+                },
+                new Fase
+                {
+                    Descricao = "Fechamento",
+                });
+            }
         }
     }
 }

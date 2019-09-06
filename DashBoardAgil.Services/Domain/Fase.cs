@@ -11,7 +11,6 @@ namespace DashBoardAgil.Services.Domain
     {
         public int FaseId { get; set; }
         public string Descricao { get; set; }
-        public string Cor { get; set; }
-        public List<SubFase> SubFases { get; set; }
+        public List<PFS> PFS { get; set; }
     }
 }

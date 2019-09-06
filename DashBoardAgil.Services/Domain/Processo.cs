@@ -10,6 +10,6 @@ namespace DashBoardAgil.Services.Domain
     {
         public int ProcessoId { get; set; }
         public string Nome { get; set; }
-        public List<Fase> Fases { get; set; }
+        public List<PFS> PFS { get; set; }
     }
 }
