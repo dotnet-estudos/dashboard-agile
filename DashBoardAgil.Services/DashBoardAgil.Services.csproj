@@ -56,6 +56,8 @@
     <Compile Include="Domain\CalendarioChamado.cs" />
     <Compile Include="Domain\Chamado.cs" />
     <Compile Include="Domain\ChamadoControl.cs" />
+    <Compile Include="Domain\Log.cs" />
+    <Compile Include="Domain\SubFase.cs" />
     <Compile Include="Domain\ConfigRedmine.cs" />
     <Compile Include="Domain\ConsumoHoras.cs" />
     <Compile Include="Domain\ConsumoHorasControl.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="Domain\Fase.cs" />
     <Compile Include="Domain\Rejection.cs" />
     <Compile Include="Domain\RejectionControl.cs" />
+    <Compile Include="Enums\SituacaoSubFase.cs" />
     <Compile Include="Interfaces\Abstracoes\IdentificableIssue.cs" />
     <Compile Include="Domain\LeadTime.cs" />
     <Compile Include="Domain\LeadTimeControl.cs" />

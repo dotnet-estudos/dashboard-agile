@@ -8,8 +8,8 @@ namespace DashBoardAgil.Services.Domain
 {
     public class Processo
     {
-        public int Id { get; set; }
+        public int ProcessoId { get; set; }
         public string Nome { get; set; }
-        public List<Fase> Fluxo { get; set; }
+        public List<Fase> Fases { get; set; }
     }
 }

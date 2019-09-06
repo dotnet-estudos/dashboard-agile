@@ -1,11 +1,17 @@
-﻿using DashBoardAgil.InfraData.Enum;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using DashBoardAgil.Services.Enums;
 
-namespace DashBoardAgil.InfraData.Models
+
+namespace DashBoardAgil.Services.Domain
 {
     public class SubFase
     {
-        public int Id { get; set; }
-        public int IdFase { get; set; }
+        public int SubFaseId { get; set; }
+        public int FaseId { get; set; }
         public int Ordem { get; set; }
         public string Descricao { get; set; }
         public StatusRedmine StatusRedmine { get; set; }

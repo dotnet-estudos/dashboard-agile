@@ -1,4 +1,4 @@
-﻿namespace DashBoardAgil.InfraData.Enum
+﻿namespace DashBoardAgil.Services.Enums
 {
     public enum SituacaoSubFase
     {
