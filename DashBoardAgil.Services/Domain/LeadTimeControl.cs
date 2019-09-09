@@ -246,27 +246,68 @@ namespace DashBoardAgil.Services.Domain
         {
             get
             {
-                var processo = JsonConvert.DeserializeObject<Processo>(Global.Instance.LerArquivo(String.Format(@"{0}\{1}",Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Json"), "processo.json")));
-
-                var dicClicleTime = new Dictionary<int, List<double>>();
-
-                var subfases = new List<Fase>();
-                processo.Fluxo.Where(fluxo => fluxo.FasePai == null).ToList().ForEach((flux) =>
+                if (UniversoChamados.Any(x => x.Journals?.Any() ?? false))
                 {
-                    flux.SubFases.ForEach(x => subfases.Add(x));
-                });
 
-                var redserv = new RedmineService("", "", "");
-                subfases.Where(x=>!x.StatusFechamento).ToList().ForEach((flux) =>
+                    var processo =
+                        JsonConvert.DeserializeObject<Processo>(
+                            Global.Instance.LerArquivo(String.Format(@"{0}\{1}",
+                                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Json"), "processo.json")));
+
+                    var dicClicleTime = new Dictionary<int, double>();
+                    // var dicClicleFase = new Dictionary<int, double>();
+
+                    var subfases = new List<Fase>();
+                    processo.Fluxo.Where(fluxo => fluxo.IdFase == null && fluxo.SubFases.Any(x => !x.StatusFechamento))
+                        .ToList().ForEach((flux) =>
+                        {
+                            flux.SubFases.Where(x => !x.StatusFechamento).ToList().ForEach(x => subfases.Add(x));
+                        });
+
+                    subfases.ToList().ForEach((flux) =>
+                    {
+                        var datesFase = UniversoChamados.Select(uni => new
+                        {
+                            chamado = uni.Id,
+                            fase = flux,
+                            dateIn = RedmineUtil.GetDateByStatus(uni, (StatusRedmine)flux.EStatusRedmine),
+                            dateFim = RedmineUtil.GetDateByStatus(uni, (StatusRedmine)flux.EStatusRedmine, true)
+                        });
+                        var resultDic = datesFase.Where(x => x.dateIn != null).Select(dic =>((DateTime)(dic.dateFim ?? DateTime.Now)).Subtract((DateTime)dic.dateIn).TotalHours);
+                        dicClicleTime.Add(flux.Id, resultDic.Any() ? Math.Round(resultDic.Average()/24, 2, MidpointRounding.AwayFromZero) : 0);
+                    });
+
+                    var dicClicleFase = processo.Fluxo.Where(fluxo => fluxo.FasePai == null && fluxo.SubFases.Any(x => !x.StatusFechamento))
+                                                      .Select((flux) =>new{
+                                                                            name = flux.Descricao,
+                                                                            y =  dicClicleTime.Any(x => flux.SubFases.Any(y => y.Id == x.Key))? 
+                                                                                     dicClicleTime.Where(x => flux.SubFases.Any(y => y.Id == x.Key)).Average(x => x.Value):
+                                                                                     0,
+                                                                            drilldown = flux.Id.ToString()
+                                                                           }).ToList();
+
+                    var drilldown = processo.Fluxo.Where(
+                        fluxo => fluxo.FasePai == null && fluxo.SubFases.Any(x => !x.StatusFechamento)).ToList()
+                        .Select(flux =>new {
+                                series = new
+                                {
+                                    name = flux.Descricao,
+                                    id = flux.Id.ToString(),
+                                    data = dicClicleTime.Where(x => flux.SubFases.Any(y => y.Id == x.Key)).Select(x => new  { name= subfases.FirstOrDefault(s => s.Id == x.Key).Descricao, x.Value }).ToArray()
+                                }
+
+                            });
+
+                    return new
+                        {
+                            series = new List<object>() { new { name = "Fases", colorByPoint = true, data = dicClicleFase }}.ToArray(),
+                            drilldown = new { series= drilldown }
+                        };
+                }
+                else
                 {
-                    var datesFase = UniversoChamados.Select(uni => new { chamado= uni.Id,  fase = flux, dateIn = redserv.GetDateByStatus(uni, (StatusRedmine)flux.EStatusRedmine), dateFim = redserv.GetDateByStatus(uni, (StatusRedmine)flux.EStatusRedmine, true) });
-                    var resultDic = datesFase.Where(x => x.dateIn != null).Select(dic => Math.Round(((DateTime)(dic.dateFim??DateTime.Now)).Subtract((DateTime)dic.dateIn).TotalHours, 2));
-                    dicClicleTime.Add(flux.GetHashCode(), resultDic.ToList());
-                });
-
-
-
                     return null;
+                }
             }
         }
     }

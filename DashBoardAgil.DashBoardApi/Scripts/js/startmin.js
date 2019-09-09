@@ -667,6 +667,36 @@ function getWeekByWeekNum(weekNum) {
     
 }
 
+function renderPizzaChart(_div, _title, _subtitle, _series, _drilldown, formatData) {
+    Highcharts.chart(_div, {
+        chart: {
+            type: 'pie'
+        },
+        title: {
+            text: _title
+        },
+        subtitle: {
+            text: _subtitle
+        },
+        plotOptions: {
+            series: {
+                dataLabels: {
+                    enabled: true,
+                    format: '{point.name}: {point.percentage:.1f}%' //'{point.name}: {point.y:.1f}%'
+                }
+            }
+        },
+
+        tooltip: {
+            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f} ' + (formatData?formatData:'dias') + ' </b> {point.percentage:.2f} % of total<br/>'
+        },
+
+        series: _series,
+        drilldown: _drilldown
+    });
+}
+
 $(document).ready(function () {
 
     $('table[data-datatable=true]').DataTable({

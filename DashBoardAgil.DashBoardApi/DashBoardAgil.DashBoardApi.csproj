@@ -463,6 +463,7 @@
     <Content Include="Views\Configuracao\UsuarioMasterDelete.cshtml" />
     <Content Include="Views\Relatorio\ConsumoHorasProjeto.cshtml" />
     <Content Include="Views\Relatorio\AbertoFechado.cshtml" />
+    <Content Include="Views\Relatorio\LeadTime.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

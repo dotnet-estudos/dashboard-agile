@@ -500,37 +500,9 @@ namespace DashBoardAgil.Services.Service
 
         public DateTime? GetDateByStatus(Issue chamado, StatusRedmine status, bool oldValue = false)
         {
-            switch (status)
-            {
-                case StatusRedmine.BacklogNovo:
-                case StatusRedmine.Novo:
-                    {
-                        return oldValue? (GetFristJournalByStatus(status, chamado, true)?.CreatedOn?? null) :  chamado.CreatedOn;
-                    }
-                case StatusRedmine.Cancelado:
-                case StatusRedmine.Fechado:
-                    {
-                        return chamado.ClosedOn;
-                    }
-                default:
-                    {
-                        var retorno = GetFristJournalByStatus(status, chamado, oldValue);
-                        return retorno?.CreatedOn ?? null;
-                    }
-            }
+            return RedmineUtil.GetDateByStatus(chamado, status, oldValue);
         }
-
-        private Journal GetFristJournalByStatus(StatusRedmine status, Issue chamado, bool oldValue = false)
-        {
-            var retorno = chamado?.Journals?.FirstOrDefault(x =>
-            x.Details.Any(Constantes.GetDetail(status.GetHashCode().ToString(), //new Value
-                                                 RedmineKeys.STATUS_ID, //Name Pardao status
-                                                 Constantes.Details.Name_Attr, //property 
-                                                 oldValue //Verificar a Saida do Status
-                                               )))??null;
-            return retorno;
-        }
-
+        
         public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false)
         {
             var chamados = leadTime ? _manager.GetObjects<Issue>(parms) : _manager.GetObjectsWithJournals(parms);

@@ -1,4 +1,5 @@
 ﻿@using System.Text
+@using WebGrease.Css.Extensions
 @model DashBoardAgil.DashBoardApi.Models.ResultDefaultModel
 
 
@@ -23,9 +24,10 @@
                 <div class="panel-title pull-left">Resultado</div>
                 <div class="pull-right active">
                     <ul class="nav nav-tabs in">
-                       @if (Model.RenderGrafico){    <li class="active"><a href="#tab-grafico" id="i_tab-grafico" data-toggle="tab" aria-expanded="true"><i class="fas fa-chart-pie"></i> Gráfico</a></li>}
-                       @if (Model.RenderDados){      <li class=""><a href="#tab-dados" id="i_tab-dados" data-toggle="tab" aria-expanded="false"><i class="far fa-list-alt"></i> Dados</a></li>}
-                       @if (Model.RenderCalendario){ <li class=""><a href="#tab-cal" id="i_tab-cal" data-toggle="tab" aria-expanded="false"><i class="fas fa-calendar-alt"></i> Calendário</a></li>}
+                       @if (Model.RenderGrafico){               <li class="active"><a href="#tab-grafico" id="i_tab-grafico" data-toggle="tab" aria-expanded="true"><i class="fas fa-chart-pie"></i> Gráfico</a></li>}
+                       @if (Model.RenderDados){                 <li class=""><a href="#tab-dados" id="i_tab-dados" data-toggle="tab" aria-expanded="false"><i class="far fa-list-alt"></i> Dados</a></li>}
+                       @if (Model.RenderCalendario){            <li class=""><a href="#tab-cal" id="i_tab-cal" data-toggle="tab" aria-expanded="false"><i class="fas fa-calendar-alt"></i> Calendário</a></li>}
+                       @foreach (var dv in Model.RenderDivs){   <li class=""><a href="#tab-@dv.Key.ToLowerInvariant()" id="i_tab-@dv.Key.ToLowerInvariant()" data-toggle="tab" aria-expanded="false"><i class="@dv.Value"></i> @dv.Key</a></li>}
                     </ul>
                 </div>
             </div>
@@ -96,6 +98,16 @@
                             </div>
                         </div>
                     }
+                    @foreach(var dv in Model.RenderDivs)
+                    {
+                        <div class="tab-pane fade " id="tab-@dv.Key.ToLowerInvariant()">
+                            <div id="carregando" class="loading">
+                            <div id="overlay"></div>
+                            <i class="fas fa-cog fa-spin" ></i >
+                            </div><div id = "@dv.Key.ToLowerInvariant()" class="dados clearable" ></div >
+                        </div>
+                    }
+                   
 
                 </div>
                 </div>

@@ -1,7 +1,7 @@
 ﻿@using DashBoardAgil.CrossCutting
 @using DashBoardAgil.Services.Domain
 @using DashBoardAgil.Services.Util
-@model DashBoardAgil.Services.Domain.Processo
+
 
 <div class="row">
     <div class="col-lg-12">
@@ -16,7 +16,15 @@
                             <div class="form-group col-lg-12">
                                 <label>Time:</label>
                                 @*<input class="form-control" >*@
-                                @Html.DropDownList("time", (SelectList)ViewBag.SelectTime, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @Html.DropDownList("time", (SelectList)ViewBag.SelectTime, "Selecione", htmlAttributes: new { @class = "form-control lockable", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label>Projeto:</label>
+                                @*<input class="form-control" >*@
+                                <select class="form-control lockable" id="projetos">
+                                    <option value="0">Selecione</option>
+                                </select>
                                 @*<p class="help-block">Exemplo: -level help text here.</p>*@
                             </div>
                             <div class="form-group col-lg-3">
@@ -65,20 +73,11 @@
         </div>
     </div>
 </div>
-
-<div class="container">
-    <div class="row">
-        <div id="conteudoBoard">
-            <div class="card-group col-12">
-
-                @foreach (var fase in Model.Fluxo.Where(x => x.IdFase == null).OrderBy(x => x.Ordem))
-                {
-                    @Html.Partial("_Fase", fase)
-                }
-            </div>
-        </div>
-    </div>
-</div>
+@Html.Partial("_resultDefault", new DashBoardAgil.DashBoardApi.Models.ResultDefaultModel(new List<string> { "#", "Projeto", "Total(Horas)" }, new Dictionary<string, string>()
+{
+    { "Pizza", "fas fa-chart-pie" },
+    { "Dados", "fas fa-list-alt" },
+}, false, false, false))
 
 <script>
     $(document).ready(function () {
@@ -89,6 +88,48 @@
             }
             return true;
         }
+
+       
+        
+        function limpar() {
+            $("#pizza").html("");
+           // $("#_tableAmostra tbody").html("");
+           // $("#tab_cal_dados").html("");
+
+        }
+
+
+        $("#time").on("change", function (e) {
+
+            var data = new Object();
+
+            data.id = $(this).val();
+
+            if (data.id) {
+                data.parent = false;
+                data.customField = 0;
+                $.ajax({
+                    url: "@Url.Action("", "api/Project")",
+                    data: data,
+                    method: "GET",
+                    beforeSend: function () {
+                        $("#projetos").html("");
+                        $("#projetos").append('<option value="0">Selecione</option>');
+                        blockCampos(true);
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        result.forEach(function (item, index) {
+                            $("#projetos").append('<option value="' + item.Identifier + '">' + item.Name + '</option>');
+                        });
+                    },
+                    complete: function () {
+                        blockCampos(false);
+                    }
+                });
+            }
+        });
+
 
         $("#pesquisar").on("click", function (e) {
 
@@ -108,15 +149,23 @@
                     data: data,
                     method: "GET",
                     beforeSend: function () {
-
+                        $("#resultado").show();
+                        $(".loading").show();
+                        $(".dados").hide();
+                        $("#i_tab-pizza").click();
+                        limpar();
+                        blockCampos(true);
                     },
                     success: function (result) {
                         console.log(result);
-
-
+                        renderPizzaChart("pizza", "", "", result.ByProcess.series, result.ByProcess.drilldown, "dias");
+                       // renderTable(result);
                     },
                     complete: function () {
-
+                        $(".dados").show();
+                        $(".loading").hide();
+                        $("#resultado").show();
+                        blockCampos(false);
                     }
 
                 });

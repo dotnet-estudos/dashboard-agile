@@ -47,18 +47,21 @@
                     </li>
                 </ul>
             </li>
-            @if (user?.Login?.Contains("uhitlei.barbosa")?? false  || ableConfig)
-            {
+           
                 <li>
 
                     <a href="#"><i class="fas fa-chart-line fa-fw"></i> Metricas <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
+                        <li>
+                            <a href="@Url.Action("LeadTime", "Relatorio", new {})"> <i class="fas fa-clock"></i> Lead Time</a>
+                        </li>
+                        <li>
+                            <a href="@Url.Action("CicleTime", "Relatorio", new {})"> <i class="fas fa-redo"></i> Ciclo Time</a>
+                        </li>
                         @*   <li>
                                 <a href="@Url.Action("Desvios", "Relatorio", new {})"> <i class="fas fa-bezier-curve"></i> Desvio</a>
                             </li>
-                            <li>
-                                <a href="@Url.Action("CicleTime", "Relatorio", new {})"> <i class="fas fa-circle-notch"></i> Ciclo Time</a>
-                            </li>
+                           
                             <li>
                                     <a href="@Url.Action("DiaDev", "Relatorio", new {})"> <i class="fas fa-sun"></i> Dia Desenvolvedor</a>
                                 </li>
@@ -67,7 +70,8 @@
                                 </li>*@
                     </ul>
                 </li>
-
+@if (user?.Login?.Contains("uhitlei.barbosa") ?? false || ableConfig)
+{
                 <li>
                     <a href="#"><i class="fas fa-cogs fa-fw"></i> Configuração <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">

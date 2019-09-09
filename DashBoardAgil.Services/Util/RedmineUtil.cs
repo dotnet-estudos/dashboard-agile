@@ -6,6 +6,9 @@ using System.Linq;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Services.Domain;
 using DashBoardAgil.Services.Enums;
+using DashBoardAgil.Services.Util;
+using Redmine.Net.Api;
+using Redmine.Net.Api.Types;
 
 namespace DashBoardAgil.Services.Extensions
 {
@@ -425,6 +428,39 @@ namespace DashBoardAgil.Services.Extensions
                     break;
             }
 
+            return retorno;
+        }
+
+        public static DateTime? GetDateByStatus(Issue chamado, StatusRedmine status, bool oldValue = false)
+        {
+            switch (status)
+            {
+                case StatusRedmine.BacklogNovo:
+                case StatusRedmine.Novo:
+                    {
+                        return oldValue ? (GetFristJournalByStatus(status, chamado, true)?.CreatedOn ?? null) : chamado.CreatedOn;
+                    }
+                case StatusRedmine.Cancelado:
+                case StatusRedmine.Fechado:
+                    {
+                        return chamado.ClosedOn;
+                    }
+                default:
+                    {
+                        var retorno = GetFristJournalByStatus(status, chamado, oldValue);
+                        return retorno?.CreatedOn ?? null;
+                    }
+            }
+        }
+
+        private static Journal GetFristJournalByStatus(StatusRedmine status, Issue chamado, bool oldValue = false)
+        {
+            var retorno = chamado?.Journals?.FirstOrDefault(x =>
+            x.Details.Any(Constantes.GetDetail(status.GetHashCode().ToString(), //new Value
+                                                 RedmineKeys.STATUS_ID, //Name Pardao status
+                                                 Constantes.Details.Name_Attr, //property 
+                                                 oldValue //Verificar a Saida do Status
+                                               ))) ?? null;
             return retorno;
         }
     }
