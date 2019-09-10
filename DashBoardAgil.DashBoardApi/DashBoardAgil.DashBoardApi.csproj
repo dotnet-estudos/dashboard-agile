@@ -463,6 +463,9 @@
     <Content Include="Views\Configuracao\UsuarioMasterDelete.cshtml" />
     <Content Include="Views\Relatorio\ConsumoHorasProjeto.cshtml" />
     <Content Include="Views\Relatorio\AbertoFechado.cshtml" />
+    <Content Include="Views\Configuracao\PerfilCliente.cshtml" />
+    <Content Include="Views\Configuracao\PerfilClienteCreate.cshtml" />
+    <Content Include="Views\Configuracao\PerfilClienteDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

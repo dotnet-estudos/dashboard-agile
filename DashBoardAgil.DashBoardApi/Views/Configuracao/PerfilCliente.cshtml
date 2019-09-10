@@ -1,0 +1,34 @@
+﻿@{
+    var perfis =(List<string>) ViewBag.perfisCliente;
+}
+<h1> Usuarios Master</h1>
+<p>
+   @* @Html.ActionLink("Adicionar", "Create", "Projeto", new { tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "btn btn-primary" })*@
+   @Html.ActionLink("Adicionar", "PerfilClienteCreate", "Configuracao", new { tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "btn btn-primary" })
+</p>
+
+
+<table class="table table-striped table-bordered" data-datatable="true">
+    <thead>
+        <tr>
+            <th>
+                Usuário
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in perfis)
+        {
+            <tr>
+                <td>
+                    @String.Format(item)
+                </td>
+                <td>
+                    @Html.ActionLink(" ", "PerfilClienteDelete", "Configuracao", new { user = item}, htmlAttributes: new { @class = "fas fa-trash-alt" })
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

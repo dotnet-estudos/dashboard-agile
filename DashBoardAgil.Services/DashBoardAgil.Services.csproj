@@ -62,6 +62,7 @@
     <Compile Include="Domain\Fase.cs" />
     <Compile Include="Domain\Rejection.cs" />
     <Compile Include="Domain\RejectionControl.cs" />
+    <Compile Include="Enums\PerfilDash.cs" />
     <Compile Include="Enums\Flag.cs" />
     <Compile Include="Interfaces\Abstracoes\IdentificableIssue.cs" />
     <Compile Include="Domain\LeadTime.cs" />
