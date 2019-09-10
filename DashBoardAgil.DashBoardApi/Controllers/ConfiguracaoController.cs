@@ -12,6 +12,7 @@ using Microsoft.Ajax.Utilities;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
 {
+    
     public class ConfiguracaoController : BaseController
     {
         // GET: Configuracao
@@ -128,6 +129,61 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             }
 
             return RedirectToAction("UsuariosMaster").Mensagem("Usuario Removido com Sucesso!");
+        }
+
+        public ActionResult PerfilCliente()
+        {
+            GlobalConfig.Instance.CarregarConfig();
+            ViewBag.perfisCliente = GlobalConfig.Instance.ConfiguracaoRedmine.PerfilCliente;
+            return View();
+        }
+
+
+
+        public ActionResult PerfilClienteCreate()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PerfilClienteCreate(Usuario user)
+        {
+            GlobalConfig.Instance.CarregarConfig();
+            if (!user.Login.IsNullOrWhiteSpace() && !GlobalConfig.Instance.ConfiguracaoRedmine.PerfilCliente.Any(x => x.Equals(user.Login.Trim())))
+            {
+                GlobalConfig.Instance.ConfiguracaoRedmine.PerfilCliente.Add(user.Login.Trim());
+                GlobalConfig.Instance.GravarConfig();
+            }
+
+            GlobalConfig.Instance.CarregarConfig();
+            ViewBag.perfisCliente = GlobalConfig.Instance.ConfiguracaoRedmine.PerfilCliente;
+
+            return View("PerfilCliente").Mensagem("Perfil Adicionado com Sucesso!");
+        }
+
+
+        public ActionResult PerfilClienteDelete(string user)
+        {
+            var _user = new Usuario() { Login = user };
+            return View(_user);
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PerfilClienteDelete(string user, string delete)
+        {
+            GlobalConfig.Instance.CarregarConfig();
+            if (!user.IsNullOrWhiteSpace() && GlobalConfig.Instance.ConfiguracaoRedmine.PerfilCliente.Any(x => !x.Equals(user.Trim())))
+            {
+                var del = GlobalConfig.Instance.ConfiguracaoRedmine.PerfilCliente.FirstOrDefault(x => x.Equals(user.Trim()));
+                GlobalConfig.Instance.ConfiguracaoRedmine.PerfilCliente.Remove(del);
+                GlobalConfig.Instance.GravarConfig();
+            }
+
+            return RedirectToAction("PerfilCliente").Mensagem("Perfil Removido com Sucesso!");
         }
     }
 }
