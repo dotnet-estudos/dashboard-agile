@@ -48,9 +48,6 @@
                         </li>
                     </ul>
                 </li>
-            }
-            @if (user?.Login?.Contains("uhitlei.barbosa")?? false  || user.Perfil == PerfilDash.Administrador)
-            {
                 <li>
 
                     <a href="#"><i class="fas fa-chart-line fa-fw"></i> Metricas <span class="fa arrow"></span></a>
@@ -64,7 +61,7 @@
                         @*   <li>
                                 <a href="@Url.Action("Desvios", "Relatorio", new {})"> <i class="fas fa-bezier-curve"></i> Desvio</a>
                             </li>
-                           
+
                             <li>
                                     <a href="@Url.Action("DiaDev", "Relatorio", new {})"> <i class="fas fa-sun"></i> Dia Desenvolvedor</a>
                                 </li>
@@ -73,8 +70,9 @@
                                 </li>*@
                     </ul>
                 </li>
-@if (user?.Login?.Contains("uhitlei.barbosa") ?? false || ableConfig)
-{
+            }
+            @if (user?.Login?.Contains("uhitlei.barbosa") ?? false || ableConfig)
+            {
                 <li>
                     <a href="#"><i class="fas fa-cogs fa-fw"></i> Configuração <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
