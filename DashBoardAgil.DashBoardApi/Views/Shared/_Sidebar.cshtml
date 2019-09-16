@@ -26,7 +26,7 @@
             <li>
                 <a href="/Home/Index"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</a>
             </li>
-            @if (user?.Login?.Contains("uhitlei.barbosa") ?? false || user.Perfil == PerfilDash.Administrador || user.Perfil == PerfilDash.Usuario)
+            @if (user.Perfil == PerfilDash.Administrador || user.Perfil == PerfilDash.Usuario)
             {
                 <li>
                     <a href="#"><i class="fas fa-receipt fa-fw "></i> Relatório <span class="fa arrow"></span></a>
@@ -49,7 +49,7 @@
                     </ul>
                 </li>
             }
-            @if (user?.Login?.Contains("uhitlei.barbosa")?? false  || user.Perfil == PerfilDash.Administrador)
+            @if ( user.Perfil == PerfilDash.Administrador || (user?.Login?.Contains("uhitlei.barbosa") ?? false))
             {
                 <li>
 
