@@ -128,18 +128,10 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
             try
             {
-<<<<<<< HEAD
-
-                // Pegar os perfis por projeto do usuário logado
-                NameValueCollection parametros = new NameValueCollection();
-                parametros.Add("include", "memberships");
-                //parametros.Add("include", "groups");
-=======
                 // Pegar os perfis por projeto do usuário logado
                 NameValueCollection parametros = new NameValueCollection();
                 parametros.Add("include", "memberships");
 
->>>>>>> remotes/origin/develop
                 var user = _RedmineService.GetCurrentUser(parametros);
 
                 if (user == null)
