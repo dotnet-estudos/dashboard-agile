@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
+using DashBoardAgil.Services.Enums;
 using DashBoardAgil.Services.Interfaces;
 using DashBoardAgil.Services.Service;
 using Redmine.Net.Api;
@@ -127,11 +128,18 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
             try
             {
+<<<<<<< HEAD
 
                 // Pegar os perfis por projeto do usuário logado
                 NameValueCollection parametros = new NameValueCollection();
                 parametros.Add("include", "memberships");
                 //parametros.Add("include", "groups");
+=======
+                // Pegar os perfis por projeto do usuário logado
+                NameValueCollection parametros = new NameValueCollection();
+                parametros.Add("include", "memberships");
+
+>>>>>>> remotes/origin/develop
                 var user = _RedmineService.GetCurrentUser(parametros);
 
                 if (user == null)
@@ -139,6 +147,9 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                     return null;
                 }
                 var usuario = Global.ReflectObjec(user, new Usuario());
+                #if DEBUG
+               // usuario.Perfil = PerfilDash.Cliente;
+                #endif
                 Session["User"] = usuario;
                 ViewBag.User = usuario;
                 if(usuario.Status == UserStatus.STATUS_ACTIVE || usuario.Status == UserStatus.STATUS_ANONYMOUS)
