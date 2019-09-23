@@ -37,9 +37,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="redmine-net45-api, Version=2.0.17.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\redmine-api.2.0.17\lib\net45\redmine-net45-api.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="redmine-net45-api, Version=2.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\redmine-api.2.0.42\lib\net45\redmine-net45-api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -52,58 +51,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Alocacao.cs" />
-    <Compile Include="Domain\CalendarioChamado.cs" />
-    <Compile Include="Domain\Chamado.cs" />
-    <Compile Include="Domain\ChamadoControl.cs" />
-    <Compile Include="Domain\PFS.cs" />
-    <Compile Include="Domain\Log.cs" />
-    <Compile Include="Domain\SubFase.cs" />
-    <Compile Include="Domain\ConfigRedmine.cs" />
-    <Compile Include="Domain\ConsumoHoras.cs" />
-    <Compile Include="Domain\ConsumoHorasControl.cs" />
-    <Compile Include="Domain\CreatedPerClosedControl.cs" />
-    <Compile Include="Domain\DiaDevControl.cs" />
-    <Compile Include="Domain\Fase.cs" />
-    <Compile Include="Domain\Rejection.cs" />
-    <Compile Include="Domain\RejectionControl.cs" />
-    <Compile Include="Enums\SituacaoSubFase.cs" />
-    <Compile Include="Interfaces\Abstracoes\IdentificableIssue.cs" />
-    <Compile Include="Domain\LeadTime.cs" />
-    <Compile Include="Domain\LeadTimeControl.cs" />
-    <Compile Include="Domain\Menu.cs" />
-    <Compile Include="Domain\Parametro.cs" />
-    <Compile Include="Domain\PrazoControl.cs" />
-    <Compile Include="Domain\Processo.cs" />
-    <Compile Include="Domain\Projeto.cs" />
-    <Compile Include="Domain\Sla.cs" />
-    <Compile Include="Domain\SlaControl.cs" />
-    <Compile Include="Domain\SlaProjeto.cs" />
-    <Compile Include="Domain\Throughput.cs" />
-    <Compile Include="Domain\ThroughputControl.cs" />
-    <Compile Include="Domain\Versao.cs" />
-    <Compile Include="Enums\StatusRedmine.cs" />
-    <Compile Include="Domain\Periodo.cs" />
-    <Compile Include="Domain\RedmineExtensions.cs" />
-    <Compile Include="Enums\PrioridadeRedmine.cs" />
-    <Compile Include="Enums\TipoChamadoRedmine.cs" />
-    <Compile Include="Enums\TipoContagem.cs" />
     <Compile Include="GlobalConfig.cs" />
-    <Compile Include="Interfaces\Abstracoes\IdentificableName.cs" />
-    <Compile Include="Interfaces\IRedmineService.cs" />
+    <Compile Include="Service\ProcessoService.cs" />
+    <Compile Include="Service\RedmineExtensions.cs" />
     <Compile Include="Service\RedmineService.cs" />
     <Compile Include="Util\Constantes.cs" />
     <Compile Include="Util\RedmineUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DashBoardAgil.CrossCutting\DashBoardAgil.CrossCutting.csproj">
       <Project>{831b3b56-9d25-402b-9106-71c5ac1b02a6}</Project>
       <Name>DashBoardAgil.CrossCutting</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DashBoardAgil.Domain\DashBoardAgil.Domain.csproj">
+      <Project>{dc6f98f5-4ff8-43c5-9250-92edf1744570}</Project>
+      <Name>DashBoardAgil.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

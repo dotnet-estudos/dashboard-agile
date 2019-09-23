@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -46,6 +47,12 @@
     <FilesToIncludeForPublish>AllFilesInTheProject</FilesToIncludeForPublish>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AI.Agent.Intercept, Version=1.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.Agent.Intercept.1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll</HintPath>
       <Private>True</Private>
@@ -223,6 +230,7 @@
     <Compile Include="Controllers\CloseController.cs" />
     <Compile Include="Controllers\ConfiguracaoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ProcessoController.cs" />
     <Compile Include="Controllers\ProjetoController.cs" />
     <Compile Include="Controllers\RelatorioController.cs" />
     <Compile Include="Controllers\SlaController.cs" />
@@ -461,10 +469,12 @@
     <Content Include="Views\Configuracao\UsuarioMasterCreate.cshtml" />
     <Content Include="Views\Configuracao\UsuarioMasterDelete.cshtml" />
     <Content Include="Views\Relatorio\ConsumoHorasProjeto.cshtml" />
+    <Content Include="Views\Configuracao\Processos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Base\" />
+    <Folder Include="Views\Processo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -482,6 +492,14 @@
     <ProjectReference Include="..\DashBoardAgil.CrossCutting\DashBoardAgil.CrossCutting.csproj">
       <Project>{831b3b56-9d25-402b-9106-71c5ac1b02a6}</Project>
       <Name>DashBoardAgil.CrossCutting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DashBoardAgil.Domain\DashBoardAgil.Domain.csproj">
+      <Project>{dc6f98f5-4ff8-43c5-9250-92edf1744570}</Project>
+      <Name>DashBoardAgil.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DashBoardAgil.InfraData\DashBoardAgil.InfraData.csproj">
+      <Project>{6a1eb4d3-012a-4af9-818f-3e32baa8aa28}</Project>
+      <Name>DashBoardAgil.InfraData</Name>
     </ProjectReference>
     <ProjectReference Include="..\DashBoardAgil.Services\DashBoardAgil.Services.csproj">
       <Project>{b707af39-b51d-4b27-9925-8ab069fc69b9}</Project>

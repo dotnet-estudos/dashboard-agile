@@ -2,15 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.DashBoardApi.Models;
-using DashBoardAgil.Services.Domain;
-using DashBoardAgil.Services.Enums;
-using DashBoardAgil.Services.Util;
 using Redmine.Net.Api;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;

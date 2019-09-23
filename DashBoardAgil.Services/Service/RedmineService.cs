@@ -9,15 +9,15 @@ using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Services.Domain;
-using DashBoardAgil.Services.Enums;
+using DashBoardAgil.Domain.Interfaces;
+using DashBoardAgil.Domain.Interfaces.Abstracoes;
+using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Services.Extensions;
-using DashBoardAgil.Services.Interfaces;
-using DashBoardAgil.Services.Interfaces.Abstracoes;
 using DashBoardAgil.Services.Util;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using DashBoardAgil.Domain.Models;
 
 
 namespace DashBoardAgil.Services.Service

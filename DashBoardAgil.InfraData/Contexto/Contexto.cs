@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using DashBoardAgil.Services.Domain;
+using DashBoardAgil.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;

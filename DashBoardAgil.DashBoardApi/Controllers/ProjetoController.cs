@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Services;
-using DashBoardAgil.Services.Domain;
+using DashBoardAgil.Domain.Models;
 using WebGrease.Css.Extensions;
 
 namespace DashBoardAgil.DashBoardApi.Controllers

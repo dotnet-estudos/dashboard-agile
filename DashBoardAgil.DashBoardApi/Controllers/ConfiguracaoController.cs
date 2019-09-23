@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
-using DashBoardAgil.Services.Domain;
+using DashBoardAgil.Domain.Models;
 using Microsoft.Ajax.Utilities;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
@@ -128,6 +128,14 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             }
 
             return RedirectToAction("UsuariosMaster").Mensagem("Usuario Removido com Sucesso!");
+        }
+
+        public ActionResult Processos()
+        {
+            GlobalConfig.Instance.CarregarConfig();
+            ViewBag.Tipo = ViewBag.Title = "Processos";
+            
+            return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList);
         }
     }
 }

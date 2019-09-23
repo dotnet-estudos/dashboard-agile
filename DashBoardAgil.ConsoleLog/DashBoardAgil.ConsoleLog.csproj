@@ -88,6 +88,10 @@
       <Project>{831b3b56-9d25-402b-9106-71c5ac1b02a6}</Project>
       <Name>DashBoardAgil.CrossCutting</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DashBoardAgil.Domain\DashBoardAgil.Domain.csproj">
+      <Project>{dc6f98f5-4ff8-43c5-9250-92edf1744570}</Project>
+      <Name>DashBoardAgil.Domain</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DashBoardAgil.Services\DashBoardAgil.Services.csproj">
       <Project>{b707af39-b51d-4b27-9925-8ab069fc69b9}</Project>
       <Name>DashBoardAgil.Services</Name>

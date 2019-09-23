@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Util;
 using DashBoardAgil.Services;
-using DashBoardAgil.Services.Domain;
-using DashBoardAgil.Services.Enums;
-using DashBoardAgil.Services.Interfaces;
+using DashBoardAgil.Domain.Models;
+using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.Services.Service;
 
 namespace DashBoardAgil.Aplication

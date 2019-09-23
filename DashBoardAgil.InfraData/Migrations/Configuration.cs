@@ -4,7 +4,7 @@ namespace DashBoardAgil.InfraData.Migrations
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
-    using Services.Domain;
+    using Domain.Models;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Contexto.Contexto>
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using DashBoardAgil.Services.Enums;
+using DashBoardAgil.Domain.Enums;
 
 namespace DashBoardAgil.DashBoardApi.Models
 {
