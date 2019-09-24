@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.CrossCutting"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.DashBoardApi", "DashBoardAgil.DashBoardApi\DashBoardAgil.DashBoardApi.csproj", "{AAA759C3-12F3-4F89-91CE-C52208A88D61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.InfraData", "DashBoardAgil.InfraData\DashBoardAgil.InfraData.csproj", "{6A1EB4D3-012A-4AF9-818F-3E32BAA8AA28}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashBoardAgil.Domain", "DashBoardAgil.Domain\DashBoardAgil.Domain.csproj", "{DC6F98F5-4FF8-43C5-9250-92EDF1744570}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,8 +49,19 @@ Global
 		{AAA759C3-12F3-4F89-91CE-C52208A88D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAA759C3-12F3-4F89-91CE-C52208A88D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAA759C3-12F3-4F89-91CE-C52208A88D61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A1EB4D3-012A-4AF9-818F-3E32BAA8AA28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A1EB4D3-012A-4AF9-818F-3E32BAA8AA28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A1EB4D3-012A-4AF9-818F-3E32BAA8AA28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A1EB4D3-012A-4AF9-818F-3E32BAA8AA28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC6F98F5-4FF8-43C5-9250-92EDF1744570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC6F98F5-4FF8-43C5-9250-92EDF1744570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC6F98F5-4FF8-43C5-9250-92EDF1744570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC6F98F5-4FF8-43C5-9250-92EDF1744570}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A36C5B9-0DDA-4279-B7C2-9D7931BBCFC0}
 	EndGlobalSection
 EndGlobal

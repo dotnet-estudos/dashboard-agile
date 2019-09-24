@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Services.Domain;
+using DashBoardAgil.Domain.Models;
 using  DashBoardAgil.Services;
 
 namespace DashBoardAgil.DashBoardApi.Controllers.Api

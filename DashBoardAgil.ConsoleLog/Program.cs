@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using DashBoardAgil.Aplication;
 using DashBoardAgil.DashBoardApi.Util;
 using DashBoardAgil.Services;
-using DashBoardAgil.Services.Interfaces;
+using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.Services.Service;
 
 namespace DashBoardAgil.ConsoleLog

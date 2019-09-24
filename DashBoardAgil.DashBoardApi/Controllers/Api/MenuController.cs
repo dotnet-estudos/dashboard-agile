@@ -11,7 +11,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
     {
         public object Get(int idUsuario)
         {
-            var menu = new List<DashBoardAgil.Services.Domain.Menu>();
+            var menu = new List<DashBoardAgil.Domain.Models.Menu>();
 
             return menu;
         }

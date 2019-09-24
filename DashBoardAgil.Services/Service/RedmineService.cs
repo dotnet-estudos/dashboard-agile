@@ -9,15 +9,15 @@ using System.Net.Http.Headers;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Services.Domain;
-using DashBoardAgil.Services.Enums;
+using DashBoardAgil.Domain.Interfaces;
+using DashBoardAgil.Domain.Interfaces.Abstracoes;
+using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Services.Extensions;
-using DashBoardAgil.Services.Interfaces;
-using DashBoardAgil.Services.Interfaces.Abstracoes;
 using DashBoardAgil.Services.Util;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using DashBoardAgil.Domain.Models;
 
 
 namespace DashBoardAgil.Services.Service
@@ -676,7 +676,7 @@ namespace DashBoardAgil.Services.Service
 
 
             #region Fluxo para FASE
-            processo.Fluxo.Where(fluxo => fluxo.FasePai == null).ToList().ForEach((flux) =>
+            processo.PFS.ToList().ForEach((pfs) =>
             {
                 //var listFluxo = new List<object>();
                 var listSerie = new List<int>();
@@ -684,31 +684,22 @@ namespace DashBoardAgil.Services.Service
                 weekList.ForEach(semana =>
                 {
                     var count = chamados
-                                .Count(ch => (flux.StatusAbertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
+                                .Count(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
                                               ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() <= semana
                                                        && y.Details.Any(det => det.Property.Equals("attr")
                                                                        && det.Name.Equals(RedmineKeys.STATUS_ID)
-                                                                       && flux.SubFases.Select(f => f.EStatusRedmine.GetHashCode().ToString()).Contains(det.NewValue))));
+                                                                       && pfs.StatusRedmine.GetHashCode().ToString().Contains(det.NewValue))));
                     // listFluxo.Add(new { Semana = semana, Quantidade = count });
                     listSerie.Add(count);
                 });
 
                 //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
-                serieFase.Add(new { name = flux.Descricao, data = listSerie });
-
+                serieFase.Add(new { name = pfs.SubFase.Descricao, data = listSerie });
             });
             #endregion
 
             #region Fluxo para Status
-
-
-            var subfases = new List<Fase>();
-            processo.Fluxo.Where(fluxo => fluxo.FasePai == null).ToList().ForEach((flux) =>
-            {
-                flux.SubFases.ForEach(x => subfases.Add(x));
-            });
-
-            subfases.ForEach((flux) =>
+            processo.PFS.ForEach((pfs) =>
                 {
                     //var listFluxo = new List<object>();
                     var listSerie = new List<int>();
@@ -716,18 +707,18 @@ namespace DashBoardAgil.Services.Service
                     weekList.ForEach(semana =>
                     {
                         var count = chamados
-                                    .Count(ch => (flux.StatusAbertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
-                                                 (flux.StatusAbertura && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() <= semana) ||
+                                    .Count(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
+                                                 (pfs.Situacao == SituacaoSubFase.Abertura && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() <= semana) ||
                                                  ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() <= semana
                                                            && y.Details.Any(det => det.Property.Equals("attr")
                                                                            && det.Name.Equals(RedmineKeys.STATUS_ID)
-                                                                           && flux.EStatusRedmine.GetHashCode().ToString().Equals(det.NewValue))));
+                                                                           && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue))));
                         //listFluxo.Add(new { Semana = semana, Quantidade = count });
                         listSerie.Add(count);
                     });
 
                     //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
-                    serie.Add(new { name = flux.Descricao, data = listSerie });
+                    serie.Add(new { name = pfs.SubFase.Descricao, data = listSerie });
 
                 });
             #endregion

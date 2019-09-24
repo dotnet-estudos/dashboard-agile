@@ -6,8 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Services;
-using DashBoardAgil.Services.Domain;
-using DashBoardAgil.Services.Enums;
+using DashBoardAgil.Domain.Models;
+using DashBoardAgil.Domain.Enums;
 using Newtonsoft.Json;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
