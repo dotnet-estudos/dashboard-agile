@@ -14,6 +14,7 @@ using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Domain.Interfaces.Abstracoes;
 using DashBoardAgil.Domain.Util;
 using Redmine.Net.Api.Types;
+using Newtonsoft.Json;
 
 namespace DashBoardAgil.Domain.Models
 {

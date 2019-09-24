@@ -6,8 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Services;
-using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.Services.Domain;
+using DashBoardAgil.Services.Enums;
 using Newtonsoft.Json;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
@@ -48,9 +48,9 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
             return View();
         }
-        public ActionResult CicleTime()
+        public ActionResult CycleTime()
         {
-            ViewBag.title = "Cicle Time";
+            ViewBag.title = "Cycle Time";
             GetSelectTime(null, true);
             ViewBag.SelectStatusRedmineDe = GetSelectStatusRedmine(StatusRedmine.BacklogNovo);
             ViewBag.SelectStatusRedminePara = GetSelectStatusRedmine(StatusRedmine.BacklogAberto);
