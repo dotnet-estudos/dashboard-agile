@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\Flag.cs" />
+    <Compile Include="Enums\PerfilDash.cs" />
     <Compile Include="Enums\PrioridadeRedmine.cs" />
     <Compile Include="Enums\SituacaoSubFase.cs" />
     <Compile Include="Enums\StatusRedmine.cs" />
@@ -60,6 +62,7 @@
     <Compile Include="Models\ConfigRedmine.cs" />
     <Compile Include="Models\ConsumoHoras.cs" />
     <Compile Include="Models\ConsumoHorasControl.cs" />
+    <Compile Include="Models\CreatedPerClosed.cs" />
     <Compile Include="Models\CreatedPerClosedControl.cs" />
     <Compile Include="Models\DiaDevControl.cs" />
     <Compile Include="Models\Fase.cs" />

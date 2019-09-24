@@ -31,7 +31,7 @@ dragging.
 
 When selection support is enabled, a "plotselected" event will be emitted on
 the DOM element you passed into the plot function. The event handler gets a
-parameter with the ranges selected on the axes, like this:
+parameters with the ranges selected on the axes, like this:
 
 	placeholder.bind( "plotselected", function( event, ranges ) {
 		alert("You selected " + ranges.xaxis.from + " to " + ranges.xaxis.to)
@@ -62,7 +62,7 @@ The plugin allso adds the following methods to the plot object:
 
   setSelection will trigger the "plotselected" event when called. If you don't
   want that to happen, e.g. if you're inside a "plotselected" handler, pass
-  true as the second parameter. If you are using multiple axes, you can
+  true as the second parameters. If you are using multiple axes, you can
   specify the ranges on any of those, e.g. as x2axis/x3axis/... instead of
   xaxis, the plugin picks the first one it sees.
 

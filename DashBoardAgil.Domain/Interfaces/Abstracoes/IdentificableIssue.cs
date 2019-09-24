@@ -20,5 +20,6 @@ namespace DashBoardAgil.Domain.Interfaces.Abstracoes
         public string PrioridadeString => this.Prioridade.GetDisplayName();
         public IdentificableName Versao { get; set; }
         public IdentificableName Status { get; set; }
+       
     }
 }

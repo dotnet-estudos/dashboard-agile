@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -32,7 +33,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             GlobalConfig.Instance.CarregarConfig();
 
             //_user = (Usuario)((User) Session["User"]);
-           
+
 #if DEBUG
             _Redmine = new Redmine.Net.Api.RedmineManager(
                            GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl,
@@ -60,9 +61,14 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         {
             try
             {
-                var list = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Select(x=>new SelectListItem() { Value= x.Identifier, Text = x.Identifier}).ToList();
+
+                var list = new List<SelectListItem>();
+
+
+
+                list = _user.Perfil == PerfilDash.Cliente ? _user.projetosRedmine.Select(x => new SelectListItem() { Value = x.Identifier, Text = x.Identifier }).ToList() : GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Select(x => new SelectListItem() { Value = x.Identifier, Text = x.Identifier }).ToList();
                 GetSelectedListWithAll(selected, todos, list);
-                var select = new SelectList(list.OrderBy(x=>x.Value), "Value",
+                var select = new SelectList(list.OrderBy(x => x.Value), "Value",
                           "Text", selected);
                 ViewBag.SelectTime = select;
                 return select;
@@ -76,7 +82,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         {
             if (todos)
             {
-                list.Add(new SelectListItem {Value = "0", Text = "Todos", Selected = (selected == null)});
+                list.Add(new SelectListItem { Value = "0", Text = "Todos", Selected = (selected == null) });
             }
 
             return list.OrderBy(x => x.Value).ToList();
@@ -128,7 +134,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         protected SelectList GetSelectStatusRedmine(StatusRedmine? selected = null, bool todos = false)
         {
             try
-            {                
+            {
                 var status = new SelectList(GetSelectedListWithAll(selected, todos, Enum.GetValues(typeof(StatusRedmine)).Cast<StatusRedmine>().Select(v => new SelectListItem
                 {
                     Text = v.GetDisplayName(),
@@ -167,16 +173,16 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
             }
         }
-        protected SelectList GetSelectTipoChamado(TipoChamadoRedmine? selected = null , bool todos = false)
+        protected SelectList GetSelectTipoChamado(TipoChamadoRedmine? selected = null, bool todos = false)
         {
             try
             {
-                var status = new SelectList(GetSelectedListWithAll(selected, todos,Enum.GetValues(typeof(TipoChamadoRedmine)).Cast<TipoChamadoRedmine>().Select(v => new SelectListItem
+                var status = new SelectList(GetSelectedListWithAll(selected, todos, Enum.GetValues(typeof(TipoChamadoRedmine)).Cast<TipoChamadoRedmine>().Select(v => new SelectListItem
                 {
                     Text = v.GetDisplayName(),
                     Value = ((int)v).ToString()
                 }).ToList()), "Value", "Text", (selected != null ? selected.GetHashCode().ToString() : null));
-                
+
                 ViewBag.SelectTipoChamado = status;
                 return status;
             }
@@ -189,11 +195,34 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         }
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var sessionUser = (User) Session["User"];
+            var sessionUser = (Usuario)Session["User"];
             if (sessionUser != null)
             {
                 _user = Global.ReflectObjec(sessionUser, new Usuario());
-                ViewBag.AbleToShowConfig = GlobalConfig.Instance.ConfiguracaoRedmine.UsuariosMaster.Contains(_user?.Login ?? "NULL");
+                if (_user.Perfil == PerfilDash.Cliente && (_user.projetosRedmine == null || !_user.projetosRedmine.Any()))
+                {
+                    _user.projetosRedmine = new List<Projeto>();
+                    var par = new NameValueCollection();
+                    _user.Projetos
+                           .ForEach(x =>
+                           {
+                               try
+                               {
+                                   var pro = new Projeto()
+                                   {
+                                       Id = x.Id,
+                                       Identifier = _Redmine.GetObject<Project>(x.Id, new NameValueCollection()).Identifier.ToString()
+                                   };
+                                   _user.projetosRedmine.Add(pro);
+                               }
+                               catch
+                               {
+                                   _user.projetosRedmine.Add(new Projeto() { Id = x.Id, Identifier = x.Id });
+                               }
+                           });
+                }
+
+                Session["User"] = _user;
 
             }
             base.OnActionExecuting(filterContext);
@@ -203,10 +232,10 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         protected override void OnException(ExceptionContext filterContext)
         {
             Debugar.WriteLine(String.Format("[Error]:[Controller: {0}][ExceptionType:{1} ][ErrorMessage: {2}][Inner:{3}] ",
-                filterContext.Controller?.ToString()??"",
-                filterContext.Exception?.ToString()??"",
+                filterContext.Controller?.ToString() ?? "",
+                filterContext.Exception?.ToString() ?? "",
                 filterContext.Exception?.Message ?? "",
-                filterContext.Exception?.InnerException?.Message?? ""
+                filterContext.Exception?.InnerException?.Message ?? ""
                 ), "OnException");
             base.OnException(filterContext);
         }

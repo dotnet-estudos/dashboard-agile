@@ -14,6 +14,7 @@ namespace DashBoardAgil.Domain.Models
             AllowList = new List<Projeto>();
             DenyList = new List<Projeto>();
             UsuariosMaster = new List<string>();
+            PerfilCliente = new List<string>();
         }
 
         public Parametro Parametro { get; set; }
@@ -23,6 +24,7 @@ namespace DashBoardAgil.Domain.Models
         public List<Projeto> DenyList { get; set; }
 
         public List<string> UsuariosMaster { get; set; }
+        public List<string> PerfilCliente { get; set; }
 
         [field: NonSerialized()]
         public virtual List<Projeto> ProjetosAtivos()

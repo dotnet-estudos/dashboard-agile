@@ -215,6 +215,7 @@
     <Compile Include="Controllers\Api\ComulativeFlowDiagramController.cs" />
     <Compile Include="Controllers\Api\ConsumptionHoursController.cs" />
     <Compile Include="Controllers\Api\CookieController.cs" />
+    <Compile Include="Controllers\Api\CreatedClosedController.cs" />
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Controllers\Api\PrazoChamadoController.cs" />
     <Compile Include="Controllers\Api\DiaDevController.cs" />
@@ -470,6 +471,10 @@
     <Content Include="Views\Configuracao\UsuarioMasterDelete.cshtml" />
     <Content Include="Views\Relatorio\ConsumoHorasProjeto.cshtml" />
     <Content Include="Views\Configuracao\Processos.cshtml" />
+    <Content Include="Views\Relatorio\AbertoFechado.cshtml" />
+    <Content Include="Views\Configuracao\PerfilCliente.cshtml" />
+    <Content Include="Views\Configuracao\PerfilClienteCreate.cshtml" />
+    <Content Include="Views\Configuracao\PerfilClienteDelete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

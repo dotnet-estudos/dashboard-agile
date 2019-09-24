@@ -1,45 +1,91 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using DashBoardAgil.CrossCutting;
+using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Domain.Interfaces.Abstracoes;
 
 namespace DashBoardAgil.Domain.Models
 {
-    public class CreatedPerClosedControl
+    public class CreatedClosedControl
     {
-        public IList<IdentificableIssue> CreatedList { get; set; }
-        public IList<IdentificableIssue> ClosedList { get; set; }
+        public CreatedClosedControl(List<CreatedClosed> createdList, List<CreatedClosed> closedList)
+        {
+            this.CreatedList = createdList;
+            this.ClosedList = closedList;
 
-        public Object GetByDay
+        }
+        public List<CreatedClosed> CreatedList { get; set; }
+        public List<CreatedClosed> ClosedList { get; set; }
+
+        private List<CreatedClosed> UnionAll
         {
             get
             {
-               // var createdList = (from rejc in CreatedList.ToList()
-               //               orderby rejc.CreatedOn
-               //               group rejc by ((DateTime)rejc.CreatedOn).Date
-               //                into grp
-               //               select new { Dia = grp.Key.ToString("d"), total = grp.Count(), type = "created" }).ToList();
+                var union = new List<CreatedClosed>(CreatedList);
+                union.AddRange(ClosedList);
+                return union;
+            }
+        }
+        private List<DateTime> Dates => this.UnionAll.Where(x => x.Flag == Flag.Created).Select(x => x.CreatedOn.Date).Union(this.UnionAll.Where(x => x.Flag == Flag.Closed).Select(y => y.ClosedOn?.Date ?? new DateTime())).ToList();
+        private List<int> WeekList => Dates.Count > 0 ? CrossCutting.Util.GetWeekList(this.Dates.Min(), this.Dates.Max()) : new List<int>();
 
-               // var closedList = (from rejc in ClosedList.ToList()
-               //                   orderby rejc.ClosedOn
-               //                   group rejc by ((DateTime)rejc.ClosedOn).Date
-               //                into grp
-               //                   select new { Dia = grp.Key.ToString("d"), total = grp.Count(), type ="closed" }).ToList();
-               // var union = new List<object>()
-               // {
-               //     closedList,
-               //     createdList
-               // };
+        public object GetByDay
+        {
+            get
+            {
+                var seriesData = new List<Object>();
+                var serieClosed = new List<int>();
+                var serieCreated = new List<int>();
+                var serieChart = new List<object>();
+                var dateTimes = this.Dates.ToArray();
 
-               //var serie =  (from rejc in union
-               //              orderby rejc["dia"]
-               //  group rejc by ((DateTime)rejc.Dia).Date
-               //                into grp
-               //  select new { Dia = grp.Key.ToString("d"), total = grp.Count(), type = "created" }).ToList();
+                dateTimes.OrderBy(x => x).ToList().ForEach(day =>
+                {
+                    var totalCrd = this.UnionAll.Count(x => x.Flag == Flag.Created && x.CreatedOn.Date == day);
+                    var totalCld = this.UnionAll.Count(x => x.ClosedOn != null && (x.Flag == Flag.Closed && ((DateTime)x.ClosedOn).Date == day));
 
-                return null;
+                    seriesData.Add(new { Dia = day.ToString("yyyy-MM-dd"), Criados = totalCrd, Fechados = totalCld });
+                    serieClosed.Add(totalCld);
+                    serieCreated.Add(totalCrd);
+
+                });
+
+                serieChart.Add(new { name = "Abertos", data = serieCreated });
+                serieChart.Add(new { name = "Fechados", data = serieClosed });
+
+                return new { data = seriesData, chart = new { categoria = dateTimes.Select(x => x.ToString("dd/MM/yyyy")).ToArray(), serie = serieChart } };
+            }
+        }
+
+        public object GetByWeek
+        {
+            get
+            {
+                var seriesData = new List<Object>();
+                var serieClosed = new List<int>();
+                var serieCreated = new List<int>();
+                var serieChart = new List<object>();
+                var dateTimes = this.Dates.ToArray();
+
+                WeekList.ForEach(week =>
+                {
+                    var totalCrd = this.UnionAll.Count(x => x.Flag == Flag.Created && x.CreatedOn.Date.GetWeekOfYear() == week);
+                    var totalCld = this.UnionAll.Count(x => x.ClosedOn != null && (x.Flag == Flag.Closed && ((DateTime)x.ClosedOn).Date.GetWeekOfYear() == week));
+
+                    seriesData.Add(new { Semana = week, Criados = totalCrd, Fechados = totalCld });
+                    serieClosed.Add(totalCld);
+                    serieCreated.Add(totalCrd);
+
+                });
+
+                serieChart.Add(new { name = "Abertos", data = serieCreated });
+                serieChart.Add(new { name = "Fechados", data = serieClosed });
+
+                return new { data = seriesData, chart = new { categoria = WeekList.ToArray(), serie = serieChart } };
             }
         }
     }

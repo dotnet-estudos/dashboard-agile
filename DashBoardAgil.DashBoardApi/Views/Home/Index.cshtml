@@ -1,8 +1,9 @@
 ﻿@using DashBoardAgil.DashBoardApi.Models
+@using DashBoardAgil.Domain.Enums
 @using Redmine.Net.Api.Types
 @{
     ViewBag.Title = "DashBoard";
-    var user = (User)ViewBag.User;//.FirstName
+    var user = (Usuario)ViewBag.User;//.FirstName
 }
 
 
@@ -25,21 +26,38 @@
         </div>*@
 </div>
 
-<div class="row">
-    @Html.Partial("_SumaryBlock")
-</div>
 
-    <div class="col-lg-6 right">
-        @Html.Partial("_ComulativeFlowDiagram")
-    </div>
-    <div class="col-lg-6 left">
-        @*@Html.Partial("_Dados")*@
-        @Html.Partial("_ThroughputRejection")
-    </div>
-    <div>
-        @Html.Partial("_DisperssionDiagram")
-    </div>
 
+@switch (user.Perfil)
+{
+    case (PerfilDash.Cliente):
+    {
+        <div class="row">
+            @Html.Partial("_SumaryBlock")
+        </div>
+        <div class="col-lg-6 left">
+            @*@Html.Partial("_Dados")*@
+            @Html.Partial("_ThroughputRejection")
+        </div>
+    }break;
+    default:
+        { 
+        <div class="row">
+            @Html.Partial("_SumaryBlock")
+        </div>
+
+        <div class="col-lg-6 right">
+           @Html.Partial("_ComulativeFlowDiagram")
+        </div>
+        <div class="col-lg-6 left">
+            @*@Html.Partial("_Dados")*@
+            @Html.Partial("_ThroughputRejection")
+        </div>
+        <div>
+            @Html.Partial("_DisperssionDiagram")
+        </div>
+    }break;
+};
 <script type="text/javascript">
 
     var dataIni = (new Date).getFullYear() + '-01-01';
@@ -50,10 +68,10 @@
         $(".iniDate").each(function () {
             $(this).prop("min", dataIni);
             $(this).prop("max", dataFim);
-        });
+    });
 
         $("#dateIni").prop("value",dataIni);
         $("#dateFim").prop("value",dataFim);
 
-    });
+});
 </script>

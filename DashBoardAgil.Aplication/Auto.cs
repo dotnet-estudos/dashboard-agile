@@ -144,6 +144,11 @@ namespace DashBoardAgil.Aplication
 
             Auto.Instance.RunAuto();
 
+#if DEBUG
+            Auto.Instance.GenerateThrougRejec();
+            Auto.Instance.GenerateCfd();
+#endif
+
             Debugar.WriteLine(String.Format("Serviço Configurado para Rodar em: {0} {1}(s)", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.ExecTime, GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.TipoContagemTempo.ToString()));
 
 

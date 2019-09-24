@@ -1,4 +1,4 @@
-/*!
+﻿/*!
  * jQuery JavaScript Library v1.4.3
  * http://jquery.com/
  *
@@ -5332,7 +5332,7 @@ jQuery.fn.extend({
 		// Default to a GET request
 		var type = "GET";
 
-		// If the second parameter was provided
+		// If the second parameters was provided
 		if ( params ) {
 			// If it's a function
 			if ( jQuery.isFunction( params ) ) {
