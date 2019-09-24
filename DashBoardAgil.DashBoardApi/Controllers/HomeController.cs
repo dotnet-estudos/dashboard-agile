@@ -7,8 +7,6 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
-using DashBoardAgil.Services.Enums;
-using DashBoardAgil.Services.Interfaces;
 using DashBoardAgil.Services.Service;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;

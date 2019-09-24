@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using DashBoardAgil.Services.Domain;
+using DashBoardAgil.Domain.Models;
 using DashBoardAgil.CrossCutting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

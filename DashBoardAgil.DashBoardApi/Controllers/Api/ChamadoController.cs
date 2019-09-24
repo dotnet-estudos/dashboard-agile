@@ -2,25 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Helpers;
 using System.Web.Http;
-using System.Web.Mvc;
 using System.Web.UI.WebControls;
-using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
-using DashBoardAgil.Services;
-using DashBoardAgil.Services.Domain;
-using DashBoardAgil.Services.Enums;
-using DashBoardAgil.Services.Extensions;
-using DashBoardAgil.Services.Service;
 using DashBoardAgil.Services.Util;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using WebGrease.Css.Extensions;
 
 namespace DashBoardAgil.DashBoardApi.Controllers.Api
 {

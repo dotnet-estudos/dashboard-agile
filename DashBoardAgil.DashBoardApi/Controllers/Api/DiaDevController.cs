@@ -6,7 +6,7 @@ using System.Web.WebPages.Html;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
-using DashBoardAgil.Services.Domain;
+using DashBoardAgil.Domain.Models;
 using Microsoft.Ajax.Utilities;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;

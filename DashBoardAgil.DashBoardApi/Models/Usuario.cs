@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Services;
-using DashBoardAgil.Services.Domain;
-using DashBoardAgil.Services.Enums;
+using DashBoardAgil.Domain.Models;
+using DashBoardAgil.Domain.Enums;
 using Redmine.Net.Api.Types;
 
 namespace DashBoardAgil.DashBoardApi.Models
