@@ -50,7 +50,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         }
         public ActionResult CicleTime()
         {
-            ViewBag.title = "Clicle Time";
+            ViewBag.title = "Cicle Time";
             GetSelectTime(null, true);
             ViewBag.SelectStatusRedmineDe = GetSelectStatusRedmine(StatusRedmine.BacklogNovo);
             ViewBag.SelectStatusRedminePara = GetSelectStatusRedmine(StatusRedmine.BacklogAberto);

@@ -375,6 +375,7 @@
     <Content Include="Scripts\js\flot\jquery.flot.threshold.js" />
     <Content Include="Scripts\js\flot\jquery.flot.time.js" />
     <Content Include="Scripts\js\flot\jquery.flot.tooltip.min.js" />
+    <Content Include="Scripts\js\highchart\drilldown.js" />
     <Content Include="Scripts\js\highchart\export-data.js" />
     <Content Include="Scripts\js\highchart\exporting.js" />
     <Content Include="Scripts\js\highchart\highcharts.js" />

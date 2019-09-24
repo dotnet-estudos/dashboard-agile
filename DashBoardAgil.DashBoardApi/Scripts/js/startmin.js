@@ -518,6 +518,45 @@ function renderRejectionThroughput(div, _title, _subtitle, _Categoria, _serie, _
 });
 }
 
+function renderCollumChart(div, _title, _subtitle, _Categoria, _labelX, _labelItemY, _serie) {
+    Highcharts.chart(div, {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: _title
+        },
+        subtitle: {
+            text: _subtitle
+        },
+        xAxis: {
+            categories: _Categoria,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: _labelX
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.2f} '+_labelItemY +'</b></td></tr>',
+            footerFormat: '</table>',
+            shared: false,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: _serie
+    });
+}
+
 function renderGaugeGoogle(div, data, options) {
 
     var ArrayData = [];

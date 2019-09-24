@@ -157,7 +157,7 @@ namespace DashBoardAgil.Services.Domain
                             {
                                 Prioridade = temp.Key,
                                 Quantidade = temp.Count(),
-                                Dias = TimeSpan.FromHours(Math.Round(temp.Average(x => x.LeadBruto) / 24, 2, MidpointRounding.AwayFromZero)).ToString(@"dd\.hh\:mm\:ss"),
+                                Dias = TimeSpan.FromHours(Math.Round(temp.Average(x => x.LeadBruto) , 2, MidpointRounding.AwayFromZero)).ToString(@"dd\.hh\:mm\:ss"),
                                 LeadBruto = Math.Round(temp.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero),
                                 Percent = (temp.Count() / TotalChamadosDouble).ToString("P")
                             };
@@ -289,20 +289,19 @@ namespace DashBoardAgil.Services.Domain
                     var drilldown = processo.Fluxo.Where(
                         fluxo => fluxo.FasePai == null && fluxo.SubFases.Any(x => !x.StatusFechamento)).ToList()
                         .Select(flux =>new {
-                                series = new
-                                {
+                               
                                     name = flux.Descricao,
                                     id = flux.Id.ToString(),
-                                    data = dicClicleTime.Where(x => flux.SubFases.Any(y => y.Id == x.Key)).Select(x => new  { name= subfases.FirstOrDefault(s => s.Id == x.Key).Descricao, x.Value }).ToArray()
-                                }
-
+                                    data = dicClicleTime.Where(x => flux.SubFases.Any(y => y.Id == x.Key)).Select(x => new  { name= subfases.FirstOrDefault(s => s.Id == x.Key).Descricao, y= x.Value, value = x.Value }).ToArray()
                             });
 
-                    return new
-                        {
-                            series = new List<object>() { new { name = "Fases", colorByPoint = true, data = dicClicleFase }}.ToArray(),
-                            drilldown = new { series= drilldown }
-                        };
+                    var retorno = new
+                    {
+                        series = new List<object>() { new { name = "Fases", colorByPoint = true, data = dicClicleFase } }.ToArray(),
+                        drilldown = new { series = drilldown }
+                    };
+
+                    return retorno;
                 }
                 else
                 {

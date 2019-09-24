@@ -19,7 +19,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         // GET: api/Project/5
         public object Get(string id, bool parent = false, int customField = 0)
         {
-            var param = new NameValueCollection {{RedmineKeys.ID, "todos"}};
+            var param = new NameValueCollection {{RedmineKeys.PROJECT_ID, "todos"}};
 
 
             var retorno = _Redmine.GetObjects<Project>(param);
@@ -28,7 +28,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
              var ret = retorno.Where(x => ((!parent || parent && (x.Parent?.Id.ToString() ?? "1") == (Parent?.Id ?? "0"))) &&
                                           (customField == 0 || x.CustomFields != null && x.CustomFields.Any(y => y.Id == customField && y.Values != null && y.Values.Any(z=>z.Info != "") ))
-                                        ).Select(x => new { x.Id, x.Identifier, x.Name }).ToList();
+                                           ).Select(x => new { x.Id, x.Identifier, x.Name }).ToList();
 
             return ret;
         }
