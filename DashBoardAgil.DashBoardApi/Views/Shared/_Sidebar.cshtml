@@ -1,12 +1,16 @@
 ﻿@using DashBoardAgil.DashBoardApi.Models
 @using DashBoardAgil.Services.Enums
+@using DashBoardAgil.Services.Domain
+
 @{
+    //carregar o menu dinamicamente
+    var ItensMenu = (List<DashBoardAgil.Services.Domain.Menu>)Session["ItensMenu"];
+    //var ItensMenu = (String)Session["ItensMenu"];
 
     var user = (Usuario)Session["User"];
     bool ableConfig = (bool)(ViewBag.AbleToShowConfig ?? false);
 
 }
-
 
 <div class="navbar-default sidebar" role="navigation">
     <div class="sidebar-nav navbar-collapse">
@@ -21,8 +25,27 @@
                     </span>
                 </div>
             </li>
+            <!--Teste exibição menu-->
+            @foreach (var item in ItensMenu)
+            {
+                <li>
+                    <a href="@String.Format(item.Url)"><i class="@String.Format(item.Icone)"></i> @String.Format(item.Titulo) <span class="@String.Format(item.SubMenus.Count > 0 ? "fa arrow" : "")"></span></a>
+                    @if (item.SubMenus.Count > 0)
+                    {
+                        <ul class="nav nav-second-level">
+                            @foreach (var sub in item.SubMenus)
+                            {
+                            <li>
+                                <a href="@String.Format(sub.Url)" @Html.Raw(sub.IdUrl !="" ? "id='"+sub.IdUrl+"'" : "")><i class="@String.Format(sub.Icone)"></i> @Html.Raw(sub.Titulo)</a>
+                            </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+            <!---->
             <!-- List de Menus-->
-
+            <!--
             <li>
                 <a href="/Home/Index"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</a>
             </li>
@@ -49,10 +72,9 @@
                     </ul>
                 </li>
             }
-            @if ( user.Perfil == PerfilDash.Administrador || (user?.Login?.Contains("uhitlei.barbosa") ?? false))
+            @if (user.Perfil == PerfilDash.Administrador || (user?.Login?.Contains("uhitlei.barbosa") ?? false))
             {
                 <li>
-
                     <a href="#"><i class="fas fa-chart-line fa-fw"></i> Metricas <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         @*   <li>
@@ -95,11 +117,15 @@
                             <a href="@Url.Action("Log", "Configuracao")"><i class="fas fa-bug"></i> Log</a>
                         </li>
                         <li>
+                            <a href="@Url.Action("ItensMenu", "Configuracao")"><i class="fas fa-bug"></i> Itens Menu</a>
+                        </li>
+                        <li>
                             <a href="javascript:void(0);" id="__agent"><i class="fas fa-user-secret"></i> Agente Serviço <input type="" id="_togleAgent" style="display: none" /> </a>
                         </li>
                     </ul>
                 </li>
             }
+            -->
             <!--<li> Exemplo
                 <a href="Home" class="active"><i class="fas fa-tachometer-alt fa-fw"></i> Dashboard</a>
             </li>
@@ -120,9 +146,10 @@
                 </ul>
             </li>-->
             <!-- Fim List de Menus-->
-        </ul>
+            </ul>
 
-    </div>
+        </div>
+
 </div>
 
 <script>

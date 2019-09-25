@@ -44,6 +44,13 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList);
         }
 
+        public ActionResult ItensMenu()
+        {
+            GlobalConfig.Instance.CarregarConfig();
+            ViewBag.Tipo = ViewBag.Title = "Itens Menu";
+            return View(GlobalConfig.Instance.ConfiguracaoRedmine.ItensMenu);
+        }
+
         public ActionResult Log()
         {
             var conteudo = Global.Instance.LerArquivo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp", String.Format("Log_{0}.txt", DateTime.Now.Date.ToString("ddMMyyyy"))));
