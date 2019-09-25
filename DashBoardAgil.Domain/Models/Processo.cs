@@ -11,5 +11,9 @@ namespace DashBoardAgil.Domain.Models
         public int ProcessoId { get; set; }
         public string Nome { get; set; }
         public List<PFS> PFS { get; set; }
+        public override string ToString()
+        {
+            return Nome;
+        }
     }
 }

@@ -475,11 +475,14 @@
     <Content Include="Views\Configuracao\PerfilCliente.cshtml" />
     <Content Include="Views\Configuracao\PerfilClienteCreate.cshtml" />
     <Content Include="Views\Configuracao\PerfilClienteDelete.cshtml" />
+    <Content Include="Views\Processo\Create.cshtml" />
+    <Content Include="Views\Processo\Delete.cshtml" />
+    <Content Include="Views\Processo\Edit.cshtml" />
+    <Content Include="Views\Processo\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Base\" />
-    <Folder Include="Views\Processo\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

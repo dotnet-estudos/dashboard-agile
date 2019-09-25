@@ -9,6 +9,7 @@ using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
 using Microsoft.Ajax.Utilities;
+using DashBoardAgil.Services.Service;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
 {
@@ -136,7 +137,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             GlobalConfig.Instance.CarregarConfig();
             ViewBag.Tipo = ViewBag.Title = "Processos";
 
-            return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList);
+            return View(ProcessoService.listarProcessos());
         }
 
         public ActionResult PerfilCliente()

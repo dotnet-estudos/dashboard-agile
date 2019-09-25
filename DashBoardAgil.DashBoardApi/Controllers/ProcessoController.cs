@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using DashBoardAgil.Domain.Models;
+using DashBoardAgil.InfraData.Contexto;
+using DashBoardAgil.Services.Service;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
 {
@@ -11,7 +14,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         // GET: Processo
         public ActionResult Index()
         {
-            return View();
+            return View(new Contexto().Processos.ToList());
         }
 
         // GET: Processo/Details/5
@@ -32,7 +35,10 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
+                Processo Processo = new Processo();
+                Processo.Nome = collection["Nome"];
+
+                ProcessoService.salvarProcesso(Processo);
 
                 return RedirectToAction("Index");
             }
@@ -45,7 +51,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         // GET: Processo/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            return View(ProcessoService.carregarPorId(id));
         }
 
         // POST: Processo/Edit/5

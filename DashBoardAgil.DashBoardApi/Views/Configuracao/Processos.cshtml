@@ -11,15 +11,9 @@
     <thead>
     <tr>
         <th>
-            Nome
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Nome)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Ativo)
-        </th>
-        <th></th>
+        <th>Ações</th>
     </tr>
     </thead>
     <tbody>
@@ -27,18 +21,12 @@
         {
             <tr>
                 <td>
-                    @String.Format(item.Parent.ToString())
-                </td>
-                <td>
                     @String.Format(item.ToString())
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Ativo)
-                </td>
-                <td>
-                    @Html.ActionLink(" ", "Edit", "Projeto", new { id = item.Id, tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "fas fa-edit" }) |
-                    @Html.ActionLink(" ", "Details", "Projeto", new { id = item.Id, topo = ViewBag.Tipo }, htmlAttributes: new { @class = "fas fa-info" }) |
-                    @Html.ActionLink(" ", "Delete", "Projeto", new { id = item.Id, tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "fas fa-trash-alt" })
+                    @Html.ActionLink(" ", "Edit", "Processo", new { id = item.ProcessoId, tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "fas fa-edit" }) |
+                    @Html.ActionLink(" ", "Details", "Processo", new { id = item.ProcessoId, topo = ViewBag.Tipo }, htmlAttributes: new { @class = "fas fa-info" }) |
+                    @Html.ActionLink(" ", "Delete", "Processo", new { id = item.ProcessoId, tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "fas fa-trash-alt" })
                 </td>
             </tr>
         }
