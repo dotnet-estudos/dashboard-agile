@@ -148,7 +148,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
                 GlobalConfig.Instance.CarregarConfig();
                 var menu = new Services.Domain.Menu();
-                Session["ItensMenu"] = menu.MontaMenuPorPerfil(GlobalConfig.Instance.ConfiguracaoRedmine.ItensMenu, usuario.Perfil.ToString());
+                Session["ItensMenu"] = menu.MontaMenuPorPerfil(GlobalConfig.Instance.ConfiguracaoRedmine.ItensMenu, usuario.Perfil);
 
                 if (usuario.Status == UserStatus.STATUS_ACTIVE || usuario.Status == UserStatus.STATUS_ANONYMOUS)
                     lUsuario.Ativo = true;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DashBoardAgil.Services.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,13 +16,14 @@ namespace DashBoardAgil.Services.Domain
         public string Icone { get; set; }
         public string Titulo { get; set; }
         public string IdUrl { get; set; }
-        public string Permissoes { get; set; }
+        //public string Permissoes { get; set; }
+        public List<PerfilDash> Permissoes { get; set; }
         public bool Visivel { get; set; }
         public List<Menu> SubMenus { get; set; }
         //public virtual ICollection<Menu> SubMenus { get; set; }
         //public virtual Menu MenuPai { get; set; }
 
-        public List<Menu> MontaMenuPorPerfil(List<Menu> ItensMenu, string _perfil)
+        public List<Menu> MontaMenuPorPerfil(List<Menu> ItensMenu, PerfilDash _perfil)
         {
             List<Menu> ItensMenuAux = ItensMenu;
             //Adicionar os menus principais
