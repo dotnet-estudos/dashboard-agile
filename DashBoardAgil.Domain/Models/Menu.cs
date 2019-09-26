@@ -1,4 +1,4 @@
-﻿using DashBoardAgil.Services.Enums;
+﻿using DashBoardAgil.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

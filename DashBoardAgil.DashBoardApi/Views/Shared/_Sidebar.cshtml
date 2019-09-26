@@ -1,10 +1,10 @@
-﻿@using DashBoardAgil.DashBoardApi.Models
-@using DashBoardAgil.Services.Enums
-@using DashBoardAgil.Services.Domain
+﻿
+@using DashBoardAgil.Domain.Enums
+@using DashBoardAgil.Domain.Models
 
 @{
     //carregar o menu dinamicamente
-    var ItensMenu = (List<DashBoardAgil.Services.Domain.Menu>)Session["ItensMenu"];
+    var ItensMenu = (List<Menu>)Session["ItensMenu"];
     //var ItensMenu = (String)Session["ItensMenu"];
 
 }

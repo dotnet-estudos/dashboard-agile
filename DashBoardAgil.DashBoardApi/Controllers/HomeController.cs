@@ -7,8 +7,9 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
-using DashBoardAgil.Services.Enums;
-using DashBoardAgil.Services.Interfaces;
+using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.Domain.Interfaces;
+using DashBoardAgil.Domain.Models;
 using DashBoardAgil.Services.Service;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
@@ -147,7 +148,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                 ViewBag.User = usuario;
 
                 GlobalConfig.Instance.CarregarConfig();
-                var menu = new Services.Domain.Menu();
+                var menu = new Domain.Models.Menu();
                 Session["ItensMenu"] = menu.MontaMenuPorPerfil(GlobalConfig.Instance.ConfiguracaoRedmine.ItensMenu, usuario.Perfil);
 
                 if (usuario.Status == UserStatus.STATUS_ACTIVE || usuario.Status == UserStatus.STATUS_ANONYMOUS)
