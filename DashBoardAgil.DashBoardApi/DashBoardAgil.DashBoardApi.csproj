@@ -476,6 +476,7 @@
     <Content Include="Views\Configuracao\PerfilCliente.cshtml" />
     <Content Include="Views\Configuracao\PerfilClienteCreate.cshtml" />
     <Content Include="Views\Configuracao\PerfilClienteDelete.cshtml" />
+    <Content Include="Views\Configuracao\ItensMenu.cshtml" />
     <Content Include="Views\Relatorio\LeadTime.cshtml" />
   </ItemGroup>
   <ItemGroup>
