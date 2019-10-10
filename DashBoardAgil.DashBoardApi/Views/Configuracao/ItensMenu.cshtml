@@ -1,11 +1,13 @@
-﻿@model IEnumerable<DashBoardAgil.Services.Domain.Menu>
+﻿@model IEnumerable<DashBoardAgil.Domain.Models.Menu>
+@using DashBoardAgil.CrossCutting;
 @{
 
 }
-<p>
-    @Html.ActionLink("Adicionar", "Create", "Projeto", new { tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "btn btn-primary" })
-</p>
-
+@*
+    <p>
+        @Html.ActionLink("Adicionar", "Create", "Projeto", new { tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "btn btn-primary" })
+    </p>
+*@
 <table class="table table-striped table-bordered" data-datatable="true">
     <thead>
         <tr>
@@ -19,12 +21,11 @@
                 @Html.DisplayNameFor(model => model.Permissoes)
             </th>
             <th width="10%">
-                @Html.DisplayNameFor(model => model.Id)
+                Id
             </th>
             <th width="10%">
                 @Html.DisplayNameFor(model => model.Visivel)
             </th>
-            <th width="1%"></th>
         </tr>
     </thead>
     <tbody>
@@ -38,16 +39,20 @@
                     @String.Format(item.Url)
                 </td>
                 <td>
-                    @String.Format(item.Permissoes)
+                    @for (int x = 0; x < item.Permissoes.Count; x++)
+                    {
+                        @String.Format(item.Permissoes[x].GetDisplayName())
+                        if (!x.Equals(item.Permissoes.Count - 1))
+                        {
+                            @String.Format(", ")
+                        }
+                    }
                 </td>
                 <td>
                     @String.Format(item.Id.ToString())
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Visivel)
-                </td>
-                <td>
-                    @Html.ActionLink(" ", "Delete", "Projeto", new { id = item.Id, tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "fas fa-trash-alt" })
                 </td>
             </tr>
             if (item.SubMenus.Count > 0)
@@ -66,16 +71,20 @@
                                     @String.Format(sub.Url)
                                 </td>
                                 <td>
-                                    @String.Format(sub.Permissoes)
+                                    @for (int x = 0; x < sub.Permissoes.Count; x++)
+                                    {
+                                        @String.Format(sub.Permissoes[x].GetDisplayName())
+                                        if (!x.Equals(sub.Permissoes.Count - 1))
+                                        {
+                                            @String.Format(", ")
+                                        }
+                                    }
                                 </td>
                                 <td>
                                     @String.Format(sub.IdPai.HasValue ? sub.IdPai.ToString() : "")
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => sub.Visivel)
-                                </td>
-                                <td>
-                                    @Html.ActionLink(" ", "Delete", "Projeto", new { id = item.Id, tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "fas fa-trash-alt" })
                                 </td>
                             </tr>
                             }
