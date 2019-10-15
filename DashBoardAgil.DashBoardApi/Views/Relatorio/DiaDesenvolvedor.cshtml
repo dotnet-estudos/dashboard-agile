@@ -1,0 +1,206 @@
+﻿@using DashBoardAgil.CrossCutting
+@using DashBoardAgil.Domain.Models
+@using DashBoardAgil.Services.Util
+@model SlaControl
+@{
+    ViewBag.title = "Dia Desenvolvedor";
+
+    var ListAbas = new Dictionary<string, string>()
+    {
+        {"Info", "fas fa-info-circle"},
+        {"Grafico", "fas fa-chart-bar"},
+        {"Dados", "fas fa-list-alt"},
+        {"Calendario", "fas fa-chart-bar"},
+
+    };
+
+    var listTable = new List<string> { "Dia", "Time", "Desenvolvedor", "Total(Horas)" };
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Consulta Sla
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form role="form" action="JavaScript: return false;">
+                            <div class="form-group col-lg-12">
+                                <label>Time:</label>
+                                @*<input class="form-control" >*@
+                                @Html.DropDownList("time", (SelectList)ViewBag.SelectTime, "Selecione", htmlAttributes: new { @class = "form-control", required = true })
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Periodo: Inicio</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.AddDays(-30).ToString("yyyy-MM-dd")" required />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label>Fim</label>
+                                @*<input class="form-control" >*@
+                                <input type="date" id="dataFim" name="dataFim" class="form-control" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="" />
+                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
+                            </div>
+                            <button type="button" id="pesquisar" class="btn btn-primary">Pesquisar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_resultDefault", new DashBoardAgil.DashBoardApi.Models.ResultDefaultModel(listTable, ListAbas, false, false, false))
+
+
+<script>
+    
+    $(document).ready(function () {
+        function valid(data) {
+            
+            return true;
+        }
+
+        @*$("#time").on("change", function(e) {
+
+            var data = new Object();
+
+            data.id = $(this).val();
+
+            if (data.id) {
+                data.parent = true;
+                data.customField = 0;
+                $.ajax({
+                    url: "@Url.Action("", "api/Project")",
+                data: data,
+                method: "GET",
+                beforeSend: function() {
+                    $("#projetos").html("");
+                    $("#projetos").append('<option value="">Selecione</option>');
+                    blockCampos(true);
+
+                },
+                success: function(result) {
+
+                    result.forEach(function(item, index) {
+                        $("#projetos").append('<option value="' + item.Identifier + '">' + item.Name + '</option>');
+                    });
+                },
+                complete: function() {
+                    blockCampos(false);
+                }
+            });
+        }
+        });*@
+
+      function renderTable(result) {
+
+          $('#dados').html('<table id="dado_table" class="display table table-striped table-bordered" width="100%"><thead></thead><tbody></tbody></table>');
+
+          var dataset = new Array();
+
+
+            result.DiaDevControl.forEach(function (diaDev, index0) {
+                diaDev.LancamentosDiaDesenvolvedor.forEach(function (chamado, index) {
+
+                    var conteudo = new Array();
+
+                    conteudo.push("<a title='' target='_blank' href='http://redmine.example.com/projects/" + diaDev.Time.Identifier + "/time_entries?spent_on=><" + result.filtro.dataIni.substring(0, 10) + "|" + result.filtro.dataFim.substring(0, 10) + "&user_id=" + chamado.User.Id + "'>" + chamado.DiaString + "</a>");
+                    conteudo.push(diaDev.Time.Identifier);
+                    conteudo.push(chamado.User.FirstName);
+                    conteudo.push(chamado.TotalHoraDia);
+                    dataset.push(conteudo);
+                });
+            });
+
+            var dataTable = $('#dado_table').DataTable({
+                data: dataset,
+                columns: [
+                    { title: "Dia", DataProp: "link" },
+                    { title: "Time", DataProp: "Projeto" },
+                    { title: "Usuário.", DataProp: "Status.Name" },
+                    { title: "Total", DataProp: "TipoString" },                   
+                ]
+            });
+            dataTable.destroy();
+            renderDatatable("#dado_table");
+
+        }
+
+
+        function renderCalendario(result) {
+
+            var notes = new Array();
+            result.DiaDevControl.forEach(function (diaDev, index0) {
+                diaDev.LancamentosDia.forEach(function (item, index) {
+
+                    var object = new Object();
+
+                    object.date = item.Dia.substring(0, 10);
+                    object.note = [item.Devs.length];
+                    notes.push(object);
+                    //[
+                    //    { "date": "2018-12-25", "note": ["Natal"] },
+                    //    { "date": "2018-12-12", "note": ["Tahun Baru"] }
+                    //]
+                });
+            });
+
+            renderCalendar("#calendario", notes, result.filtro.dataIni.substring(0, 10), result.filtro.dataFim.substring(0, 10));
+
+        }
+
+        $("#pesquisar").on("click", function (e) {
+
+            $("#resultado").hide();
+            limpar();
+            $('#i_tab-grafico').click();
+
+            var data = new Object();
+
+            data.time = $("#time").val();
+            data.dataIni = $("#dataIni").val();
+            data.dataFim = $("#dataFim").val();
+            data.AceitePO = true;
+
+            if (valid(data)) {
+
+                $.ajax({
+                    url: "@Url.Action("", "api/DiaDev")",
+                    data: data,
+                    method: "GET",
+                    beforeSend: function () {
+                        $("#resultado").show();
+                        $(".loading").show();
+                        $(".dados").hide();
+                    },
+                    success: function (result) {
+                        console.log(result);
+
+                        if (result.status) {
+
+                            //grafico(result);
+
+                            //renderTable(result);
+
+                            //renderCalendario(result);
+                        } else {
+                            dashboard.alertErro(result.mensagem);
+                        }
+                    },
+                    complete: function () {
+                        $(".loading").hide();
+                    }
+                });
+            } else {
+                dashboard.alertAtencao("Todos Campos são obrigatorios");
+            }
+
+        });
+    });
+</script>
+@Scripts.Render("~/bundles/jqueryval")

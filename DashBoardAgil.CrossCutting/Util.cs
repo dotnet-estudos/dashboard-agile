@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -16,6 +17,7 @@ using RazorEngine;
 using RazorEngine.Templating;
 using System.Web.Mvc;
 using System.Web;
+using DashBoardAgil.CrossCutting.Object;
 using Encoding = System.Text.Encoding;
 
 namespace DashBoardAgil.CrossCutting
@@ -786,6 +788,26 @@ namespace DashBoardAgil.CrossCutting
         {
             return (percent * From / 100);
         }
+
+        public static List<Feriado> Feriados(int ano = 0, string uf = "BA", string cidade="SALVADOR")
+        {
+            ano = ano == 0 ? DateTime.Now.Year: ano;
+            var arquivo = Global.Instance.LerArquivo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Feriados",ano.ToString()));
+            if (!(arquivo ?? "fasle").Equals("false"))
+            {
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://api.calendario.com.br");
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                System.Net.Http.HttpResponseMessage response = client.GetAsync("json=true&ano=" + ano.ToString() + "&estado=" + uf + "&cidade=" + cidade +"&token=dWhpdGxlaUBnbWFpbC5jb20maGFzaD0xNDIxNDk1MDc").Result;
+                var result = response.Content;
+
+
+                
+            }
+
+            return new List<Feriado>();
+        } 
+
 
     }
 }

@@ -216,6 +216,7 @@
     <Compile Include="Controllers\Api\ConsumptionHoursController.cs" />
     <Compile Include="Controllers\Api\CookieController.cs" />
     <Compile Include="Controllers\Api\CreatedClosedController.cs" />
+    <Compile Include="Controllers\Api\EntregasController.cs" />
     <Compile Include="Controllers\Api\MenuController.cs" />
     <Compile Include="Controllers\Api\PrazoChamadoController.cs" />
     <Compile Include="Controllers\Api\DiaDevController.cs" />
@@ -239,7 +240,6 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DivLoading.cs" />
-    <Compile Include="Models\Feriado.cs" />
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Models\Login.cs" />
     <Compile Include="Models\Mensagem.cs" />
@@ -304,6 +304,7 @@
     <Content Include="Content\css-bootstrap-4.2.1\bootstrap.css.map" />
     <Content Include="Content\css-bootstrap-4.2.1\bootstrap.min.css.map" />
     <None Include="config.template.json" />
+    <Content Include="Feriados\2019.json" />
     <None Include="Json\FeriadoSalvador2019.json" />
     <Content Include="Json\processo.json" />
     <None Include="Json\Sla.json" />
@@ -459,7 +460,7 @@
     <Content Include="Scripts\js\bootstrap-4.2.1\bootstrap.min.js.map" />
     <Content Include="Views\Shared\_defaultCarousel.cshtml" />
     <Content Include="Views\Relatorio\Desvios.cshtml" />
-    <Content Include="Views\Relatorio\CicleTime.cshtml" />
+    <Content Include="Views\Relatorio\CycleTime.cshtml" />
     <Content Include="Views\Relatorio\_Fase.cshtml" />
     <Content Include="Views\Projeto\Delete.cshtml" />
     <Content Include="Views\Configuracao\ChamadoFechados.cshtml" />
@@ -477,6 +478,7 @@
     <Content Include="Views\Configuracao\PerfilClienteCreate.cshtml" />
     <Content Include="Views\Configuracao\PerfilClienteDelete.cshtml" />
     <Content Include="Views\Relatorio\LeadTime.cshtml" />
+    <Content Include="Views\Relatorio\DiaDesenvolvedor.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

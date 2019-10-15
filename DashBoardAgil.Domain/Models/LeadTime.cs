@@ -16,10 +16,10 @@ namespace DashBoardAgil.Domain.Models
         //public int IdChamado { get; set; }
         //public DateTime CreatedOn { get; set; }
         //public string Projeto { get; set; }
-        //public StatusRedmine StatusDe { get; set; }
-        //public string StatusDeString => StatusDe.GetDisplayName();
-        //public StatusRedmine StatusPara { get; set; }
-        //public string StatusParaString => StatusPara.GetDisplayName();
+        public StatusRedmine StatusDe { get; set; }
+        public string StatusDeString => StatusDe.GetDisplayName();
+        public StatusRedmine StatusPara { get; set; }
+        public string StatusParaString => StatusPara.GetDisplayName();
         //public TipoChamadoRedmine Tipo { get; set; }
         //public string TipoString => this.Tipo.GetDisplayName();
         //public PrioridadeRedmine Prioridade { get; set; }

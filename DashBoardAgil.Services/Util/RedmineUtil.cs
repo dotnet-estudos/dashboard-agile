@@ -428,10 +428,29 @@ namespace DashBoardAgil.Services.Extensions
             var retorno = chamado?.Journals?.FirstOrDefault(x =>
             x.Details.Any(Constantes.GetDetail(status.GetHashCode().ToString(), //new Value
                                                  RedmineKeys.STATUS_ID, //Name Pardao status
-                                                 Constantes.Details.Name_Attr, //property 
+                                                 ConstantesCC.Details.Name_Attr, //property 
                                                  oldValue //Verificar a Saida do Status
                                                ))) ?? null;
             return retorno;
         }
+
+        public static List<Rejection> GetRejectionsList(List<Issue> chamados)
+        {
+            return chamados.Select(
+                chamado =>
+                    new Rejection()
+                    {
+                        IdChamado = chamado.Id,
+                        Tipo = (TipoChamadoRedmine)chamado.Tracker.Id,
+                        Prioridade = (PrioridadeRedmine)chamado.Priority.Id,
+                        //HasRejection = ((!(chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(x => x.Info?.Equals("Sim") ?? false)) ?? false) && chamado.Journals.Any(x => x.Details.Any(y => y.Name == Constantes.Details.Name_Tag && (y.NewValue.Contains(Constantes.Details.Value_Rejeitado)))))),
+                        RejectedDate = chamado.Journals?.FirstOrDefault(x => x.Details.Any(y => y.Name == ConstantesCC.Details.Name_Tag && (y.NewValue.Contains(ConstantesCC.Details.Value_Rejeitado))) && (!(chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(val => val.Info?.Equals("Sim") ?? false)) ?? false)))?.CreatedOn ?? null,
+                        ClosedOn = chamado.ClosedOn ?? null,
+                        CreatedOn = chamado.CreatedOn ?? new DateTime(1900, 1, 1),
+                        Projeto = chamado.Project.Name
+
+                    }).ToList();
+        }
+
     }
 }

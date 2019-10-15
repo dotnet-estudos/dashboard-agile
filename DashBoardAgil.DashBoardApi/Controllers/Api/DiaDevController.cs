@@ -7,6 +7,7 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
+using DashBoardAgil.InfraData.Contexto;
 using Microsoft.Ajax.Utilities;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
@@ -80,6 +81,48 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             var filtro = new { time, dataIni, dataFim };
 
             return new { status = true, mensagem = "sucesso", filtro, DiaDevControl = diaDevControl, DiaDevUnion = diaDevUni, PerDay = perDay2 };
+        }
+
+        public Object Get(string time, DateTime dataIni, DateTime dataFim, bool aceitePO)
+        {
+            if (time.IsNullOrWhiteSpace())
+                return new { status = false, mensagem = "Time é Obrigatório", SlaControl = new SlaControl() };
+
+            var _parametrosBase = new NameValueCollection
+                             {
+                               // {RedmineKeys.PROJECT_ID, "compatibilizacao-do-compras-net"},
+                                { RedmineKeys.PROJECT_ID, time}
+                                //{RedmineKeys.SPENT_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")) }
+                                //, {RedmineKeys.SORT, "spent_on:desc" }
+                                //,{"criteria", "user" }
+                                // ,{"group_by", "hours"}
+                              };
+
+            var parametroIssue = new NameValueCollection(_parametrosBase)
+                                     {
+                                       {RedmineKeys.STATUS_ID, "*" },
+                                       {RedmineKeys.UPDATED_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")) }
+                                     };
+
+             var parametroSpent = new NameValueCollection(_parametrosBase)
+                             {
+                               
+                                {RedmineKeys.SPENT_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")) }
+                                , {RedmineKeys.SORT, "spent_on:desc" }
+                                ,{"criteria", "user" }
+                                ,{"group_by", "hours"}
+                              };
+
+            var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier == time)??null;
+            
+            if (projeto?.QuantidadeDesenvolvedores <= 0)
+            {
+                return new { status = false, mensagem = "Cadastre quantidade de Dev do time", SlaControl = new SlaControl() };
+            }
+
+            var retorno = _RedmineService.GetDiaDevControl(parametroSpent, projeto, parametroIssue, dataIni, dataFim);
+
+            return retorno;
         }
     }
 }

@@ -63,6 +63,7 @@
     <Compile Include="Debugar.cs" />
     <Compile Include="Enums\UsuarioPerfil.cs" />
     <Compile Include="Global.cs" />
+    <Compile Include="Object\Feriado.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>

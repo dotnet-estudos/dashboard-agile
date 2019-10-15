@@ -33,6 +33,11 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             //GetSelectStatusRedmine();
             return View();
         }
+        public ActionResult DiaDesenvolvedor()
+        {
+            GetSelectTime("", false);
+            return View();
+        }
         public ActionResult PrazoChamado()
         {
             ViewBag.title = "Prazo";

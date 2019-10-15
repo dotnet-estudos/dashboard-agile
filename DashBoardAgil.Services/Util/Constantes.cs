@@ -15,14 +15,6 @@ namespace DashBoardAgil.Services.Util
     public class Constantes
     {
 
-        public static class Details
-        {
-            public const string Name_Attr = "attr";
-            public const string Name_Tag = "tag_list";
-            public const string Value_AguardandoInformacao = "Aguardando Informação";
-            public const string Value_Rejeitado = "Rejeitado";
-        }
-
         public static class Mensagens
         {
             public const string NOT_FOUND = "Não foi Possível encontrar {0}";
@@ -149,15 +141,15 @@ namespace DashBoardAgil.Services.Util
         /// </summary>
         public static readonly Func<Issue, bool> ChamadoPendenteInterno = fase => Constantes.StatusChamadosPendenteInterno.Contains(fase.Status.Id.ToString());
 
-        public static readonly Func<Issue, bool> ChamadoPendenteCliente = fase => (Constantes.StatusChamadosPendenteCliente.Contains(fase.Status.Id.ToString()) && !(fase.Journals.Any(jorn=>jorn.Details.Any(det=>det.Name.Equals(Constantes.Details.Name_Tag) && det.NewValue.Contains(Details.Value_AguardandoInformacao)) && !jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.OldValue.Contains(Details.Value_AguardandoInformacao)))));
+        public static readonly Func<Issue, bool> ChamadoPendenteCliente = fase => (Constantes.StatusChamadosPendenteCliente.Contains(fase.Status.Id.ToString()) && !(fase.Journals.Any(jorn=>jorn.Details.Any(det=>det.Name.Equals(ConstantesCC.Details.Name_Tag) && det.NewValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao)) && !jorn.Details.Any(det => det.Name.Equals(ConstantesCC.Details.Name_Tag) && det.OldValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao)))));
 
         public static readonly Func<Issue, bool> ChamadosEmAguardandoInformacao = chamad =>
-                                                                     (chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.NewValue.Contains(Details.Value_AguardandoInformacao) && !det.OldValue.Contains(Details.Value_AguardandoInformacao))) !=
-                                                                      chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.OldValue.Contains(Details.Value_AguardandoInformacao) && !det.NewValue.Contains(Details.Value_AguardandoInformacao))));
+                                                                     (chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(ConstantesCC.Details.Name_Tag) && det.NewValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao) && !det.OldValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao))) !=
+                                                                      chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(ConstantesCC.Details.Name_Tag) && det.OldValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao) && !det.NewValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao))));
 
         public static readonly Func<Issue, bool> ChamadosRejeitados = chamad => 
-                                                                     (chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.NewValue.Contains(Details.Value_Rejeitado) && !det.OldValue.Contains(Details.Value_Rejeitado))) !=
-                                                                      chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.OldValue.Contains(Details.Value_Rejeitado) && !det.NewValue.Contains(Details.Value_Rejeitado))));
+                                                                     (chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(ConstantesCC.Details.Name_Tag) && det.NewValue.Contains(ConstantesCC.Details.Value_Rejeitado) && !det.OldValue.Contains(ConstantesCC.Details.Value_Rejeitado))) !=
+                                                                      chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(ConstantesCC.Details.Name_Tag) && det.OldValue.Contains(ConstantesCC.Details.Value_Rejeitado) && !det.NewValue.Contains(ConstantesCC.Details.Value_Rejeitado))));
         public static Func<Detail, bool> GetDetail(string newvalue, string Name, string prop, bool old = false)
         {
 
@@ -167,10 +159,9 @@ namespace DashBoardAgil.Services.Util
 
         public static Func<Issue, bool> GetChamadoOntag(string tag_name)
         {
-           Func<Issue, bool> chan = chamad =>  (chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.NewValue.Contains(tag_name) && !det.OldValue.Contains(tag_name))) !=
-                                                chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(Constantes.Details.Name_Tag) && det.OldValue.Contains(tag_name) && !det.NewValue.Contains(tag_name))));
+           Func<Issue, bool> chan = chamad =>  (chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(ConstantesCC.Details.Name_Tag) && det.NewValue.Contains(tag_name) && !det.OldValue.Contains(tag_name))) !=
+                                                chamad.Journals.Count(jorn => jorn.Details.Any(det => det.Name.Equals(ConstantesCC.Details.Name_Tag) && det.OldValue.Contains(tag_name) && !det.NewValue.Contains(tag_name))));
             return chan;
         }
-
     }
 }

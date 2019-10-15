@@ -17,6 +17,12 @@
             @Html.DisplayNameFor(model => model.Identifier)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.QuantidadeDesenvolvedores)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProcessoId)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.Ativo)
         </th>
         <th></th>
@@ -31,6 +37,12 @@
                 </td>
                 <td>
                     @String.Format(item.ToString())
+                </td>
+                <td>
+                    @String.Format(item.QuantidadeDesenvolvedores.ToString())
+                </td>
+                <td>
+                    @String.Format(item.ProcessoId.ToString())
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Ativo)

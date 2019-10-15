@@ -84,6 +84,9 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
                         edit.Identifier = collection.Identifier;
                         edit.Ativo = collection.Ativo;
+                        edit.QuantidadeDesenvolvedores = collection.QuantidadeDesenvolvedores;
+                        edit.ProcessoId = collection.ProcessoId;
+
                         GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Add(edit);
                     }
                     else

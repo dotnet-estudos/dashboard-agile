@@ -17,6 +17,8 @@ namespace DashBoardAgil.Domain.Models
             Rejections =  new List<Rejection>();
         }
 
+        
+
         public DateTime? DataIni { get; set; }
         public DateTime? DataFim { get; set; }
         public List<Rejection> Rejections { get; set; }

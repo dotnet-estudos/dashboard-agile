@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Data.Entity;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Net.Http.Headers;
 using System.Net.Sockets;
@@ -354,8 +353,7 @@ namespace DashBoardAgil.Services.Service
                     {
                         var __datePara = (DateTime)datePara;
                         item.Under = __dateDe.DiferencaDentroDoPrazo(__datePara, slaProjeto.TipoContagemTempo, slaProjeto.Tempo + horaPausa, slaProjeto.TempoUltil);
-                        //if(!item.Under)
-                        //    item.HourTo = Math.Abs(Double.Parse(__dateDe.AddHoraUtil(slaProjeto.Tempo + horaPausa).Subtract(__datePara).TotalHours.ToString("##.###")));
+                        item.HourTo = Math.Abs(Double.Parse(__datePara.Subtract(__dateDe).TotalHours.ToString("##.###")));
                         item.Mensagem = String.Format(mensagem, __dateDe.ToString("dd/MM/yyyy HH:mm:ss"), __dateDe.AddHoraUtil(slaProjeto.Tempo).ToString("dd/MM/yyyy HH:mm:ss"), __datePara.ToString("dd/MM/yyyy HH:mm:ss"), horaPausa);
                     }
 
@@ -459,9 +457,9 @@ namespace DashBoardAgil.Services.Service
 
 
                 //Pegar Jornals Menor que a data limite e que contenha a tag Aguardando Informação
-                var jornals = chamado.Journals.Where(x => x.CreatedOn >= dateRef && x.CreatedOn <= dateLimite && x.Details.Any(y => y.Name == Constantes.Details.Name_Tag
-                                                                      && (y.NewValue.Contains(Constantes.Details.Value_AguardandoInformacao) ||
-                                                                          y.OldValue.Contains(Constantes.Details.Value_AguardandoInformacao)))
+                var jornals = chamado.Journals.Where(x => x.CreatedOn >= dateRef && x.CreatedOn <= dateLimite && x.Details.Any(y => y.Name == ConstantesCC.Details.Name_Tag
+                                                                      && (y.NewValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao) ||
+                                                                          y.OldValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao)))
                                                       )
                                               .Select(x => x).ToList();
 
@@ -469,9 +467,9 @@ namespace DashBoardAgil.Services.Service
                 {
                     //Percorcer os jornal que add A Tag Aguardando Informação
                     jornals.Where(x => x.Details.Any(y =>
-                                    y.Name == Constantes.Details.Name_Tag &&
-                                    (y.NewValue.Contains(Constantes.Details.Value_AguardandoInformacao) &&
-                                     !y.OldValue.Contains(Constantes.Details.Value_AguardandoInformacao))))
+                                    y.Name == ConstantesCC.Details.Name_Tag &&
+                                    (y.NewValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao) &&
+                                     !y.OldValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao))))
                         .OrderBy(x => x.CreatedOn)
                         .ToList()
                         .ForEach((jornal) =>
@@ -479,9 +477,9 @@ namespace DashBoardAgil.Services.Service
                             var firstOrDefault =
                                 jornals.FirstOrDefault(x => x.CreatedOn > jornal.CreatedOn &&
                                         x.Details.Any(
-                                            y => y.Name == Constantes.Details.Name_Tag &&
-                                                (!y.NewValue.Contains(Constantes.Details.Value_AguardandoInformacao) &&
-                                                y.OldValue.Contains(Constantes.Details.Value_AguardandoInformacao))));
+                                            y => y.Name == ConstantesCC.Details.Name_Tag &&
+                                                (!y.NewValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao) &&
+                                                y.OldValue.Contains(ConstantesCC.Details.Value_AguardandoInformacao))));
                             DateTime dateTagOf = firstOrDefault?.CreatedOn ?? DateTime.Now;
 
                             if (jornal.CreatedOn != null)
@@ -507,6 +505,29 @@ namespace DashBoardAgil.Services.Service
 
         public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false)
         {
+
+            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
+
+            //var processo = db.Processos
+            //                 .Include(x => x.PFS)
+            //                 .Include(x => x.PFS.Select(y=>y.Fase))
+            //                 .Include(x => x.PFS.Select(y => y.SubFase))
+            //                 .FirstOrDefault();
+
+            //processo.PFS.ForEach(x =>
+            //{
+            //    x.Processo = null;
+            //    x.SubFase.PFS = null;
+            //    x.Fase.PFS = null;
+            //});
+
+
+            // var conteudo = JsonConvert.SerializeObject(processo);
+
+
+
+            //Global.Instance.GravarArquivo(System.AppDomain.CurrentDomain.BaseDirectory, conteudo, "ProcessoBanco.json");
+
             var chamados = leadTime ? _manager.GetObjects<Issue>(parms) : _manager.GetObjectsWithJournals(parms);
             var leadsTimes = new List<LeadTime>();
             chamados.ForEach(chamado =>
@@ -560,20 +581,7 @@ namespace DashBoardAgil.Services.Service
             var chamados = _manager.GetObjectsWithJournals(parms);
             var rejecControl = new RejectionControl();
 
-            rejecControl.Rejections = chamados.Select(
-                chamado =>
-                    new Rejection()
-                    {
-                        IdChamado = chamado.Id,
-                        Tipo = (TipoChamadoRedmine)chamado.Tracker.Id,
-                        Prioridade = (PrioridadeRedmine)chamado.Priority.Id,
-                        //HasRejection = ((!(chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(x => x.Info?.Equals("Sim") ?? false)) ?? false) && chamado.Journals.Any(x => x.Details.Any(y => y.Name == Constantes.Details.Name_Tag && (y.NewValue.Contains(Constantes.Details.Value_Rejeitado)))))),
-                        RejectedDate = chamado.Journals?.FirstOrDefault(x => x.Details.Any(y => y.Name == Constantes.Details.Name_Tag && (y.NewValue.Contains(Constantes.Details.Value_Rejeitado))) && (!(chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(val => val.Info?.Equals("Sim") ?? false)) ?? false)))?.CreatedOn ?? null,
-                        ClosedOn = chamado.ClosedOn ?? null,
-                        CreatedOn = chamado.CreatedOn ?? new DateTime(1900, 1, 1),
-                        Projeto = chamado.Project.Name
-
-                    }).ToList();
+            rejecControl.Rejections = RedmineUtil.GetRejectionsList(chamados);
 
             return rejecControl;
         }
@@ -672,9 +680,9 @@ namespace DashBoardAgil.Services.Service
                                                               && det.Name.Equals(RedmineKeys.STATUS_ID)
                                                               && subFase.StatusRedmine.GetHashCode().ToString().Contains(det.NewValue))))
                                               .Select(x => x.Id).ToList());
-                            // listFluxo.Add(new { Semana = semana, Quantidade = count });
+                          // listFluxo.Add(new { Semana = semana, Quantidade = count });
 
-                        });
+                      });
                       listSerie.Add(count.Distinct().Count());
                   });
 
@@ -686,8 +694,8 @@ namespace DashBoardAgil.Services.Service
             #region Fluxo para Status
             processo.PFS.OrderBy(x => x.Ordem).ToList().ForEach((pfs) =>
                   {
-                    //var listFluxo = new List<object>();
-                    var listSerie = new List<int>();
+                      //var listFluxo = new List<object>();
+                      var listSerie = new List<int>();
 
                       weekList.ForEach(semana =>
                       {
@@ -698,12 +706,12 @@ namespace DashBoardAgil.Services.Service
                                                              && y.Details.Any(det => det.Property.Equals("attr")
                                                                              && det.Name.Equals(RedmineKeys.STATUS_ID)
                                                                              && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue))));
-                        //listFluxo.Add(new { Semana = semana, Quantidade = count });
-                        listSerie.Add(count);
+                          //listFluxo.Add(new { Semana = semana, Quantidade = count });
+                          listSerie.Add(count);
                       });
 
-                    //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
-                    serie.Add(new { name = pfs.SubFase.Descricao, data = listSerie });
+                      //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
+                      serie.Add(new { name = pfs.SubFase.Descricao, data = listSerie });
 
                   });
             #endregion
@@ -785,14 +793,77 @@ namespace DashBoardAgil.Services.Service
                             Id = 0,
                             Chamado = new IdentificableName() { Id = 0, Name = "Sem Chamado" },
                             Projeto = new IdentificableName() { Id = int.Parse(item.Id), Name = item.Identifier },
-                        // Team = new IdentificableName() {Id = int.Parse(team.Parent.Id??"0"), Name = team.Parent.Identifier},
-                        Usuario = new IdentificableName() { Id = 0, Name = "Sem Usuário" },
+                            // Team = new IdentificableName() {Id = int.Parse(team.Parent.Id??"0"), Name = team.Parent.Identifier},
+                            Usuario = new IdentificableName() { Id = 0, Name = "Sem Usuário" },
                             Comentario = string.Empty,
                             Horas = 0,
                             DataAlocacao = DateTime.Now.Date,
                             DataCriacao = DateTime.Now.Date,
                         }));
             return ConsumoH;
+        }
+
+        public DiaDevControl GetDiaDevControl(NameValueCollection parms, Projeto projeto, NameValueCollection parmIssues, DateTime dataIni, DateTime dataFim)
+        {
+
+            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
+
+            var processo = db.Processos
+                             .Include(x => x.PFS)
+                             .Include(x => x.PFS.Select(y => y.Fase))
+                             .Include(x => x.PFS.Select(y => y.SubFase))
+                             .FirstOrDefault();
+
+            processo.PFS.ForEach(x =>
+            {
+                x.Processo = null;
+                x.SubFase.PFS = null;
+                x.Fase.PFS = null;
+            });
+
+            projeto.Processo = processo;
+
+            var retorno = new DiaDevControl();
+
+            var lancamentos = _manager.GetObjects<TimeEntry>(parms);
+
+            var chas = _manager.GetObjectsWithJournals(parmIssues);
+            var chamados = chas.Select(x => Global.ReflectObjec(x, new Chamado())).ToList();
+
+
+            var listAlocaco = lancamentos.Select(x => Global.ReflectObjec(x, new Alocacao(projeto))).ToList();
+            retorno = new DiaDevControl(chamados, dataIni, dataFim) { Lancamentos = listAlocaco, Time = projeto };
+
+            return retorno;
+        }
+
+        public EntregasControl GetEntregasPeriodo(NameValueCollection parms, Projeto projeto, DateTime dataIni, DateTime dataFim)
+        {
+
+            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
+
+            var processo = db.Processos
+                             .Include(x => x.PFS)
+                             .Include(x => x.PFS.Select(y => y.Fase))
+                             .Include(x => x.PFS.Select(y => y.SubFase))
+                             .FirstOrDefault();
+
+            processo.PFS.ForEach(x =>
+            {
+                x.Processo = null;
+                x.SubFase.PFS = null;
+                x.Fase.PFS = null;
+            });
+
+            projeto.Processo = processo;
+
+
+            var chas = _manager.GetObjectsWithJournals(parms);
+            var chamados = chas.Select(x => Global.ReflectObjec(x, new Chamado())).ToList();
+            var rejections = RedmineUtil.GetRejectionsList(chas);
+            var retorno = new EntregasControl(chamados, rejections, projeto, dataIni, dataFim);
+
+            return retorno;
         }
 
         public CreatedClosedControl GetCreatedClosed(NameValueCollection parms, DateTime DataIni, DateTime DataFim)

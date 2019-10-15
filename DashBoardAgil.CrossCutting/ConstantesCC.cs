@@ -10,6 +10,15 @@ namespace DashBoardAgil.CrossCutting
 {
     public class ConstantesCC
     {
+        public static class Details
+        {
+            public const string Name_Attr = "attr";
+            public const string Name_Tag = "tag_list";
+            public const string Value_AguardandoInformacao = "Aguardando Informação";
+            public const string Value_Rejeitado = "Rejeitado";
+        }
+
+
         public const string TEXTO_VAZIO = "-";
         public const string TEXTO_SIM = "Sim";
         public const string TEXTO_NAO = "Não";

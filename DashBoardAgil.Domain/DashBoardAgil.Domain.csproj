@@ -69,6 +69,8 @@
     <Compile Include="Models\CreatedPerClosed.cs" />
     <Compile Include="Models\CreatedPerClosedControl.cs" />
     <Compile Include="Models\DiaDevControl.cs" />
+    <Compile Include="Models\Entrega.cs" />
+    <Compile Include="Models\EntregasControl.cs" />
     <Compile Include="Models\Fase.cs" />
     <Compile Include="Models\LeadTime.cs" />
     <Compile Include="Models\LeadTimeControl.cs" />

@@ -55,6 +55,14 @@
     <Compile Include="Migrations\201909061850505_Initial.Designer.cs">
       <DependentUpon>201909061850505_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.cs" />
+    <Compile Include="Migrations\201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.Designer.cs">
+      <DependentUpon>201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910151217355_Desenvolvimento_PFS.cs" />
+    <Compile Include="Migrations\201910151217355_Desenvolvimento_PFS.Designer.cs">
+      <DependentUpon>201910151217355_Desenvolvimento_PFS.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -71,6 +79,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201909061850505_Initial.resx">
       <DependentUpon>201909061850505_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.resx">
+      <DependentUpon>201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910151217355_Desenvolvimento_PFS.resx">
+      <DependentUpon>201910151217355_Desenvolvimento_PFS.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

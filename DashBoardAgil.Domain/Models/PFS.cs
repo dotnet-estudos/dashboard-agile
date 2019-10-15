@@ -22,6 +22,10 @@ namespace DashBoardAgil.Domain.Models
         public virtual SubFase SubFase { get; set; }
         public StatusRedmine StatusRedmine { get; set; }
         public SituacaoSubFase Situacao { get; set; }
+        public bool BackLog { get; set; }
+        public bool Cliente { get; set; }
+        public bool ValidadoPO { get; set; }
+        public bool Desenvolvimento { get; set; }
         public int Ordem { get; set; }
     }
 }
