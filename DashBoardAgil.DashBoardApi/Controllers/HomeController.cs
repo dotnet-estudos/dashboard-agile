@@ -7,10 +7,14 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
+using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.Domain.Interfaces;
+using DashBoardAgil.Domain.Models;
 using DashBoardAgil.Services.Service;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 
+using DashBoardAgil.Services;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
 {
@@ -138,11 +142,16 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                 }
                 var usuario = Global.ReflectObjec(user, new Usuario());
                 #if DEBUG
-               // usuario.Perfil = PerfilDash.Cliente;
+                //usuario.Perfil = PerfilDash.Cliente;
                 #endif
                 Session["User"] = usuario;
                 ViewBag.User = usuario;
-                if(usuario.Status == UserStatus.STATUS_ACTIVE || usuario.Status == UserStatus.STATUS_ANONYMOUS)
+
+                GlobalConfig.Instance.CarregarConfig();
+                var menu = new Domain.Models.Menu();
+                Session["ItensMenu"] = menu.MontaMenuPorPerfil(GlobalConfig.Instance.ConfiguracaoRedmine.ItensMenu, usuario.Perfil);
+
+                if (usuario.Status == UserStatus.STATUS_ACTIVE || usuario.Status == UserStatus.STATUS_ANONYMOUS)
                     lUsuario.Ativo = true;
             }
             catch (Exception)
