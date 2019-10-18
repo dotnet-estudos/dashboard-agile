@@ -118,7 +118,7 @@ namespace DashBoardAgil.Services.Service
                            select new { Id = e.GetHashCode(), Nome = e.ToString() };
             var lststr = lsitTipo.Select(x => x.Id.ToString()).ToList();
             String time = null;
-            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Id == "539").ToList().ForEach(team =>
+            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.ForEach(team =>
               {
                   try
                   {
@@ -190,7 +190,7 @@ namespace DashBoardAgil.Services.Service
                            select new { Id = e.GetHashCode(), Nome = e.ToString() };
             var lststr = lsitTipo.Select(x => x.Id.ToString()).ToList();
             String time = null;
-            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Id == "539").ToList().ForEach(team =>
+            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.ForEach(team =>
               {
                   try
                   {
@@ -735,9 +735,9 @@ namespace DashBoardAgil.Services.Service
 
                       weekList.ForEach(semana =>
                       {
-                          var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
+                          var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
                                                    (pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() <= semana) ||
-                                                    ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() <= semana
+                                                    ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() == semana
                                                                 && y.Details.Any(det => det.Property.Equals("attr")
                                                                 && det.Name.Equals(RedmineKeys.STATUS_ID)
                                                                 && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue)))).Select(x => x.Id).ToList();
