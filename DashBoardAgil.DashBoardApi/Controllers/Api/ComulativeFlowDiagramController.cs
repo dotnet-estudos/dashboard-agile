@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Linq;
+using System.Data.Entity;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
@@ -42,16 +44,41 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             #endregion
 
             #region time
-            if (!time.IsNullOrWhiteSpace())
-            {
-                parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", time));
-            }
+
+           if (!time.IsNullOrWhiteSpace())
+           {
+               parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", time));
+           }
+           else
+           {
+               return new {status = false, mensage = "erro"};
+           }
             #endregion
-           // Debugar.WriteLine(string.Format("Inicio: {0}", DateTime.Now.ToString("G")));
+            // Debugar.WriteLine(string.Format("Inicio: {0}", DateTime.Now.ToString("G")));
+
+           var proj =
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+
+            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
+
+            var processo = db.Processos
+                             .Include(x => x.PFS)
+                             .Include(x => x.ProcessoTipo)
+                             .Include(x => x.ProcessoTipo.Select(y => y.TipoChamado))
+                             .Include(x => x.PFS.Select(y => y.Fase))
+                             .Include(x => x.PFS.Select(y => y.SubFase))
+                             .FirstOrDefault(x => x.ProcessoId == proj.ProcessoId);
+
+            processo.PFS.ForEach(x =>
+            {
+                x.Processo = null;
+                x.SubFase.PFS = null;
+                x.Fase.PFS = null;
+            });
 
             var comulativeFlow = dashboard ?
                                  JsonConvert.DeserializeObject(Global.Instance.LerArquivo(Path.Combine(ConstantesCC.PATH_CFD_DIAGRAM, String.Format("{0}.json", time)))) :
-                                _RedmineService.GetCumulativeFlowDiagram(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim));
+                                _RedmineService.GetCumulativeFlowDiagram(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim), processo);
 
             //Debugar.WriteLine(string.Format("Fim: {0}", DateTime.Now.ToString("G")));
             return comulativeFlow;

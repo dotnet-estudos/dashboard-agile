@@ -63,6 +63,7 @@
     <Compile Include="Models\CalendarioChamado.cs" />
     <Compile Include="Models\Chamado.cs" />
     <Compile Include="Models\ChamadoControl.cs" />
+    <Compile Include="Models\ClasseServico.cs" />
     <Compile Include="Models\ConfigRedmine.cs" />
     <Compile Include="Models\ConsumoHoras.cs" />
     <Compile Include="Models\ConsumoHorasControl.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Models\PFS.cs" />
     <Compile Include="Models\PrazoControl.cs" />
     <Compile Include="Models\Processo.cs" />
+    <Compile Include="Models\ProcessoTipo.cs" />
     <Compile Include="Models\Projeto.cs" />
     <Compile Include="Models\Rejection.cs" />
     <Compile Include="Models\RejectionControl.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="Models\SubFase.cs" />
     <Compile Include="Models\Throughput.cs" />
     <Compile Include="Models\ThroughputControl.cs" />
+    <Compile Include="Models\TipoChamado.cs" />
     <Compile Include="Models\Versao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Util\DomainUtil.cs" />

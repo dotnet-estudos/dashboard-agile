@@ -118,40 +118,66 @@ namespace DashBoardAgil.Services.Service
                            select new { Id = e.GetHashCode(), Nome = e.ToString() };
             var lststr = lsitTipo.Select(x => x.Id.ToString()).ToList();
             String time = null;
-            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.ForEach(team =>
-            {
-                try
-                {
-                    time = team.Identifier;
+            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Id == "539").ToList().ForEach(team =>
+              {
+                  try
+                  {
+                      time = team.Identifier;
 
-                    if (time != null)
-                    {
-                        Debugar.WriteLine(string.Format("Iniciando {0} ", time), "GERADOR CFD");
-                        var parm = new NameValueCollection
-                    {
+                      var processo = GetProcessoTeam(team);
+
+                      lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
+
+
+                      if (time != null)
+                      {
+                          Debugar.WriteLine(string.Format("Iniciando {0} ", time), "GERADOR CFD");
+                          var parm = new NameValueCollection
+                      {
                             {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
                             {RedmineKeys.STATUS_ID, "*"},
                             {RedmineKeys.PROJECT_ID, String.Format("{0}", time)},
                             {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime) dataIni).ToString("yyyy-MM-dd"),((DateTime) dataFim).ToString("yyyy-MM-dd"))}
-                    };
+                      };
 
-                        var comulativeFlow = this.GetCumulativeFlowDiagram(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim));
-                        Global.Instance.GravarArquivo(ConstantesCC.PATH_CFD_DIAGRAM, JsonConvert.SerializeObject(comulativeFlow), String.Format("{0}.json", time));
-                        Debugar.WriteLine(String.Format("{0} gerado CFD", team), "GERADOR CFD");
-                    }
-                    else
-                    {
-                        Debugar.WriteLine(String.Format("{0} Não gerado CFD", team), "GERADOR CFD");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debugar.WriteLine(String.Format("Error.. Time: {0} Error: {1} Inner:{2}", time, ex.Message, ex.InnerException.Message), "GERADOR CFD");
-                }
-            });
+                          var comulativeFlow = this.GetCumulativeFlowDiagram(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim), processo);
+                          Global.Instance.GravarArquivo(ConstantesCC.PATH_CFD_DIAGRAM, JsonConvert.SerializeObject(comulativeFlow), String.Format("{0}.json", time));
+                          Debugar.WriteLine(String.Format("{0} gerado CFD", team), "GERADOR CFD");
+                      }
+                      else
+                      {
+                          Debugar.WriteLine(String.Format("{0} Não gerado CFD", team), "GERADOR CFD");
+                      }
+                  }
+                  catch (Exception ex)
+                  {
+                      Debugar.WriteLine(String.Format("Error.. Time: {0} Error: {1} Inner:{2}", time, ex.Message, ex.InnerException.Message), "GERADOR CFD");
+                  }
+              });
             Debugar.WriteLine("Finalizado ... ", "GERADOR CFD");
 
             return true;
+        }
+
+        protected Processo GetProcessoTeam(Projeto team)
+        {
+            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
+
+            var processo = db.Processos
+                .Include(x => x.PFS)
+                .Include(x => x.ProcessoTipo)
+                .Include(x => x.ProcessoTipo.Select(y => y.TipoChamado))
+                .Include(x => x.PFS.Select(y => y.Fase))
+                .Include(x => x.PFS.Select(y => y.SubFase))
+                .FirstOrDefault(x => x.ProcessoId == team.ProcessoId);
+
+            processo.PFS.ForEach(x =>
+            {
+                x.Processo = null;
+                x.SubFase.PFS = null;
+                x.Fase.PFS = null;
+            });
+            return processo;
         }
 
         public bool GerarThroughputReject()
@@ -164,52 +190,55 @@ namespace DashBoardAgil.Services.Service
                            select new { Id = e.GetHashCode(), Nome = e.ToString() };
             var lststr = lsitTipo.Select(x => x.Id.ToString()).ToList();
             String time = null;
-            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.ForEach(team =>
-            {
-                try
-                {
-                    time = team.Identifier;
+            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Id == "539").ToList().ForEach(team =>
+              {
+                  try
+                  {
+                      time = team.Identifier;
+                      var processo = GetProcessoTeam(team);
 
-                    if (time != null)
-                    {
-                        Debugar.WriteLine(string.Format("Iniciando {0} ", time), "GerarThroughputReject");
-                        var parm = new NameValueCollection
-                    {
+                      lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
+
+                      if (time != null)
+                      {
+                          Debugar.WriteLine(string.Format("Iniciando {0} ", time), "GerarThroughputReject");
+                          var parm = new NameValueCollection
+                      {
                             {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
                             {RedmineKeys.STATUS_ID, "closed"},
                             {RedmineKeys.PROJECT_ID, String.Format("{0}", time)},
                             {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime) dataIni).ToString("yyyy-MM-dd"),((DateTime) dataFim).ToString("yyyy-MM-dd"))}
-                    };
+                      };
                         ///PAREI AQUI
                         var reject = this.GetRejectionRate(parm);
 
-                        var thoupt = new ThroughputControl();
+                          var thoupt = new ThroughputControl();
 
-                        thoupt.DataFim = reject.DataFim = dataFim;
-                        thoupt.DataIni = reject.DataIni = dataIni;
+                          thoupt.DataFim = reject.DataFim = dataFim;
+                          thoupt.DataIni = reject.DataIni = dataIni;
 
-                        reject.Rejections.ForEach(rejection => thoupt.Throughputs.Add(CrossCutting.Util.ReflectObjec(rejection, new Throughput())));
+                          reject.Rejections.ForEach(rejection => thoupt.Throughputs.Add(CrossCutting.Util.ReflectObjec(rejection, new Throughput())));
 
-                        var week = CrossCutting.Util.GetWeekList(dataIni, dataFim);
+                          var week = CrossCutting.Util.GetWeekList(dataIni, dataFim);
 
-                        var unionSerieData = thoupt.ByTypeWeek.ToList();
+                          var unionSerieData = thoupt.ByTypeWeek.ToList();
 
-                        reject.ByTypeWeek.ToList().ForEach(x => unionSerieData.Add(x));
+                          reject.ByTypeWeek.ToList().ForEach(x => unionSerieData.Add(x));
 
-                        Global.Instance.GravarArquivo(ConstantesCC.PATH_THROUGHPUT_REJECT_DIAGRAM, JsonConvert.SerializeObject(new { Rejeicao = reject, Throughput = thoupt, Serie = unionSerieData, Categoria = week }), String.Format("{0}.json", time));
+                          Global.Instance.GravarArquivo(ConstantesCC.PATH_THROUGHPUT_REJECT_DIAGRAM, JsonConvert.SerializeObject(new { Rejeicao = reject, Throughput = thoupt, Serie = unionSerieData, Categoria = week }), String.Format("{0}.json", time));
 
-                        Debugar.WriteLine(String.Format("{0} gerado ThroughputReject", team), "GerarThroughputReject");
-                    }
-                    else
-                    {
-                        Debugar.WriteLine(String.Format("{0} Não gerado", team), "GerarThroughputReject");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debugar.WriteLine(String.Format("Error.. Time: {0} Error: {1} Inner:{2}", time, ex.Message, ex.InnerException.Message), "GerarThroughputReject");
-                }
-            });
+                          Debugar.WriteLine(String.Format("{0} gerado ThroughputReject", team), "GerarThroughputReject");
+                      }
+                      else
+                      {
+                          Debugar.WriteLine(String.Format("{0} Não gerado", team), "GerarThroughputReject");
+                      }
+                  }
+                  catch (Exception ex)
+                  {
+                      Debugar.WriteLine(String.Format("Error.. Time: {0} Error: {1} Inner:{2}", time, ex.Message, ex.InnerException.Message), "GerarThroughputReject");
+                  }
+              });
             Debugar.WriteLine("Finalizado ... ", "GerarThroughputReject");
 
             return true;
@@ -642,7 +671,7 @@ namespace DashBoardAgil.Services.Service
             return ret;
         }
 
-        public object GetCumulativeFlowDiagram(NameValueCollection parms, List<int> weekList)
+        public object GetCumulativeFlowDiagram(NameValueCollection parms, List<int> weekList, Processo processo)
         {
             var chamados = _manager.GetObjectsWithJournals(parms);
 
@@ -651,47 +680,54 @@ namespace DashBoardAgil.Services.Service
             var retorno = new List<object>();
             var serie = new List<object>();
             var serieFase = new List<object>();
-
+            var dicSerieFase = new Dictionary<KeyValuePair<int, int>, KeyValuePair<int, List<int>>>();
             // var processo = JsonConvert.DeserializeObject<Processo>(Global.Instance.LerArquivo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Json", "processo.json")));
 
-            var contexto = new DashBoardAgil.InfraData.Contexto.Contexto();
+            //var contexto = new DashBoardAgil.InfraData.Contexto.Contexto();
 
-            var processo = contexto.Processos.Include(y => y.PFS).FirstOrDefault(x => x.ProcessoId == 1);
+            //var processo = contexto.Processos.Include(y => y.PFS).FirstOrDefault(x => x.ProcessoId == processoId);
 
             #region Fluxo para FASE
 
-            var fases = processo.PFS.OrderBy(x => x.Ordem).Select(x => x.Fase).Distinct().ToList();
-            fases.ForEach((fase) =>
-            {
-                //var listFluxo = new List<object>();
-                var listSerie = new List<int>();
+            //var fases = processo.PFS.OrderBy(x => x.Ordem).Select(x => x.Fase).Distinct().ToList();
+            //fases.ForEach((fase) =>
+            //{
+            //    //var listFluxo = new List<object>();
+            //    var listSerie = new List<int>();
 
-                var statusFaseRedmine = processo.PFS.Where(x => x.FaseId == fase.FaseId).Select(x => new { Situacao = x.Situacao, SubFase = x.SubFase, StatusRedmine = x.StatusRedmine }).ToList();
+            //    var statusFaseRedmine = processo.PFS.Where(x => x.FaseId == fase.FaseId).Select(x => new { Situacao = x.Situacao, SubFase = x.SubFase, StatusRedmine = x.StatusRedmine }).ToList();
 
-                var count = new List<int>();
-                weekList.ForEach(semana =>
-                  {
-                      statusFaseRedmine.ForEach(subFase =>
-                      {
+            //    var count = new List<int>();
+            //    weekList.ForEach(semana =>
+            //      {
+            //          statusFaseRedmine.ForEach(subFase =>
+            //          {
 
-                          count.AddRange(chamados.Where(ch => (subFase.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
-                                                              ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() <= semana
-                                                              && y.Details.Any(det => det.Property.Equals("attr")
-                                                              && det.Name.Equals(RedmineKeys.STATUS_ID)
-                                                              && subFase.StatusRedmine.GetHashCode().ToString().Contains(det.NewValue))))
-                                              .Select(x => x.Id).ToList());
-                          // listFluxo.Add(new { Semana = semana, Quantidade = count });
+            //              count.AddRange(chamados.Where(ch => (subFase.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
+            //                                                  ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() <= semana
+            //                                                  && y.Details.Any(det => det.Property.Equals("attr")
+            //                                                  && det.Name.Equals(RedmineKeys.STATUS_ID)
+            //                                                  && subFase.StatusRedmine.GetHashCode().ToString().Contains(det.NewValue))))
+            //                                  .Select(x => x.Id).ToList());
+            //              // listFluxo.Add(new { Semana = semana, Quantidade = count });
 
-                      });
-                      listSerie.Add(count.Distinct().Count());
-                  });
+            //          });
+            //          listSerie.Add(count.Distinct().Count());
+            //      });
 
-                //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
-                serieFase.Add(new { name = fase.Descricao, data = listSerie });
-            });
+            //    //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
+            //    serieFase.Add(new { name = fase.Descricao, data = listSerie });
+            //});
             #endregion
 
             #region Fluxo para Status
+
+            try
+            {
+
+           
+            Debugar.WriteLine(String.Format("{0} - {1}", "Comecou ", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));
+
             processo.PFS.OrderBy(x => x.Ordem).ToList().ForEach((pfs) =>
                   {
                       //var listFluxo = new List<object>();
@@ -699,24 +735,53 @@ namespace DashBoardAgil.Services.Service
 
                       weekList.ForEach(semana =>
                       {
-                          var count = chamados
-                                      .Count(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
-                                                   (pfs.Situacao == SituacaoSubFase.Abertura && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() <= semana) ||
-                                                   ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() <= semana
-                                                             && y.Details.Any(det => det.Property.Equals("attr")
-                                                                             && det.Name.Equals(RedmineKeys.STATUS_ID)
-                                                                             && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue))));
+                          var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() <= semana) ||
+                                                   (pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() <= semana) ||
+                                                    ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() <= semana
+                                                                && y.Details.Any(det => det.Property.Equals("attr")
+                                                                && det.Name.Equals(RedmineKeys.STATUS_ID)
+                                                                && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue)))).Select(x => x.Id).ToList();
                           //listFluxo.Add(new { Semana = semana, Quantidade = count });
-                          listSerie.Add(count);
+                          var chave = new KeyValuePair<int, int>(pfs.SubFaseId, semana );
+                          var value = new KeyValuePair<int, List<int>>(pfs.FaseId, count);
+
+                          dicSerieFase.Add(chave, value);
+                          listSerie.Add(count.Count());
                       });
 
                       //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
                       serie.Add(new { name = pfs.SubFase.Descricao, data = listSerie });
 
                   });
+
+            Debugar.WriteLine(String.Format("{0} - {1}", "Terminou ", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));
+
             #endregion
 
+            #region Fase
+            var fases = processo.PFS.OrderBy(x => x.Ordem).Select(x => x.Fase).Distinct().ToList();
+            fases.ForEach((fase) =>
+            {
+                var listSerie = new List<int>();
+                weekList.ForEach(semana =>
+                {
+                    var count = new List<int>();
+                    dicSerieFase.Where(x => x.Value.Key == fase.FaseId && x.Key.Value == semana).ToList().ForEach(x =>
+                    {
+                        count.AddRange(x.Value.Value);
+                    });
+                    listSerie.Add(count.Distinct().Count());
+                });
+                serieFase.Add(new { name = fase.Descricao, data = listSerie });
+            });
+                #endregion
 
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
             return new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
         }
 
@@ -806,22 +871,7 @@ namespace DashBoardAgil.Services.Service
         public DiaDevControl GetDiaDevControl(NameValueCollection parms, Projeto projeto, NameValueCollection parmIssues, DateTime dataIni, DateTime dataFim)
         {
 
-            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
-
-            var processo = db.Processos
-                             .Include(x => x.PFS)
-                             .Include(x => x.PFS.Select(y => y.Fase))
-                             .Include(x => x.PFS.Select(y => y.SubFase))
-                             .FirstOrDefault();
-
-            processo.PFS.ForEach(x =>
-            {
-                x.Processo = null;
-                x.SubFase.PFS = null;
-                x.Fase.PFS = null;
-            });
-
-            projeto.Processo = processo;
+            projeto.Processo = GetProcessoTeam(projeto);
 
             var retorno = new DiaDevControl();
 
@@ -840,22 +890,8 @@ namespace DashBoardAgil.Services.Service
         public EntregasControl GetEntregasPeriodo(NameValueCollection parms, Projeto projeto, DateTime dataIni, DateTime dataFim)
         {
 
-            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
 
-            var processo = db.Processos
-                             .Include(x => x.PFS)
-                             .Include(x => x.PFS.Select(y => y.Fase))
-                             .Include(x => x.PFS.Select(y => y.SubFase))
-                             .FirstOrDefault();
-
-            processo.PFS.ForEach(x =>
-            {
-                x.Processo = null;
-                x.SubFase.PFS = null;
-                x.Fase.PFS = null;
-            });
-
-            projeto.Processo = processo;
+            projeto.Processo = GetProcessoTeam(projeto);
 
 
             var chas = _manager.GetObjectsWithJournals(parms);

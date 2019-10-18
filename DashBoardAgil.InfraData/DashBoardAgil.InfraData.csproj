@@ -63,6 +63,14 @@
     <Compile Include="Migrations\201910151217355_Desenvolvimento_PFS.Designer.cs">
       <DependentUpon>201910151217355_Desenvolvimento_PFS.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201910151725211_Add-tipochamado-processotipo.cs" />
+    <Compile Include="Migrations\201910151725211_Add-tipochamado-processotipo.Designer.cs">
+      <DependentUpon>201910151725211_Add-tipochamado-processotipo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201910151738006_Add-tipochamado-processotipo-2.cs" />
+    <Compile Include="Migrations\201910151738006_Add-tipochamado-processotipo-2.Designer.cs">
+      <DependentUpon>201910151738006_Add-tipochamado-processotipo-2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -85,6 +93,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910151217355_Desenvolvimento_PFS.resx">
       <DependentUpon>201910151217355_Desenvolvimento_PFS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910151725211_Add-tipochamado-processotipo.resx">
+      <DependentUpon>201910151725211_Add-tipochamado-processotipo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201910151738006_Add-tipochamado-processotipo-2.resx">
+      <DependentUpon>201910151738006_Add-tipochamado-processotipo-2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

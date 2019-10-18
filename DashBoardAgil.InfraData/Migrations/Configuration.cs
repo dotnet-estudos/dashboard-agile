@@ -21,6 +21,8 @@ namespace DashBoardAgil.InfraData.Migrations
             //  to avoid creating duplicate seed data.
             SeedProcessos(context);
             SeedFases(context);
+            SeedTipoChamdo(context);
+            context.SaveChangesSeed();
         }
 
         private void SeedProcessos(Contexto.Contexto context)
@@ -33,7 +35,7 @@ namespace DashBoardAgil.InfraData.Migrations
                     Nome = "Sustentação"
                 });
 
-                context.SaveChangesSeed();
+               
             }
         }
 
@@ -66,6 +68,55 @@ namespace DashBoardAgil.InfraData.Migrations
                 {
                     Descricao = "Fechamento",
                 });
+            }
+        }
+
+        private void SeedTipoChamdo(Contexto.Contexto context)
+        {
+            if (!context.TipoChamado.Any())
+            {
+                context.TipoChamado.AddOrUpdate(
+                    new TipoChamado()
+                    {
+                        Descricao = "Evolutiva",
+                        IdExterno = "83"
+                    },
+                    new TipoChamado()
+                    {
+                        Descricao = "Adaptativa",
+                        IdExterno = "86"
+                    },
+                    new TipoChamado()
+                    {
+                        Descricao = "Consulta",
+                        IdExterno = "87"
+                    },
+                     new TipoChamado()
+                     {
+                         Descricao = "Corretiva",
+                         IdExterno = "85"
+                     },
+                     new TipoChamado()
+                     {
+                         Descricao = "Fiplan: Evolutiva",
+                         IdExterno = "96"
+                     },
+                     new TipoChamado()
+                     {
+                         Descricao = "Fiplan: Adaptativa",
+                         IdExterno = "93"
+                     },
+                     new TipoChamado()
+                     {
+                         Descricao = "Fiplan:  Consulta",
+                         IdExterno = "100"
+                     },
+                     new TipoChamado()
+                     {
+                         Descricao = "Fiplan:  Corretiva",
+                         IdExterno = "99"
+                     }
+                    );
             }
         }
     }
