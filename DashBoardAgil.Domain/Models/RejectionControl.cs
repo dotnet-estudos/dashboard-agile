@@ -50,13 +50,12 @@ namespace DashBoardAgil.Domain.Models
 
                 var week = this.WeekList;
 
-                var tipoChamado = from TipoChamadoRedmine e in Enum.GetValues(typeof(TipoChamadoRedmine))
-                                  select new
-                                  {
-                                      Id = e.GetHashCode(),
-                                      Nome = e.ToString(),
-                                      tipo = e
-                                  };
+                var tipoChamado = Rejections.ToList().Select(x => new
+                {
+                    Id = x.Tipo.GetHashCode(),
+                    Nome = x.Tipo.ToString(),
+                    tipo = x.Tipo
+                }).Distinct();
 
                 var chamadosDiaTipo = (from chamado in Rejections.Where(x=>x.HasRejection)
                                        orderby chamado.ClosedOn descending

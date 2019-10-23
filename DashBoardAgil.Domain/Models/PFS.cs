@@ -20,7 +20,7 @@ namespace DashBoardAgil.Domain.Models
         public virtual Processo Processo { get; set; }
         public virtual Fase Fase { get; set; }
         public virtual SubFase SubFase { get; set; }
-        public StatusRedmine StatusRedmine { get; set; }
+        public int StatusRedmine { get; set; }
         public SituacaoSubFase Situacao { get; set; }
         public bool BackLog { get; set; }
         public bool Cliente { get; set; }

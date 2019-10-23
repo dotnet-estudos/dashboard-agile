@@ -9,6 +9,7 @@ namespace DashBoardAgil.Domain.Enums
 {
     public enum TipoChamadoRedmine
     {
+        #region CSOL-1
         [Display(Name = "Evolutiva")]
         Evolutiva = 83,
         [Display(Name = "Adaptativa")]
@@ -17,5 +18,18 @@ namespace DashBoardAgil.Domain.Enums
         Consulta = 87,
         [Display(Name = "Corretiva")]
         Corretiva = 85,
+        #endregion
+
+        #region FIPLAN
+        [Display(Name = "Fiplan: Evolutiva")]
+        FiplanEvolutiva = 96,
+        [Display(Name = "Fiplan: Adaptativa")]
+        FiplanAdaptativa = 93,
+        [Display(Name = "Fiplan:  Consulta")]
+        FiplanConsulta = 100,
+        [Display(Name = "Fiplan:  Corretiva")]
+        FiplanCorretiva = 99,
+        #endregion
+
     }
 }

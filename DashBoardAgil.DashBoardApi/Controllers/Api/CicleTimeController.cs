@@ -31,7 +31,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                 parm.Add(RedmineKeys.TRACKER_ID, String.Format("{0}", tipoChamado.GetDisplayName()));
             }
 
-            parm.Add(RedmineKeys.STATUS_ID, (leadTime && issueCanceled) ? "closed" : (leadTime ? StatusRedmine.Fechado.GetHashCode().ToString() : "*" ));
+            parm.Add(RedmineKeys.STATUS_ID, (leadTime && issueCanceled) ? "closed" : (leadTime ? Global.Instance.ConcatenarLista("|", GetStatusFechamento()) : "*" ));
 
           
             #endregion

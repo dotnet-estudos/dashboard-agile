@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Data.Entity;
 using System.Web.Http.Results;
 using System.Web.Mvc;
 using DashBoardAgil.Aplication;
@@ -14,6 +15,7 @@ using DashBoardAgil.DashBoardApi.Util;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Domain.Interfaces;
+using DashBoardAgil.InfraData.Contexto;
 using DashBoardAgil.Services.Service;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
@@ -75,6 +77,16 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                            };
             _lsitPrioridae = lststrPrt.Select(x => x.Id.ToString()).ToList();
             _defaultPrioridade = new NameValueCollection { { RedmineKeys.PRIORITY_ID, Global.Instance.ConcatenarLista("|", _lsitPrioridae) } };
+
+        }
+
+        protected List<string> GetStatusFechamento()
+        {
+            var db = new Contexto();
+
+            var list = db.PFS.Include(x=>x.SubFase).Where(x => x.Situacao == SituacaoSubFase.Fechamento && x.StatusRedmine != 5).Select(x => x.StatusRedmine.ToString()).ToList();
+
+            return list;
 
         }
 
