@@ -169,10 +169,15 @@ function renderComulativeFlow(div, title, subtitle, categories, yTitles, valueSu
             }
         },
         tooltip: {
-            split: true,
+            split: false,
             valueSuffix: valueSuffix  // ' Chamado(s)'
         },
         plotOptions: {
+            series: {
+                marker: {
+                    enabled: false
+                }
+            },
             area: {
                 stacking: 'normal',
                 lineColor: '#666666',

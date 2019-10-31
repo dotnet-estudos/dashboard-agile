@@ -25,9 +25,10 @@ namespace DashBoardAgil.Domain.Models
         public List<Rejection> Rejected => Rejections.Where(x => x.HasRejection).ToList();
         public List<int> WeekList => CrossCutting.Util.GetWeekList(DataIni ?? new DateTime(DateTime.Now.Year, 1, 1), DataFim ?? DateTime.Now.Date);
         public int TotalChamados => Rejections.Count;
-        public string RejectionsRate => Rejections.Any(x => x.HasRejection) ? (double.Parse(this.Rejections.Count(x => x.HasRejection).ToString()) / double.Parse(this.Rejections.Count.ToString())).ToString("P") : "0.0 %";
-        public string RejectionsRateWeek => Rejections.Any(x => x.HasRejection) ? (double.Parse(this.Rejections.Count(x => x.HasRejection).ToString()) / double.Parse(this.WeekList.Count.ToString()) * 100   ).ToString() + "%" : "0.0 %";
-
+        public int TotalRejeitado => this.Rejections.Count(x => x.HasRejection);
+        public int TotalIR => this.Rejections.Count(x => x.HasIR);
+        public string RejectionsRate => Rejections.Any(x => x.HasRejection) ? (double.Parse((this.TotalRejeitado - this.TotalIR).ToString()) / double.Parse(this.TotalChamados.ToString())).ToString("P") : "0.0 %";
+       
         public object ByDay
         {
             get
