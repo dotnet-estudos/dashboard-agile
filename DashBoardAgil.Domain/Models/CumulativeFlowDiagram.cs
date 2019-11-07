@@ -4,7 +4,7 @@ using DashBoardAgil.Domain.Interfaces.Abstracoes;
 
 namespace DashBoardAgil.Domain.Models
 {
-    public class ComulativeFlowDiagram : IdentificableIssue
+    public class CumulativeFlowDiagram : IdentificableIssue
     {
 
         public Fase Fase { get; set; }

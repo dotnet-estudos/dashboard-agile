@@ -64,8 +64,8 @@
     <Compile Include="Models\Chamado.cs" />
     <Compile Include="Models\ChamadoControl.cs" />
     <Compile Include="Models\ClasseServico.cs" />
-    <Compile Include="Models\ComulativeFlowDiagramControl.cs" />
-    <Compile Include="Models\ComulativeFlowDiagram.cs" />
+    <Compile Include="Models\CumulativeFlowDiagramControl.cs" />
+    <Compile Include="Models\CumulativeFlowDiagram.cs" />
     <Compile Include="Models\ConfigRedmine.cs" />
     <Compile Include="Models\ConsumoHoras.cs" />
     <Compile Include="Models\ConsumoHorasControl.cs" />
