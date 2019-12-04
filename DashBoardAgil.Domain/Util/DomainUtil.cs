@@ -18,25 +18,29 @@ namespace DashBoardAgil.Domain.Util
             {
                 case TipoChamadoRedmine.Adaptativa:
                 case TipoChamadoRedmine.FiplanAdaptativa:
+                case TipoChamadoRedmine.SacHistoriaUsuario:
                     {
                         retorno += string.Format(formato, 255, 102, 0);
                     }
                     break;
                 case TipoChamadoRedmine.Consulta:
                 case TipoChamadoRedmine.FiplanConsulta:
-                    {
+                case TipoChamadoRedmine.SacItemMelhoria:
+                {
                         retorno += string.Format(formato, 140, 140, 140);
                     }
                     break;
                 case TipoChamadoRedmine.Corretiva:
                 case TipoChamadoRedmine.FiplanCorretiva:
-                    {
+                case TipoChamadoRedmine.SacDefeito:
+                {
                         retorno += string.Format(formato, 0, 153, 0);
                     }
                     break;
                 case TipoChamadoRedmine.Evolutiva:
                 case TipoChamadoRedmine.FiplanEvolutiva:
-                    {
+                case TipoChamadoRedmine.SacTarefa:
+                {
                         retorno += string.Format(formato, 255, 255, 0);
                     }
                     break;
