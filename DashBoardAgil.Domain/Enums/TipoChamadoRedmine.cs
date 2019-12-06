@@ -31,5 +31,16 @@ namespace DashBoardAgil.Domain.Enums
         FiplanCorretiva = 99,
         #endregion
 
+        #region SAC Digital
+        [Display(Name = "História de Usuário")]
+        SacHistoriaUsuario = 71,
+        [Display(Name = "Item de Melhoria")]
+        SacItemMelhoria = 73,
+        [Display(Name = "Defeito")]
+        SacDefeito = 74,
+        [Display(Name = "SD:Tarefa")]
+        SacTarefa = 80,
+        #endregion
+
     }
 }
