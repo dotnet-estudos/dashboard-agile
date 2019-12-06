@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -71,7 +72,7 @@ namespace DashBoardAgil.CrossCutting
 
             return true;
         }
-        
+
         public static string GetDisplayName(this Enum enumValue)
         {
             return enumValue.GetType()
@@ -312,7 +313,7 @@ namespace DashBoardAgil.CrossCutting
 
         public static string GetMd5Hash(string input)
         {
-            if(input != null)
+            if (input != null)
             {
                 using (MD5 md5Hash = MD5.Create())
                 {
@@ -503,7 +504,7 @@ namespace DashBoardAgil.CrossCutting
                     return string.Empty;
             }
         }
-        
+
         /// <summary>
         /// Adiciona ao Log a mensagem desejada.
         /// Arquivo logMensagem.txt (diretório raiz).
@@ -660,7 +661,7 @@ namespace DashBoardAgil.CrossCutting
                 return false;
             return true;
         }
-        
+
         private static FileVersionInfo GetVersionInfo()
         {
             Assembly assembly = Assembly.GetEntryAssembly();
@@ -730,12 +731,12 @@ namespace DashBoardAgil.CrossCutting
         {
             var array = new List<int>();
             var valorAtual = 0;
-            for (int i = 0; i < quantidadeSaltos-1; i++)
+            for (int i = 0; i < quantidadeSaltos - 1; i++)
             {
                 valorAtual += primeiroSalto;
                 array.Add(valorAtual);
             }
-            valorAtual ++;
+            valorAtual++;
             array.Add(valorAtual);
             return array.ToArray();
         }
@@ -750,15 +751,15 @@ namespace DashBoardAgil.CrossCutting
             // Gets the DTFI properties required by GetWeekOfYear.
             CalendarWeekRule myCWR = myCI.DateTimeFormat.CalendarWeekRule;
             DayOfWeek myFirstDOW = myCI.DateTimeFormat.FirstDayOfWeek;
-            
-            var ini = myCal.GetWeekOfYear(dataIni , myCWR, myFirstDOW);
-            var fim = myCal.GetWeekOfYear(dataFim , myCWR, myFirstDOW);
+
+            var ini = myCal.GetWeekOfYear(dataIni, myCWR, myFirstDOW);
+            var fim = myCal.GetWeekOfYear(dataFim, myCWR, myFirstDOW);
 
             for (int i = ini; i < fim; i++)
             {
                 retorno.Add(i);
             }
-           
+
             return retorno;
         }
 
@@ -767,7 +768,7 @@ namespace DashBoardAgil.CrossCutting
             // Gets the Calendar instance associated with a CultureInfo.
             var myCI = new CultureInfo("pt-BR");
             var myCal = myCI.Calendar;
-            
+
             // Gets the DTFI properties required by GetWeekOfYear.
             CalendarWeekRule myCWR = myCI.DateTimeFormat.CalendarWeekRule;
             DayOfWeek myFirstDOW = myCI.DateTimeFormat.FirstDayOfWeek;
@@ -789,24 +790,77 @@ namespace DashBoardAgil.CrossCutting
             return (percent * From / 100);
         }
 
-        public static List<Feriado> Feriados(int ano = 0, string uf = "BA", string cidade="SALVADOR")
+        public static List<Feriado> Feriados(int ano = 0, string uf = "BA", string cidade = "SALVADOR")
         {
-            ano = ano == 0 ? DateTime.Now.Year: ano;
-            var arquivo = Global.Instance.LerArquivo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Feriados",ano.ToString()));
+            ano = ano == 0 ? DateTime.Now.Year : ano;
+            var arquivo = Global.Instance.LerArquivo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Feriados", ano.ToString()));
             if (!(arquivo ?? "fasle").Equals("false"))
             {
                 var client = new HttpClient();
                 client.BaseAddress = new Uri("https://api.calendario.com.br");
                 client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-                System.Net.Http.HttpResponseMessage response = client.GetAsync("json=true&ano=" + ano.ToString() + "&estado=" + uf + "&cidade=" + cidade +"&token=dWhpdGxlaUBnbWFpbC5jb20maGFzaD0xNDIxNDk1MDc").Result;
+                System.Net.Http.HttpResponseMessage response = client.GetAsync("json=true&ano=" + ano.ToString() + "&estado=" + uf + "&cidade=" + cidade + "&token=dWhpdGxlaUBnbWFpbC5jb20maGFzaD0xNDIxNDk1MDc").Result;
                 var result = response.Content;
 
 
-                
+
             }
 
             return new List<Feriado>();
-        } 
+        }
+
+        public static Predicate<T> Or<T>(params Predicate<T>[] predicates)
+        {
+            return delegate (T item)
+            {
+                foreach (Predicate<T> predicate in predicates)
+                {
+                    if (predicate(item))
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            };
+        }
+
+        public static Predicate<T> And<T>(params Predicate<T>[] predicates)
+        {
+            return delegate (T item)
+            {
+                foreach (Predicate<T> predicate in predicates)
+                {
+                    if (!predicate(item))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            };
+        }
+
+        public static Expression<T> Compose<T>(this Expression<T> first, Expression<T> second, Func<Expression, Expression, Expression> merge)
+        {
+            // build parameter map (from parameters of second to parameters of first)
+            var map = first.Parameters.Select((f, i) => new { f, s = second.Parameters[i] }).ToDictionary(p => p.s, p => p.f);
+            
+            // replace parameters in the second lambda expression with parameters from the first
+            var secondBody = ParameterRebinder.ReplaceParameters(map, second.Body);
+            
+            // apply composition of lambda expression bodies to parameters from the first expression 
+            return Expression.Lambda<T>(merge(first.Body, secondBody), first.Parameters);
+        }
+
+        public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
+        {
+            return first.Compose(second, Expression.And);
+        }
+        
+        public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
+        {
+            return first.Compose(second, Expression.Or);
+        }
+
 
 
     }

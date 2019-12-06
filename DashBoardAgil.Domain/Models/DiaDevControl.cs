@@ -33,7 +33,10 @@ namespace DashBoardAgil.Domain.Models
         }
         private List<Chamado> Chamados { get; set; }
         public Projeto Time { get; set; }
+
+        [field: NonSerializedAttribute()]
         public List<Alocacao> Lancamentos { get; set; }
+        public decimal TotalAlocado =>  Lancamentos.Sum(x => x.Hours);
         public DateTime DataIni { get; set; }
         public DateTime DataFim { get; set; }
         public int TotalDiaDev => LancamentosDia.Any() ? LancamentosDia.Sum(x => x.Quantidade) : 0;
@@ -124,31 +127,37 @@ namespace DashBoardAgil.Domain.Models
                                                           ) ?? false
                             select new
                             {
-                                act.Id,
-                                act.CreatedOn,
-                                aceite = act.Journals?.Any(x => (x.CreatedOn >= DataIni && x.CreatedOn <= DataFim) && 
-                                                                 x.Details.Any(d => d.Name.Equals(RedmineKeys.STATUS_ID) && d.Property.Equals(ConstantesCC.Details.Name_Attr) &&
-                                                                                     (redmineBackLoadStatus.Select(red => red.status.GetHashCode().ToString()).Contains(d.NewValue ?? "0") ||
-                                                                                      redmineBackLoadStatus.Select(red => red.status.GetHashCode().ToString()).Contains(d.OldValue ?? "0")))) ?? false,
+                                // act.Id,
+                                // act.CreatedOn,
+                                chamado = act,
+                                //aceite = act.Journals?.Any(x => (x.CreatedOn >= DataIni && x.CreatedOn <= DataFim) && 
+                                //                                 x.Details.Any(d => d.Name.Equals(RedmineKeys.STATUS_ID) && d.Property.Equals(ConstantesCC.Details.Name_Attr) &&
+                                //                                                     (redmineBackLoadStatus.Select(red => red.status.GetHashCode().ToString()).Contains(d.NewValue ?? "0") ||
+                                //                                                      redmineBackLoadStatus.Select(red => red.status.GetHashCode().ToString()).Contains(d.OldValue ?? "0")))) ?? false,
                                 dataAceite = act.Journals?.FirstOrDefault(x => (x.CreatedOn >= DataIni && x.CreatedOn <= DataFim) && 
                                                                                 x.Details.Any(d => d.Name.Equals(RedmineKeys.STATUS_ID) && d.Property.Equals(ConstantesCC.Details.Name_Attr) &&
                                                                                       (redmineBackLoadStatus.Select(red => red.status.GetHashCode().ToString()).Contains(d.NewValue ?? "0") ||
                                                                                        redmineBackLoadStatus.Select(red => red.status.GetHashCode().ToString()).Contains(d.OldValue ?? "0"))))?.CreatedOn??null
+                                
                             };
 
                         var grpAct =    from grpAceite in aceitPO
                                         orderby (DateTime) grpAceite.dataAceite
-                                        where grpAceite.aceite
-                                        group grpAceite by ((DateTime) grpAceite.dataAceite).Date
+                                        where grpAceite.dataAceite != null
+                                        // group grpAceite by ((DateTime) grpAceite.dataAceite).Date
+                                        group grpAceite by new { projeto=  grpAceite.chamado.Project.Name, tipoChamado = grpAceite.chamado.Tracker.Name }
                                         into grp
                                         select new
                                         {
-                                            Dia = grp.Key,
+                                            Projeto = grp.Key.projeto,
+                                            Tipo= grp.Key.tipoChamado,
                                             TotalChamados = grp.Count(),
-                                            Chamados = grp.Select(x => x.Id).ToArray()
+                                            TotalAlocado = grp.Sum(x=>x.chamado.TotalSpentHours),
+                                            Chamados = grp.Select(x => new {NumChamado = x.chamado.Id, Titulo= string.Format("{0}...",x.chamado.Subject.PadLeft(20)), TotalHoraAlocada = x.chamado.TotalSpentHours} ).ToArray()
+                                            
                                         };
 
-                        return new {TotalValidado = grpAct.Sum(x => x.TotalChamados), QuantidadeValidadoDia = grpAct, StatusVerificados = redmineBackLoadStatus };
+                        return new {TotalValidado = grpAct.Sum(x => x.TotalChamados), TotalHoraAlocada = grpAct.Sum(x=>x.TotalAlocado) ,  QuantidadeValidadoDia = grpAct.OrderBy(x=> x.Projeto).ThenBy(x=>x.Tipo).ToList(), StatusVerificados = redmineBackLoadStatus };
 
                     }
 
