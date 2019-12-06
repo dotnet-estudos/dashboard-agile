@@ -738,8 +738,8 @@ namespace DashBoardAgil.Services.Service
                           weekList.ForEach(semana =>
                           {
                               var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
-                                                       (pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() == semana) ||
-                                                        ch.Journals.Any(y => ((DateTime)y.CreatedOn).GetWeekOfYear() == semana
+                                                       //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() == semana) ||
+                                                        ch.Journals.Any(y => ((pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null? (DateTime)ch.ClosedOn : (DateTime)y.CreatedOn)).GetWeekOfYear() == semana
                                                                     && y.Details.Any(det => det.Property.Equals("attr")
                                                                     && det.Name.Equals(RedmineKeys.STATUS_ID)
                                                                     && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue)))).Select(x => x.Id).ToList();
@@ -828,7 +828,7 @@ namespace DashBoardAgil.Services.Service
                                                               .Select(x => new CumulativeFlowDiagram()
                                                               {
                                                                   IdChamado = x.Id,
-                                                                  ClosedOn = x.ClosedOn,
+                                                                  ClosedOn = x.ClosedOn?? null,
                                                                   CreatedOn = (DateTime)x.CreatedOn,
                                                                  // DataReferencia = x.CreatedOn,
                                                                   Fase = pfs.Fase,
@@ -967,6 +967,45 @@ namespace DashBoardAgil.Services.Service
 
         public DiaDevControl GetDiaDevControl(NameValueCollection parms, Projeto projeto, NameValueCollection parmIssues, DateTime dataIni, DateTime dataFim)
         {
+            parms.Add(RedmineKeys.SUBJECT, String.Format("!{0}", Global.Instance.ConcatenarLista("|", 
+                new List<string>() {
+                    "435",
+                    "607",
+                    "525",
+                    "524",
+                    "526",
+                    "301",
+                    "299",
+                    "621",
+                    "624",
+                    "621",
+                    "620",
+                    "622",
+                    "625",
+                    "606",
+                    "605",
+                    "623",
+                } )));
+
+            parmIssues.Add(RedmineKeys.SUBPROJECT_ID, String.Format("!{0}", Global.Instance.ConcatenarLista("|",
+                new List<string>() {
+                    "435",
+                    "607",
+                    "525",
+                    "524",
+                    "526",
+                    "301",
+                    "299",
+                    "621",
+                    "624",
+                    "621",
+                    "620",
+                    "622",
+                    "625",
+                    "606",
+                    "605",
+                    "623",
+                })));
 
             projeto.Processo = GetProcessoTeam(projeto);
 
@@ -986,7 +1025,26 @@ namespace DashBoardAgil.Services.Service
 
         public EntregasControl GetEntregasPeriodo(NameValueCollection parms, Projeto projeto, DateTime dataIni, DateTime dataFim)
         {
-
+            //retirando Chamados
+            parms.Add(RedmineKeys.SUBPROJECT_ID, String.Format("!{0}", Global.Instance.ConcatenarLista("|",
+               new List<string>() {
+                    "435",
+                    "607",
+                    "525",
+                    "524",
+                    "526",
+                    "301",
+                    "299",
+                    "621",
+                    "624",
+                    "621",
+                    "620",
+                    "622",
+                    "625",
+                    "606",
+                    "605",
+                    "623",
+               })));
 
             projeto.Processo = GetProcessoTeam(projeto);
 
