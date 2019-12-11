@@ -38,8 +38,6 @@ namespace DashBoardAgil.Domain.Enums
         SacItemMelhoria = 73,
         [Display(Name = "Defeito")]
         SacDefeito = 74,
-        [Display(Name = "SD:Tarefa")]
-        SacTarefa = 80,
         #endregion
 
     }

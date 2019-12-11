@@ -39,7 +39,6 @@ namespace DashBoardAgil.Domain.Util
                     break;
                 case TipoChamadoRedmine.Evolutiva:
                 case TipoChamadoRedmine.FiplanEvolutiva:
-                case TipoChamadoRedmine.SacTarefa:
                 {
                         retorno += string.Format(formato, 255, 255, 0);
                     }
