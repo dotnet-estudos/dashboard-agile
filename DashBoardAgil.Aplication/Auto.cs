@@ -152,8 +152,8 @@ namespace DashBoardAgil.Aplication
 
             Debugar.WriteLine(String.Format("Serviço Configurado para Rodar em: {0} {1}(s)", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.ExecTime, GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.TipoContagemTempo.ToString()));
 
-           //_manager.GerarCfdTeams();
-            _manager.GerarThroughputReject();
+            //_manager.GerarCfdTeams();
+            //_manager.GerarThroughputReject();
 
             #endregion
 

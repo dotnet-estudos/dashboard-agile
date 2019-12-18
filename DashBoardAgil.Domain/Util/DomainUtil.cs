@@ -23,11 +23,11 @@ namespace DashBoardAgil.Domain.Util
                     }
                     break;
                 case TipoChamadoRedmine.Consulta:
-                case TipoChamadoRedmine.FiplanConsulta:
+                /*case TipoChamadoRedmine.FiplanConsulta:
                     {
                         retorno += string.Format(formato, 140, 140, 140);
                     }
-                    break;
+                    break;*/
                 case TipoChamadoRedmine.Corretiva:
                 case TipoChamadoRedmine.FiplanCorretiva:
                     {

@@ -7,12 +7,11 @@
 @*<script src="~/Scripts/js/highchart7/modules/exporting.js"></script>*@
 
 
-@Html.Partial("_Loading", new DivLoading { Id = "_LoadingCFD" })
-
 <div class="panel panel-default">
     <div class="panel-heading">
         <i class="fas fa-chart-area fa-fw"></i> Diagrama de Fluxo Cumulativo <div class="pull-right">Status: <input type="checkbox" id="__fase" value="" /></div>
-</div>
+    </div>
+    @Html.Partial("_Loading", new DivLoading { Id = "_LoadingCFD" })
     <div id="_ComulativeFlowDiagram" class="chartSizeble" ></div>
 </div>
 
@@ -28,13 +27,19 @@
         $("#time").change(function () {
             $("#_LoadingCFD").show();
             $("#_ComulativeFlowDiagram").html("");
-
             LoadCFD(this.value);
         });
 
+        /*$("#pesquisar").on("click", function (e) {
+            alert('chamou Cumulative');
+            $("#_LoadingCFD").show();
+            $("#_ComulativeFlowDiagram").html("");
+            LoadCFD($("#time").val());
+        });*/
+
+
         $("#__fase").change(function () {
             var toggle = $(this).prop('checked');
-
             renderComulativeFlow(divDados, 'CFD do time: ' + _time, 'Source: redmine.example.com | Year:' + (new Date).getFullYear(), DataResult.Semanas, " Chamado", ' Chamado(s)', toggle ? DataResult.Serie : DataResult.SerieFase);
         });
 
@@ -44,6 +49,7 @@
             data.time = time;
             data.dataIni = dataIni;//(new Date).getFullYear() + '-01-01';
             data.dataFim = dataFim;//(new Date).getFullYear() + '-' + parseInt((new Date).getMonth() + 1) + '-' + (new Date).getDate();
+            var descTime = $('#time :selected').text();
 
             $.ajax({
                 dataType: "json",
@@ -57,7 +63,7 @@
                         DataResult = datas;
                         _time = time;
                         var toggle = $("#__fase").prop('checked');
-                        renderComulativeFlow(divDados, 'CFD do time: ' + time, 'Source: redmine.example.com | Year: 2019', datas.Semanas, " Chamado", ' Chamado(s)', toggle ? datas.Serie : datas.SerieFase);
+                        renderComulativeFlow(divDados, 'CFD do time: ' + descTime, 'Source: redmine.example.com | Year: 2019', datas.Semanas, " Chamado", ' Chamado(s)', toggle ? datas.Serie : datas.SerieFase);
                     }
                 }
 

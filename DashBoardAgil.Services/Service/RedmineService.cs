@@ -112,36 +112,42 @@ namespace DashBoardAgil.Services.Service
         {
             Debugar.WriteLine("Iniciando ... ", "GERADOR CFD");
 
-            var dataIni = new DateTime(DateTime.Now.Year, 1, 1);
+            var dataIni = new DateTime(DateTime.Now.Year, 11, 1);
             var dataFim = DateTime.Now;
             var lsitTipo = from TipoChamadoRedmine e in Enum.GetValues(typeof(TipoChamadoRedmine))
                            select new { Id = e.GetHashCode(), Nome = e.ToString() };
             var lststr = lsitTipo.Select(x => x.Id.ToString()).ToList();
             String time = null;
+            String nameTime = null;
+            //GlobalConfig.Instance.CarregarConfig();
             GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.ForEach(team =>
               {
                   try
                   {
                       time = team.Identifier;
+                      nameTime = String.Format("{0}", team.Id);
 
                       var processo = GetProcessoTeam(team);
 
                       lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
 
-
                       if (time != null)
                       {
                           Debugar.WriteLine(string.Format("Iniciando {0} ", time), "GERADOR CFD");
                           var parm = new NameValueCollection
-                      {
-                            {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
-                            {RedmineKeys.STATUS_ID, "*"},
-                            {RedmineKeys.PROJECT_ID, String.Format("{0}", time)},
-                            {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime) dataIni).ToString("yyyy-MM-dd"),((DateTime) dataFim).ToString("yyyy-MM-dd"))}
-                      };
-
+                              {
+                                    {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
+                                    {RedmineKeys.STATUS_ID, "*"},
+                                    {RedmineKeys.PROJECT_ID, String.Format("{0}", time)},
+                                    {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime) dataIni).ToString("yyyy-MM-dd"),((DateTime) dataFim).ToString("yyyy-MM-dd"))}
+                              };
+                          //verificar os custons fields dos times
+                          team.CustonFields.ForEach(custon => {
+                              parm.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+                          });
+                          //Fim verificar os custons fields dos times
                           var comulativeFlow = this.GetCumulativeFlowDiagram(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim), processo);
-                          Global.Instance.GravarArquivo(ConstantesCC.PATH_CFD_DIAGRAM, JsonConvert.SerializeObject(comulativeFlow), String.Format("{0}.json", time));
+                          Global.Instance.GravarArquivo(ConstantesCC.PATH_CFD_DIAGRAM, JsonConvert.SerializeObject(comulativeFlow), String.Format("{0}.json", nameTime));
                           Debugar.WriteLine(String.Format("{0} gerado CFD", team), "GERADOR CFD");
                       }
                       else
@@ -159,7 +165,7 @@ namespace DashBoardAgil.Services.Service
             return true;
         }
 
-        protected Processo GetProcessoTeam(Projeto team)
+        public Processo GetProcessoTeam(Projeto team)
         {
             var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
 
@@ -184,17 +190,19 @@ namespace DashBoardAgil.Services.Service
         {
             Debugar.WriteLine("Iniciando ... ", "GerarThroughputReject");
 
-            var dataIni = new DateTime(DateTime.Now.Year, 1, 1);
+            var dataIni = new DateTime(DateTime.Now.Year, 11, 1);
             var dataFim = DateTime.Now;
             var lsitTipo = from TipoChamadoRedmine e in Enum.GetValues(typeof(TipoChamadoRedmine))
                            select new { Id = e.GetHashCode(), Nome = e.ToString() };
             var lststr = lsitTipo.Select(x => x.Id.ToString()).ToList();
             String time = null;
+            String nameTime = null;
             GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.ForEach(team =>
               {
                   try
                   {
                       time = team.Identifier;
+                      nameTime = String.Format("{0}", team.Id);
                       var processo = GetProcessoTeam(team);
 
                       lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
@@ -203,31 +211,56 @@ namespace DashBoardAgil.Services.Service
                       {
                           Debugar.WriteLine(string.Format("Iniciando {0} ", time), "GerarThroughputReject");
                           var parm = new NameValueCollection
-                      {
-                            {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
-                            {RedmineKeys.STATUS_ID, "closed"},
-                            {RedmineKeys.PROJECT_ID, String.Format("{0}", time)},
-                            {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime) dataIni).ToString("yyyy-MM-dd"),((DateTime) dataFim).ToString("yyyy-MM-dd"))}
-                      };
-                        ///PAREI AQUI
-                        var reject = this.GetRejectionRate(parm);
-
+                              {
+                                    {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
+                                    {RedmineKeys.STATUS_ID, "closed"},
+                                    {RedmineKeys.PROJECT_ID, String.Format("{0}", time)},
+                                    {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime) dataIni).ToString("yyyy-MM-dd"),((DateTime) dataFim).ToString("yyyy-MM-dd"))}
+                              };
+                          ///PAREI AQUI
+                          //verificar os custons fields dos times
+                          team.CustonFields.ForEach(custon => {
+                              parm.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+                          });
+                          //Fim verificar os custons fields dos times
+                          var reject = this.GetRejectionRate(parm);
                           var thoupt = new ThroughputControl();
-
                           thoupt.DataFim = reject.DataFim = dataFim;
                           thoupt.DataIni = reject.DataIni = dataIni;
-
                           reject.Rejections.ForEach(rejection => thoupt.Throughputs.Add(CrossCutting.Util.ReflectObjec(rejection, new Throughput())));
-
                           var week = CrossCutting.Util.GetWeekList(dataIni, dataFim);
-
                           var unionSerieData = thoupt.ByTypeWeek.ToList();
-
                           reject.ByTypeWeek.ToList().ForEach(x => unionSerieData.Add(x));
-
-                          Global.Instance.GravarArquivo(ConstantesCC.PATH_THROUGHPUT_REJECT_DIAGRAM, JsonConvert.SerializeObject(new { Rejeicao = reject, Throughput = thoupt, Serie = unionSerieData, Categoria = week }), String.Format("{0}.json", time));
-
+                          Global.Instance.GravarArquivo(ConstantesCC.PATH_THROUGHPUT_REJECT_DIAGRAM, JsonConvert.SerializeObject(new { Rejeicao = reject, Throughput = thoupt, Serie = unionSerieData, Categoria = week }), String.Format("{0}.json", nameTime));
                           Debugar.WriteLine(String.Format("{0} gerado ThroughputReject", team), "GerarThroughputReject");
+
+                          /*if (time == "projeto-fiplan")
+                          {
+                              GlobalConfig.Instance.ConfiguracaoRedmine.CampoGestorFiplan.ForEach(gestor =>
+                              {
+                                  Debugar.WriteLine(string.Format("Iniciando {0} {1}", time, gestor), "GerarThroughputReject FIPLAN POR GESTOR");
+                                  var parmGestor = new NameValueCollection
+                                  {
+                                        {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
+                                        {RedmineKeys.STATUS_ID, "closed"},
+                                        {RedmineKeys.PROJECT_ID, String.Format("{0}", time)},
+                                        {"cf_252", String.Format("{0}", gestor) },
+                                        {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime) dataIni).ToString("yyyy-MM-dd"),((DateTime) dataFim).ToString("yyyy-MM-dd"))}
+                                  };
+                                  ///PAREI AQUI
+                                  var rejectGestor = this.GetRejectionRate(parmGestor);
+                                  var thouptGestor = new ThroughputControl();
+                                  thouptGestor.DataFim = rejectGestor.DataFim = dataFim;
+                                  thouptGestor.DataIni = rejectGestor.DataIni = dataIni;
+                                  rejectGestor.Rejections.ForEach(rejection => thouptGestor.Throughputs.Add(CrossCutting.Util.ReflectObjec(rejection, new Throughput())));
+                                  var weekGestor = CrossCutting.Util.GetWeekList(dataIni, dataFim);
+                                  var unionSerieDataGestor = thouptGestor.ByTypeWeek.ToList();
+                                  rejectGestor.ByTypeWeek.ToList().ForEach(x => unionSerieDataGestor.Add(x));
+                                  Global.Instance.GravarArquivo(ConstantesCC.PATH_THROUGHPUT_REJECT_DIAGRAM, JsonConvert.SerializeObject(new { Rejeicao = rejectGestor, Throughput = thouptGestor, Serie = unionSerieDataGestor, Categoria = weekGestor }), String.Format("{0}_{1}.json", time, gestor));
+                                  Debugar.WriteLine(String.Format("{0} gerado ThroughputReject FIPLAN POR GESTOR: {1}", team, gestor), "GerarThroughputReject FIPLAN POR GESTOR");
+
+                              });
+                          }*/
                       }
                       else
                       {
@@ -795,15 +828,18 @@ namespace DashBoardAgil.Services.Service
 
             if (time != null && !time.Equals(""))
             {
-
-                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => time.Equals("0") || x.Identifier.Equals(time)).ToList().ForEach(_time =>
+                var maxIdProj = Convert.ToInt32(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Max(x => x.Id));
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => time.Equals("0") || x.Id.Equals(time)).ToList().ForEach(_time =>
                  {
-                     var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.Id.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.Id) ?? false))).Select(
+                     //var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.Id.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.Id) ?? false))).Select(
+                     var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.IdProjeto.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.IdProjeto) ?? false))).Select(
                          pro =>
                              new Projeto()
                              {
-                                 Id = pro.Id.ToString(),
+                                 Id = maxIdProj++.ToString(),
+                                 IdProjeto = pro.Id.ToString(),
                                  Identifier = pro.Identifier,
+                                 Descricao = pro.Name.ToString(),
                                  HorasContratadas = int.Parse(pro.CustomFields.FirstOrDefault(cus => cus.Id == 143)?.Values.FirstOrDefault()?.Info ?? "0")
                              }
                          );
@@ -827,13 +863,13 @@ namespace DashBoardAgil.Services.Service
 
                 listProjetos.ForEach(pr =>
                 {
-                    var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, pr.Id } };
+                    var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, pr.IdProjeto } };
                     lancamentos.AddRange(_manager.GetObjects<TimeEntry>(parm));
                 });
             }
             else
             {
-                var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, projeto.Id } };
+                var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, projeto.IdProjeto } };
                 lancamentos.AddRange(_manager.GetObjects<TimeEntry>(parm));
             }
 

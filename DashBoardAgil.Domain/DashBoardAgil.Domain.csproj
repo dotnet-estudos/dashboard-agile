@@ -63,6 +63,7 @@
     <Compile Include="Models\CalendarioChamado.cs" />
     <Compile Include="Models\Chamado.cs" />
     <Compile Include="Models\ChamadoControl.cs" />
+    <Compile Include="Models\CustonFieldProjeto.cs" />
     <Compile Include="Models\ClasseServico.cs" />
     <Compile Include="Models\ComulativeFlowDiagramControl.cs" />
     <Compile Include="Models\ComulativeFlowDiagram.cs" />

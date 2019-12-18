@@ -22,7 +22,18 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
        [CacheOutput(ServerTimeSpan = 1 * (60*60))]
         public Object Get(string time, DateTime? dataIni, DateTime? dataFim,  StatusRedmine statusDe, StatusRedmine statusPara, TipoChamadoRedmine? tipoChamado=null, PrioridadeRedmine? prioridade=null, int primeiroSalto=5, int quantidadeSaltos = 10, bool leadTime =false, bool issueCanceled = true, bool  programada=false)
         {
-            var parm = new NameValueCollection(_defaultTipoChamados);
+            #region processo
+            var proj =
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+
+            var processo = _RedmineService.GetProcessoTeam(proj);
+            var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
+            #endregion
+
+            var parm = new NameValueCollection
+                {
+                    {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
+                };
 
             #region tipo/status
             if (tipoChamado != null)
@@ -32,8 +43,6 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             }
 
             parm.Add(RedmineKeys.STATUS_ID, (leadTime && issueCanceled) ? "closed" : (leadTime ? Global.Instance.ConcatenarLista("|", GetStatusFechamento()) : "*" ));
-
-          
             #endregion
 
             #region Data
@@ -61,12 +70,18 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                 parm.Add(new NameValueCollection { { RedmineKeys.PRIORITY, Global.Instance.ConcatenarLista("|", _lsitPrioridae.Where(x => !x.Equals(PrioridadeRedmine.Programada.GetHashCode().ToString())).ToList()) } });
             }
 
-            if (!time.IsNullOrWhiteSpace())
+            if (!time.IsNullOrWhiteSpace() && proj.Identifier != null)
             {
-                parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", time));
+                parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", proj.Identifier));
             }
             #endregion
-            
+
+            //verificar os custons fields dos times
+            proj.CustonFields.ForEach(custon => {
+                parm.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+            });
+            //Fim verificar os custons fields dos times
+
             var projectosAnalise = _RedmineService.GetCicleTimeTeam(parm, statusDe, statusPara, primeiroSalto, quantidadeSaltos, leadTime);
 
             return projectosAnalise;

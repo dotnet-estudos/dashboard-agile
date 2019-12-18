@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
 using DashBoardAgil.Domain.Enums;
 using Microsoft.Ajax.Utilities;
@@ -20,10 +21,19 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             var filtro = new { time, dataIni, dataFim };
             try
             {
-                if(time.IsNullOrWhiteSpace()) throw new Exception("Time é Obrigatório");
+                if (time.IsNullOrWhiteSpace()) throw new Exception("Time é Obrigatório");
+
+                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(time));
+                //.ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(time)) ?? null;
 
                 _nameValueDefault.Add(RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")));
-                _nameValueDefault.Add(RedmineKeys.PROJECT_ID, time);
+
+                _nameValueDefault.Add(RedmineKeys.PROJECT_ID, projeto.Identifier);
+                //verificar os custons fields dos times
+                projeto.CustonFields.ForEach(custon => {
+                    _nameValueDefault.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+                });
+                //Fim verificar os custons fields dos times
                 _nameValueDefault.Add(RedmineKeys.STATUS_ID, "*");
                 var retorno = _RedmineService.GetPrazo(_nameValueDefault, efetiva, status);
 

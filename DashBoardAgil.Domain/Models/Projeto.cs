@@ -11,14 +11,20 @@ namespace DashBoardAgil.Domain.Models
     {
         public Projeto()
         {
+            CustonFields = new List<CustonFieldProjeto>();
             Slas = new List<SlaProjeto>();
         }
         [Required]
         public string Id { get; set; }
         [Required]
+        public string Descricao { get; set; }
+        [Required]
+        public string IdProjeto { get; set; }
+        [Required]
         public string Identifier { get; set; }
         public bool Ativo { get; set; }
         public int HorasContratadas { get; set; }
+        public List<CustonFieldProjeto> CustonFields { get; set; }
         public List<SlaProjeto> Slas { get; set; }
         public Projeto Parent { get; set; }
         public int QuantidadeDesenvolvedores { get; set; }
