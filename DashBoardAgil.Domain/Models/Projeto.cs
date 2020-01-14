@@ -34,7 +34,7 @@ namespace DashBoardAgil.Domain.Models
 
         public override string ToString()
         {
-            return string.Format("{0} - {1}", Id, Identifier);
+            return string.Format("{0} - {1} ({2}-{3})", IdProjeto, Descricao, Id, Identifier);
         }
     }
 }
