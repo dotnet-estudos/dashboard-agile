@@ -34,17 +34,17 @@ namespace DashBoardAgil.Domain.Models
         public List<LeadTime> LeadTimes { get; set; }
         public int TotalChamados => LeadTimes.Count();
         private double TotalChamadosDouble => Double.Parse(this.TotalChamados.ToString());
-        public double GeneralAverageHours => Math.Round(LeadTimes.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero);
-        public double GeneralMedianaHours => Math.Round(LeadTimes.Select(x => new { x.LeadBruto }).OrderBy(x => x.LeadBruto).Skip(LeadTimes.Count() / 2).First().LeadBruto, 2, MidpointRounding.AwayFromZero);
+        public double GeneralAverageHours => LeadTimes.Any()? Math.Round(LeadTimes.Average(x => x.LeadBruto), 2, MidpointRounding.AwayFromZero) : 0.0;
+        public double GeneralMedianaHours => LeadTimes.Any() ? Math.Round(LeadTimes.Select(x => new { x.LeadBruto }).OrderBy(x => x.LeadBruto).Skip(LeadTimes.Count() / 2).First().LeadBruto, 2, MidpointRounding.AwayFromZero): 0.0;
         public double GeneralAverageDays => Math.Round((GeneralAverageHours / 24), 2, MidpointRounding.AwayFromZero);
         public double GeneralMedianaDays => Math.Round((GeneralMedianaHours / 24), 2, MidpointRounding.AwayFromZero);
         public string GeneralAverageDaysString => TimeSpan.FromHours(GeneralAverageHours).ToString(@"dd\.hh\:mm\:ss");
         public string GeneralMedianaDaysString => TimeSpan.FromHours(GeneralMedianaHours).ToString(@"dd\.hh\:mm\:ss");
-        public double GeneralAverageHoursUtil => Math.Round(LeadTimes.Average(x => x.LeadUtil), 2, MidpointRounding.AwayFromZero);
+        public double GeneralAverageHoursUtil => LeadTimes.Any() ? Math.Round(LeadTimes.Average(x => x.LeadUtil), 2, MidpointRounding.AwayFromZero) : 0.0;
         public double GeneralAverageDaysUtil => Math.Round(GeneralAverageHoursUtil / 7.2, 2, MidpointRounding.AwayFromZero);
         public string GeneralAverageDaysUtilString => TimeSpan.FromHours(GeneralAverageHoursUtil).ToString(@"dd\.hh\:mm\:ss");
-        public double GeneralMedianaHoursUtil => Math.Round(LeadTimes.Select(x => new { x.LeadUtil }).OrderBy(x => x.LeadUtil).Skip(LeadTimes.Count() / 2).First().LeadUtil, 2, MidpointRounding.AwayFromZero);
-        public double GeneralMedianaDaysUtil => Math.Round(GeneralMedianaHoursUtil / 7.2, 2, MidpointRounding.AwayFromZero);
+        public double GeneralMedianaHoursUtil => LeadTimes.Any() ? Math.Round(LeadTimes.Select(x => new { x.LeadUtil }).OrderBy(x => x.LeadUtil).Skip(LeadTimes.Count() / 2).First().LeadUtil, 2, MidpointRounding.AwayFromZero) : 0.0;
+        public double GeneralMedianaDaysUtil => LeadTimes.Any() ? Math.Round(GeneralMedianaHoursUtil / 7.2, 2, MidpointRounding.AwayFromZero) : 0.0;
         public string GeneralMedianaDaysUtilString => TimeSpan.FromHours(GeneralMedianaHoursUtil).ToString(@"dd\.hh\:mm\:ss");
         public int[] Range => CrossCutting.Util.GerarArraySalto(this.PrimeiroSalto, this.QuantidadeSaltos);
         public string[] RangeString
