@@ -25,8 +25,8 @@ namespace DashBoardAgil.Domain.Enums
         FiplanEvolutiva = 96,
         [Display(Name = "Fiplan: Adaptativa")]
         FiplanAdaptativa = 93,
-        [Display(Name = "Fiplan:  Consulta")]
-        FiplanConsulta = 100,
+        /*[Display(Name = "Fiplan:  Consulta")]
+        FiplanConsulta = 100,*/
         [Display(Name = "Fiplan:  Corretiva")]
         FiplanCorretiva = 99,
         #endregion

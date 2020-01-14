@@ -63,9 +63,12 @@
     <Compile Include="Models\CalendarioChamado.cs" />
     <Compile Include="Models\Chamado.cs" />
     <Compile Include="Models\ChamadoControl.cs" />
-    <Compile Include="Models\ClasseServico.cs" />
-    <Compile Include="Models\CumulativeFlowDiagramControl.cs" />
+    <Compile Include="Models\CreatedClosed.cs" />
+    <Compile Include="Models\CreatedClosedControl.cs" />
     <Compile Include="Models\CumulativeFlowDiagram.cs" />
+    <Compile Include="Models\CumulativeFlowDiagramControl.cs" />
+    <Compile Include="Models\CustonFieldProjeto.cs" />
+    <Compile Include="Models\ClasseServico.cs" />
     <Compile Include="Models\ConfigRedmine.cs" />
     <Compile Include="Models\ConsumoHoras.cs" />
     <Compile Include="Models\ConsumoHorasControl.cs" />

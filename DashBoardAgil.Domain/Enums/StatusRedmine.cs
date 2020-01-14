@@ -49,7 +49,32 @@ namespace DashBoardAgil.Domain.Enums
         [Display(Name = "Pre-Hml: Feito")]
         PreHmlFeito = 133,
         [Display(Name = "Demanda")]
-        Demanda =157
+        Demanda = 157,
+        /*Status do Fiplan*/
+        [Display(Name = "Backlog: A fazer")]
+        BacklogFazer = 147,
+        [Display(Name = "Backlog - Em andamento")]
+        BacklogAndamento = 148,
+        [Display(Name = "Desenvolvimento: A fazer")]
+        DesenvolvimentoFazer = 156,
+        [Display(Name = "Teste: A fazer")]
+        TesteFazer = 149,
+        [Display(Name = "Teste: Em andamento")]
+        TesteAndamento = 150,
+        [Display(Name = "Homologação: A fazer")]
+        HomologacaoFazer = 142,
+        [Display(Name = "Homologação: Validando")]
+        HomologacaoValidando = 152,
+        [Display(Name = "Pré-Produção: Pendente")]
+        PreProducaoPendente = 153,
+        [Display(Name = "Pré-Produção: A fazer")]
+        PreProducaoFazer = 144,
+        [Display(Name = "Pré-Produção: Andamento")]
+        PreProducaoAndamento = 145,
+        [Display(Name = "Pré-Produção: Pronto")]
+        PreProducaoPronto = 146,
+        [Display(Name = "Produção")]
+        Producao = 50
 
     }
 }

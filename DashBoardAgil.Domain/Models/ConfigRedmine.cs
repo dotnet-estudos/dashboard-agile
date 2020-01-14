@@ -36,9 +36,7 @@ namespace DashBoardAgil.Domain.Models
 
         public Projeto GetProjetoById(string id)
         {
-
             return ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(id));
-
         }
     }
     

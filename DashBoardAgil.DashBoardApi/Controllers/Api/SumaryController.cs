@@ -21,72 +21,73 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         [CacheOutput(ServerTimeSpan = 1*(60*60))]
         public List<SumaryChamdo> Get(string time = null)
         {
-            //var parametros = new NameValueCollection
-            //{
-            //    {RedmineKeys.PROJECT_ID, "csol1"}, {RedmineKeys.STATUS_ID, Global.Instance.ConcatenarLista("|", Constantes.StatusChamadosAbertos ) }
-            //};
+            #region processo
+            var proj =
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+
+            var processo = _RedmineService.GetProcessoTeam(proj);
+            var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
+            #endregion
 
             var parametros = new NameValueCollection
-            {
-                {RedmineKeys.PROJECT_ID, time??"csol1"}, {RedmineKeys.STATUS_ID, "open" }
-            };
+                {
+                    { RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
+                    { RedmineKeys.PROJECT_ID, proj.Identifier??"csol1"},
+                    { RedmineKeys.STATUS_ID, "open" }
+                };
 
             var chamados = _Redmine.GetObjects<Issue>(parametros);
 
             var sumary = new List<SumaryChamdo>();
 
             sumary.Add(new SumaryChamdo
-            {
-                Ordem = 1,
-                FaIcon = "fa fa-tasks",
-                PaneColor = "primary",
-                Fase = "BackLog",
-                Quantidade = chamados.Count(Constantes.ChamadoFaseBackLog),
-                Mensagem = String.Format("em {0}", "BackLog"),
-                UrlRedmine = string.Format("{0}/issues/?project_id={1}&status_id={2}",GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl, time ?? "csol1", Global.Instance.ConcatenarLista("|", Constantes.FaseBackLog))  
-
-            }
-            );
-
-            sumary.Add(new SumaryChamdo
-            {
-                Ordem = 1,
-                FaIcon = "fab fa-dev",
-                PaneColor = "green",
-                Fase = "Desenvolvimento",
-                Quantidade = chamados.Count(Constantes.ChamadoFaseDesenvolvimento),
-                Mensagem = String.Format("em {0}", "Desenvolvimento"),
-                UrlRedmine = string.Format("{0}/issues/?project_id={1}&status_id={2}", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl, time ?? "csol1", Global.Instance.ConcatenarLista("|", Constantes.FaseDesnvolvimento))
-
-
-            }
-           );
+                            {
+                                Ordem = 1,
+                                FaIcon = "fa fa-tasks",
+                                PaneColor = "primary",
+                                Fase = "BackLog",
+                                Quantidade = chamados.Count(Constantes.ChamadoFaseBackLog),
+                                Mensagem = String.Format("em {0}", "BackLog"),
+                                UrlRedmine = string.Format("{0}/issues/?project_id={1}&status_id={2}",GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl, proj.Identifier ?? "csol1", Global.Instance.ConcatenarLista("|", Constantes.FaseBackLog))  
+                            }
+                        );
 
             sumary.Add(new SumaryChamdo
-            {
-                Ordem = 1,
-                FaIcon = "fas fa-clipboard-list",
-                PaneColor = "yellow",
-                Fase = "Homologação",
-                Quantidade = chamados.Count(Constantes.ChamadoFaseHomologacao),
-                Mensagem = String.Format("em {0}", "Homologação"),
-                UrlRedmine = string.Format("{0}/issues/?project_id={1}&status_id={2}", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl, time ?? "csol1", Global.Instance.ConcatenarLista("|", Constantes.FaseHomologacao))
-
-            }
-           );
+                            {
+                                Ordem = 1,
+                                FaIcon = "fab fa-dev",
+                                PaneColor = "green",
+                                Fase = "Desenvolvimento",
+                                Quantidade = chamados.Count(Constantes.ChamadoFaseDesenvolvimento),
+                                Mensagem = String.Format("em {0}", "Desenvolvimento"),
+                                UrlRedmine = string.Format("{0}/issues/?project_id={1}&status_id={2}", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl, proj.Identifier ?? "csol1", Global.Instance.ConcatenarLista("|", Constantes.FaseDesnvolvimento))
+                            }
+                        );
 
             sumary.Add(new SumaryChamdo
-            {
-                Ordem = 1,
-                FaIcon = "fab fa-creative-commons-pd-alt",
-                PaneColor = "info",
-                Fase = "Produção",
-                Quantidade = chamados.Count(Constantes.ChamadoFaseProducao),
-                Mensagem = String.Format("em {0}", "Produção"),
-                UrlRedmine = string.Format("{0}/issues/?project_id={1}&status_id={2}", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl, time ?? "csol1", Global.Instance.ConcatenarLista("|", Constantes.FaseProducao))
+                            {
+                                Ordem = 1,
+                                FaIcon = "fas fa-clipboard-list",
+                                PaneColor = "yellow",
+                                Fase = "Homologação",
+                                Quantidade = chamados.Count(Constantes.ChamadoFaseHomologacao),
+                                Mensagem = String.Format("em {0}", "Homologação"),
+                                UrlRedmine = string.Format("{0}/issues/?project_id={1}&status_id={2}", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl, proj.Identifier ?? "csol1", Global.Instance.ConcatenarLista("|", Constantes.FaseHomologacao))
 
-            }
-           );
+                            }
+                        );
+
+            sumary.Add(new SumaryChamdo
+                            {
+                                Ordem = 1,
+                                FaIcon = "fab fa-creative-commons-pd-alt",
+                                PaneColor = "info",
+                                Fase = "Produção",
+                                Quantidade = chamados.Count(Constantes.ChamadoFaseProducao),
+                                Mensagem = String.Format("em {0}", "Produção"),
+                                UrlRedmine = string.Format("{0}/issues/?project_id={1}&status_id={2}", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.RedmineUrl, proj.Identifier ?? "csol1", Global.Instance.ConcatenarLista("|", Constantes.FaseProducao))
+                            }
+                        );
 
             return sumary;
 

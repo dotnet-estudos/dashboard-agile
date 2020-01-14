@@ -35,11 +35,16 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             var diaDevControl = new List<DiaDevControl>();
             var lancamentoTotais = new List<Alocacao>();
 
-            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Identifier.Equals(time) || time.Equals("0")).ForEach(
+            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Id.Equals(time) || time.Equals("0")).ForEach(
                     (team) =>
                     {
                         var parm = new NameValueCollection(_parametros);
                         parm.Add(RedmineKeys.PROJECT_ID, team.Identifier);
+                        //verificar os custons fields dos times
+                        team.CustonFields.ForEach(custon => {
+                            parm.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+                        });
+                        //Fim verificar os custons fields dos times
 
                         var lancamentos = _Redmine.GetObjects<TimeEntry>(parm);
 
@@ -85,18 +90,26 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool aceitePO)
         {
+            var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(time));
+            //.ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(time)) ?? null;
+
             if (time.IsNullOrWhiteSpace())
                 return new { status = false, mensagem = "Time é Obrigatório", SlaControl = new SlaControl() };
 
             var _parametrosBase = new NameValueCollection
                              {
                                // {RedmineKeys.PROJECT_ID, "compatibilizacao-do-compras-net"},
-                                { RedmineKeys.PROJECT_ID, time}
+                                { RedmineKeys.PROJECT_ID, projeto.Identifier}
                                 //{RedmineKeys.SPENT_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")) }
                                 //, {RedmineKeys.SORT, "spent_on:desc" }
                                 //,{"criteria", "user" }
                                 // ,{"group_by", "hours"}
                               };
+            //verificar os custons fields dos times
+            projeto.CustonFields.ForEach(custon => {
+                _parametrosBase.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+            });
+            //Fim verificar os custons fields dos times
 
             var parametroIssue = new NameValueCollection(_parametrosBase)
                                      {
@@ -113,8 +126,8 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                                 ,{"group_by", "hours"}
                               };
 
-            var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier == time)??null;
-            
+            //var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier == time)??null;
+
             if (projeto?.QuantidadeDesenvolvedores <= 0)
             {
                 return new { status = false, mensagem = "Cadastre quantidade de Dev do time", SlaControl = new SlaControl() };

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DashBoardAgil.Services.Enums;
-using DashBoardAgil.Services.Interfaces.Abstracoes;
+using DashBoardAgil.Domain.Interfaces.Abstracoes;
+using DashBoardAgil.Domain.Enums;
 
 namespace DashBoardAgil.Services.Domain
 {

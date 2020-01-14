@@ -26,6 +26,9 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
         public List<Issue> Get(string id, DateTime dataIni, DateTime dataFim, string status)
         {
+           
+            var proj =
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(id));
 
             var parametros = new NameValueCollection
             {
@@ -33,8 +36,14 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                     RedmineKeys.CREATED_ON,
                     String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd"))
                 },
-                {RedmineKeys.PROJECT_ID, id}
+                {RedmineKeys.PROJECT_ID, proj.Identifier}
             };
+
+            //verificar os custons fields dos times
+            proj.CustonFields.ForEach(custon => {
+                parametros.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+            });
+            //Fim verificar os custons fields dos times
 
             var chamados = _Redmine.GetObjects<Issue>(parametros);
             // chamados = chamados.Select(x => _Redmine.GetObject<Issue>(x.Id.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } })).ToList();
@@ -48,22 +57,26 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         {
             try
             {
+                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(time));
+                //.ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(time));
 
 
-                if (time.IsNullOrWhiteSpace())
+                if (projeto.Identifier.IsNullOrWhiteSpace())
                     return new { status = false, mensagem = "Time é Obrigatório", SlaControl = new SlaControl() };
 
                 var parametros = new NameValueCollection
-                             {
-                {RedmineKeys.PROJECT_ID, time}
-                ,{ RedmineKeys.STATUS_ID, "*"}
-                ,{RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")) }
-                    };
-
+                        {
+                            {RedmineKeys.PROJECT_ID, projeto.Identifier},
+                            { RedmineKeys.STATUS_ID, "*"},
+                            {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")) }
+                        };
+                //verificar os custons fields dos times
+                projeto.CustonFields.ForEach(custon => {
+                    parametros.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+                });
+                //Fim verificar os custons fields dos times
                 var chamados = _Redmine.GetObjects<Issue>(parametros);
                 chamados = chamados.Select(x => _Redmine.GetObject<Issue>(x.Id.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } })).ToList();
-
-                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().FirstOrDefault(x => x.Identifier.Equals(time));
 
                 var strSla = Global.Instance.LerArquivo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Json", "Sla.json"));
 
@@ -92,24 +105,33 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             try
             {
 
-
                 if (time.IsNullOrWhiteSpace())
                     return new { status = false, mensagem = "Time é Obrigatório", SlaControl = new SlaControl() };
 
-                _defaultTipoChamados.Add(RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")));
-                _defaultTipoChamados.Add(RedmineKeys.STATUS_ID, "*");
-
                 var retorno = new List<SlaControl>();
 
-                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Identifier.Equals(time) || time.Equals("0")).ForEach(
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Id.Equals(time) || time.Equals("0")).ForEach(
                     (team) =>
                     {
-                       // var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().FirstOrDefault(x => x.Identifier.Equals(team.Identifier));
+                        // var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().FirstOrDefault(x => x.Identifier.Equals(team.Identifier));
+                        var processo = _RedmineService.GetProcessoTeam(team);
+                        var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
 
                         var slaProjeto = new SlaProjeto() { IdSla = 0, Tempo = tempo, TempoUltil = util, TipoContagemTempo = tipoContagem, Sla = new Sla() { StatusDe = redmineDe, StatusPara = redminePara } };
 
-                        var parametro = new NameValueCollection(_defaultTipoChamados);
-                        
+                        var parametro = new NameValueCollection
+                            {
+                                { RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
+                                { RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")) },
+                                { RedmineKeys.STATUS_ID, "*" }
+                            };
+                        //var parametro = new NameValueCollection(_defaultTipoChamados);
+                        //verificar os custons fields dos times
+                        team.CustonFields.ForEach(custon => {
+                            parametro.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+                        });
+                        //Fim verificar os custons fields dos times
+
                         parametro.Add(RedmineKeys.PROJECT_ID, team.Identifier);
                         
                         var slaControl = _RedmineService.GetSla(team, slaProjeto, parametro);

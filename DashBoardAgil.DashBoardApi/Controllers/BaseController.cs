@@ -57,18 +57,24 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
 #endif
         }
-        protected SelectList GetSelectTime(string selected = null, bool todos = false)
+        protected SelectList GetSelectTime(string selected = null, bool todos = false, string strLike = null)
         {
             try
             {
 
                 var list = new List<SelectListItem>();
 
-
-
-                list = _user.Perfil == PerfilDash.Cliente ? _user.projetosRedmine.Select(x => new SelectListItem() { Value = x.Identifier, Text = x.Identifier }).ToList() : GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Select(x => new SelectListItem() { Value = x.Identifier, Text = x.Identifier }).ToList();
+                list = _user.Perfil == PerfilDash.Cliente 
+                                            ? 
+                                            _user.projetosRedmine.Where(x => 
+                                            (strLike != null && x.Identifier.Contains(strLike)) || 
+                                            (strLike == null)).Select(x => new SelectListItem() { Value = x.Id, Text = x.Descricao }).ToList() 
+                                            : 
+                                            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => 
+                                            (strLike != null && x.Identifier.Contains(strLike)) 
+                                            || (strLike == null)).Select(x => new SelectListItem() { Value = x.Id, Text = x.Descricao }).ToList();
                 GetSelectedListWithAll(selected, todos, list);
-                var select = new SelectList(list.OrderBy(x => x.Value), "Value",
+                var select = new SelectList(list.OrderBy(x => x.Text), "Value",
                           "Text", selected);
                 ViewBag.SelectTime = select;
                 return select;
@@ -78,6 +84,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                 throw ex;
             }
         }
+
         private List<SelectListItem> GetSelectedListWithAll(object selected, bool todos, List<SelectListItem> list)
         {
             if (todos)

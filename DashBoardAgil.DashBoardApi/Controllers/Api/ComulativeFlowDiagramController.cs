@@ -24,9 +24,18 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool dashboard = true)
         {
 
-            var parm = new NameValueCollection(_defaultTipoChamados);
+            var proj =
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+            #region processo
+            var processo = _RedmineService.GetProcessoTeam(proj);
+            var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
+            #endregion
 
-            parm.Add(RedmineKeys.STATUS_ID, "*");
+            var parm = new NameValueCollection
+                {
+                    {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
+                    {RedmineKeys.STATUS_ID, "*"}
+                };
 
             #region Data
             if (dataIni != null && dataFim != null)
@@ -44,37 +53,23 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             #endregion
 
             #region time
-
-           if (!time.IsNullOrWhiteSpace())
-           {
-               parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", time));
-           }
-           else
-           {
-               return new {status = false, mensage = "erro"};
-           }
-            #endregion
-            // Debugar.WriteLine(string.Format("Inicio: {0}", DateTime.Now.ToString("G")));
-
-           var proj =
-               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
-
-            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
-
-            var processo = db.Processos
-                             .Include(x => x.PFS)
-                             .Include(x => x.ProcessoTipo)
-                             .Include(x => x.ProcessoTipo.Select(y => y.TipoChamado))
-                             .Include(x => x.PFS.Select(y => y.Fase))
-                             .Include(x => x.PFS.Select(y => y.SubFase))
-                             .FirstOrDefault(x => x.ProcessoId == proj.ProcessoId);
-
-            processo.PFS.ForEach(x =>
+            if (!time.IsNullOrWhiteSpace() && proj.Identifier != null)
             {
-                x.Processo = null;
-                x.SubFase.PFS = null;
-                x.Fase.PFS = null;
+                parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", proj.Identifier));
+            }
+            else
+            {
+                return new {status = false, mensage = "erro"};
+            }
+            #endregion
+
+            //verificar os custons fields dos times
+            proj.CustonFields.ForEach(custon => {
+                parm.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
             });
+            //Fim verificar os custons fields dos times
+            // Debugar.WriteLine(string.Format("Inicio: {0}", DateTime.Now.ToString("G")));
+            //dashboard = false;
 
             var comulativeFlow = dashboard ?
                                  JsonConvert.DeserializeObject(Global.Instance.LerArquivo(Path.Combine(ConstantesCC.PATH_CFD_DIAGRAM, String.Format("{0}.json", time)))) :

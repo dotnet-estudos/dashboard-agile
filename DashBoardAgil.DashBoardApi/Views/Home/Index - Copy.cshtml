@@ -1,0 +1,77 @@
+﻿@using DashBoardAgil.DashBoardApi.Models
+@using DashBoardAgil.Domain.Enums
+@using Redmine.Net.Api.Types
+@{
+    ViewBag.Title = "DashBoard";
+    var user = (Usuario)ViewBag.User;//.FirstName
+}
+
+
+
+
+<div class="row">
+    <div class="form-group col-lg-3">
+        <label>Time:</label>
+        @*<input class="form-control" >*@
+        @Html.DropDownList("time", (SelectList)ViewBag.SelectTime, "Selecione", htmlAttributes: new { @class = "form-control lockable", required = true })
+        @*<p class="help-block">Exemplo: -level help text here.</p>*@
+    </div>
+        @*<div class="form-group col-lg-2">
+            <label>Data De:</label>
+            <input type="date" id="dataIni" class="form-control iniDate lockable" name="dataIni" min="" max="" onkeydown="return false">
+        </div>
+        <div class="form-group col-lg-2">
+            <label>Até:</label>
+            <input type="date" id="dataFim" class="form-control iniDate lockable" name="dataFim" min="" max="" onkeydown="return false">
+        </div>*@
+</div>
+
+
+
+@switch (user.Perfil)
+{
+    case (PerfilDash.Cliente):
+    {
+        <div class="row">
+            @Html.Partial("_SumaryBlock")
+        </div>
+        <div class="col-lg-6 left">
+            @*@Html.Partial("_Dados")*@
+            @Html.Partial("_ThroughputRejection")
+        </div>
+    }break;
+    default:
+        { 
+        <div class="row">
+            @Html.Partial("_SumaryBlock")
+        </div>
+
+        <div class="col-lg-6 right">
+           @Html.Partial("_ComulativeFlowDiagram")
+        </div>
+        <div class="col-lg-6 left">
+            @*@Html.Partial("_Dados")*@
+            @Html.Partial("_ThroughputRejection")
+        </div>
+        <div>
+            @Html.Partial("_DisperssionDiagram")
+        </div>
+    }break;
+};
+<script type="text/javascript">
+
+    var dataIni = (new Date).getFullYear() + '-01-01';
+    var dataFim = (new Date).getFullYear() + '-' + (parseInt((new Date).getMonth() + 1)).padLeft(2) + '-' + ((new Date).getDate()).padLeft(2);
+
+    $(document).ready(function () {
+
+        $(".iniDate").each(function () {
+            $(this).prop("min", dataIni);
+            $(this).prop("max", dataFim);
+    });
+
+        $("#dateIni").prop("value",dataIni);
+        $("#dateFim").prop("value",dataFim);
+
+});
+</script>

@@ -51,14 +51,14 @@ namespace DashBoardAgil.DashBoardApi.Controllers
 
 
                 ViewBag.User = (Usuario)Session["User"];
-                GetSelectTime("time-traiket", false);
+                //GetSelectTime("time-traiket", false);
+                GetSelectTime("1", false);
                 return View("Index");
             }
 
 
             return View("Login");
         }
-
 
         [AllowAnonymous]
         public ActionResult Login()

@@ -5,8 +5,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Services.Enums;
-using DashBoardAgil.Services.Interfaces.Abstracoes;
+using DashBoardAgil.Domain.Enums;
 
 namespace DashBoardAgil.Services.Domain
 {
