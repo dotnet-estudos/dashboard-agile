@@ -21,7 +21,7 @@ namespace DashBoardAgil.Domain.Models
 
         public Parametro Parametro { get; set; }
 
-        public List<Projeto> AllowList { get; set; }
+        public List<Projeto> AllowList { get;  set; }
         public List<Projeto> DenyList { get; set; }
 
         public List<string> UsuariosMaster { get; set; }

@@ -28,6 +28,7 @@ namespace DashBoardAgil.Domain.Interfaces
         CreatedClosedControl GetCreatedClosed(NameValueCollection parms, DateTime DataIni, DateTime DataFim);
 	    EntregasControl GetEntregasPeriodo(NameValueCollection parms, Projeto projeto, DateTime dataIni, DateTime dataFim);
         Processo GetProcessoTeam(Projeto time);
+        Projeto GetTime(string time);
 
 
 

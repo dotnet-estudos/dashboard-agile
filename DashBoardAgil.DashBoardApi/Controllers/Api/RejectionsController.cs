@@ -18,7 +18,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
     {
 
         [CacheOutput(ServerTimeSpan = 1 * (60))]
-        public Object Get(string time, DateTime dataIni, DateTime dataFim, bool throughput=false)
+        public Object Get(string time, DateTime dataIni, DateTime dataFim, bool dashboard = true)
         {
             #region processo
             var proj =
@@ -31,7 +31,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             var parm = new NameValueCollection
                 {
                     {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
-                    {RedmineKeys.STATUS_ID, throughput? "closed": "*"},
+                    {RedmineKeys.STATUS_ID, "closed"},
                     {
                         RedmineKeys.CREATED_ON,
                         String.Format("><{0}|{1}", ((DateTime)dataIni).ToString("yyyy-MM-dd"), ((DateTime)dataFim).ToString("yyyy-MM-dd"))
@@ -53,7 +53,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
             /*var ret = throughput? JsonConvert.DeserializeObject(Global.Instance.LerArquivo(Path.Combine(ConstantesCC.PATH_THROUGHPUT_REJECT_DIAGRAM, String.Format("{0}.json", time)))) :
                         _RedmineService.GetRejectionRate(parm);*/
-            if (throughput) {
+            if (dashboard) {
                 return JsonConvert.DeserializeObject(Global.Instance.LerArquivo(Path.Combine(ConstantesCC.PATH_THROUGHPUT_REJECT_DIAGRAM, String.Format("{0}.json", time))));
             } else {
                 var reject = _RedmineService.GetRejectionRate(parm);

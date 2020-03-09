@@ -164,7 +164,16 @@ namespace DashBoardAgil.Services.Service
 
             return true;
         }
+        public Projeto GetTime(string time)
+        {
+            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
 
+            var _time = db.Projetos
+                .Include(x => x.CustonFields)
+                .Include(x => x.CustonFields.Select(y => y.Projeto))
+                .FirstOrDefault(x => x.Id == time);
+            return _time;
+        }
         public Processo GetProcessoTeam(Projeto team)
         {
             var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
@@ -772,9 +781,9 @@ namespace DashBoardAgil.Services.Service
 
                           weekList.ForEach(semana =>
                           {
-                              var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
-                                                       //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() == semana) ||
-                                                        ch.Journals.Any(y => ((pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null? (DateTime)ch.ClosedOn : (DateTime)y.CreatedOn)).GetWeekOfYear() == semana
+                          var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
+                                                   //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() <= semana) ||
+                                                    ch.Journals.Any(y => ( (!pfs.Entregue && (((DateTime)y.CreatedOn)).GetWeekOfYear() == semana ) || (pfs.Entregue && (((DateTime)y.CreatedOn)).GetWeekOfYear() <= semana))
                                                                     && y.Details.Any(det => det.Property.Equals("attr")
                                                                     && det.Name.Equals(RedmineKeys.STATUS_ID)
                                                                     && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue)))).Select(x => x.Id).ToList();
@@ -992,7 +1001,7 @@ namespace DashBoardAgil.Services.Service
                         {
                             Id = 0,
                             Chamado = new IdentificableName() { Id = 0, Name = "Sem Chamado" },
-                            Projeto = new IdentificableName() { Id = int.Parse(item.Id), Name = item.Identifier },
+                            Projeto = new IdentificableName() { Id = int.Parse(item.IdProjeto), Name = item.Identifier },
                             // Team = new IdentificableName() {Id = int.Parse(team.Parent.Id??"0"), Name = team.Parent.Identifier},
                             Usuario = new IdentificableName() { Id = 0, Name = "Sem Usuário" },
                             Comentario = string.Empty,

@@ -22,6 +22,8 @@ namespace DashBoardAgil.InfraData.Migrations
             SeedProcessos(context);
             SeedFases(context);
             SeedTipoChamdo(context);
+            SeedProjetos(context);
+            SeedCustonFieldProjetos(context);
             context.SaveChangesSeed();
         }
 
@@ -117,6 +119,167 @@ namespace DashBoardAgil.InfraData.Migrations
                          IdExterno = "99"
                      }
                     );
+            }
+        }
+
+        private void SeedProjetos(Contexto.Contexto context)
+        {
+            if (!context.Projetos.Any())
+            {
+                context.Projetos.AddOrUpdate(
+                    new Projeto()
+                    {
+                        Id = "1",
+                        Descricao = "Time Traiket",
+                        IdProjeto = "519",
+                        Identifier = "time-traiket",
+                        Ativo = true,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 4,
+                        ProcessoId = 1
+                    },
+                    new Projeto()
+                    {
+                        Id = "2",
+                        Descricao = "FIPLAN PROJETO - Todo",
+                        IdProjeto = "539",
+                        Identifier = "projeto-fiplan",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 15,
+                        ProcessoId = 2,
+
+                    },
+                    new Projeto()
+                    {
+                    Id = "3",
+                        Descricao = "FIPLAN SUSTENTA플O - Todo",
+                        IdProjeto = "539",
+                        Identifier = "projeto-fiplan",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 15,
+                        ProcessoId = 10,
+                        
+                    },
+                    new Projeto()
+                    {
+                    Id = "4",
+                        Descricao = "FIPLAN PROJETO - SEFAZ",
+                        IdProjeto = "539",
+                        Identifier = "projeto-fiplan",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 9,
+                        ProcessoId = 2,
+                        
+                    },
+                    new Projeto()
+                    {
+                    Id = "5",
+                        Descricao = "FIPLAN SUSTENTA플O - SEFAZ",
+                        IdProjeto = "539",
+                        Identifier = "projeto-fiplan",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 9,
+                        ProcessoId = 10,
+                        
+                    },
+                    new Projeto()
+                    {
+                    Id = "6",
+                        Descricao = "FIPLAN PROJETO - SEPLAN",
+                        IdProjeto = "539",
+                        Identifier = "projeto-fiplan",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 5,
+                        ProcessoId = 2,
+                        
+                    },
+                    new Projeto()
+                    {
+                    Id = "7",
+                        Descricao = "FIPLAN SUSTENTA플O - SEPLAN",
+                        IdProjeto = "539",
+                        Identifier = "projeto-fiplan",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 5,
+                        ProcessoId = 10,
+                        
+                    },
+                    new Projeto()
+                    {
+                    Id = "8",
+                        Descricao = "FIPLAN PROJETO - SPF",
+                        IdProjeto = "539",
+                        Identifier = "projeto-fiplan",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 1,
+                        ProcessoId = 2,
+                        
+                    },
+                    new Projeto()
+                    {
+                    Id = "9",
+                        Descricao = "FIPLAN SUSTENTA플O - SPF",
+                        IdProjeto = "539",
+                        Identifier = "projeto-fiplan",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 1,
+                        ProcessoId = 10,
+                        
+                    }
+                );
+            }
+        }
+
+        private void SeedCustonFieldProjetos(Contexto.Contexto context)
+        {
+            if (!context.CustonFieldProjetos.Any())
+            {
+                context.CustonFieldProjetos.AddOrUpdate(
+                    new CustonFieldProjeto()
+                    {
+                        Campo = "cf_252",
+                        Valor = "SEFAZ",
+                        ProjetoId = "4"
+                    },
+                    new CustonFieldProjeto()
+                    {
+                        Campo = "cf_252",
+                        Valor = "SEFAZ",
+                        ProjetoId = "5"
+                    },
+                    new CustonFieldProjeto()
+                    {
+                        Campo = "cf_252",
+                        Valor = "SEPLAN",
+                        ProjetoId = "6"
+                    },
+                    new CustonFieldProjeto()
+                    {
+                        Campo = "cf_252",
+                        Valor = "SEPLAN",
+                        ProjetoId = "7"
+                    },
+                    new CustonFieldProjeto()
+                    {
+                        Campo = "cf_252",
+                        Valor = "SPF",
+                        ProjetoId = "8"
+                    },
+                    new CustonFieldProjeto()
+                    {
+                        Campo = "cf_252",
+                        Valor = "SPF",
+                        ProjetoId = "9"
+                    }
+                );
             }
         }
     }

@@ -206,7 +206,7 @@ namespace DashBoardAgil.Aplication
 
                     Debugar.WriteLine(string.Format("{0} - {1} - {2}", "Hora", DateTime.Now, "Objeto Mananger Criado"), GlobalConfig.Instance.Categoria);
 
-                    var projetos = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().Select(x => x.Id).ToArray();
+                    var projetos = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().Select(x => x.IdProjeto.ToString()).ToArray();
                     
                     var result = _manager.FecharChamadosAvaliarProducao(projetos, GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.Prazo);
 

@@ -23,8 +23,9 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         public Object Get(string time, DateTime? dataIni, DateTime? dataFim,  StatusRedmine statusDe, StatusRedmine statusPara, TipoChamadoRedmine? tipoChamado=null, PrioridadeRedmine? prioridade=null, int primeiroSalto=5, int quantidadeSaltos = 10, bool leadTime =false, bool issueCanceled = true, bool  programada=false)
         {
             #region processo
-            var proj =
-               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+            //var proj =
+            //   GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+            var proj = _RedmineService.GetTime(time);
 
             var processo = _RedmineService.GetProcessoTeam(proj);
             var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();

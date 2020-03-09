@@ -19,7 +19,7 @@
 
 <script type="text/javascript">
     var __divDados = '_ThroughputRejectionDiagram';
-    
+        
     $(document).ready(function () {
 
         LoadRejections($("#time").val());
@@ -30,21 +30,22 @@
             LoadRejections(this.value);
         });
 
-        /*$("#pesquisar").on("click", function (e) {
-            alert('chamou Rejection');
+        $("#pesquisar").on("click", function (e) {
+            //alert('chamou Rejection');
             $("#_LoadingThpt").show();
             $("#" + __divDados).html("");
-            LoadRejections($("#time").val());
-        });*/
+            LoadRejections($("#time").val(), false);
+        });
 
-        function LoadRejections(time) {
+        function LoadRejections(time, dashboard = true) {
             
             var data = new Object();
             data.time = time;
-            data.dataIni = dataIni;//(new Date).getFullYear() + '-01-01';
-            data.dataFim = dataFim;//(new Date).getFullYear() + '-' + parseInt((new Date).getMonth() + 1) + '-' + (new Date).getDate();
-            data.throughput = true;
+            data.dataIni = $("#dataIni").val();
+            data.dataFim = $("#dataFim").val();
+            data.dashboard = dashboard;
             var descTime = $('#time :selected').text();
+            var periodo = $("#dataIni").val().split('-').reverse().join('/') + ' à ' + $("#dataFim").val().split('-').reverse().join('/');
 
             $.ajax({
                 dataType: "json",
@@ -56,7 +57,7 @@
                 success: function (datas) {
                     if (datas != null) {
                         _time = time;
-                        renderRejectionThroughput(__divDados, 'Throughput X Rejeição do time: ' + descTime, 'Source: redmine.example.com | Year: 2019', datas.Categoria, datas.Serie, (datas.Throughput.ThroughputWeek ? datas.Throughput.ThroughputWeek : datas.Throughput.Throughput), datas.Rejeicao.RejectionsRate);
+                        renderRejectionThroughput(__divDados, 'Throughput X Rejeição do time: ' + descTime, 'Source: redmine.example.com | Interval: '+periodo, datas.Categoria, datas.Serie, (datas.Throughput.ThroughputWeek ? datas.Throughput.ThroughputWeek : datas.Throughput.Throughput), datas.Rejeicao.RejectionsRate);
                     }
                 }
 

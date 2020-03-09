@@ -30,25 +30,29 @@
             LoadCFD(this.value);
         });
 
-        /*$("#pesquisar").on("click", function (e) {
-            alert('chamou Cumulative');
+        $("#pesquisar").on("click", function (e) {
+            //alert('chamou Cumulative');
             $("#_LoadingCFD").show();
             $("#_ComulativeFlowDiagram").html("");
-            LoadCFD($("#time").val());
-        });*/
+            LoadCFD($("#time").val(),false);
+        });
 
 
         $("#__fase").change(function () {
             var toggle = $(this).prop('checked');
-            renderComulativeFlow(divDados, 'CFD do time: ' + _time, 'Source: redmine.example.com | Year:' + (new Date).getFullYear(), DataResult.Semanas, " Chamado", ' Chamado(s)', toggle ? DataResult.Serie : DataResult.SerieFase);
+            var periodo = $("#dataIni").val().split('-').reverse().join('/') + ' à ' + $("#dataFim").val().split('-').reverse().join('/');
+            var descTime = $('#time :selected').text();
+            renderComulativeFlow(divDados, 'CFD do time: ' + descTime, 'Source: redmine.example.com | Interval: '+ periodo, DataResult.Semanas, " Chamado", ' Chamado(s)', toggle ? DataResult.Serie : DataResult.SerieFase);
         });
 
-        function LoadCFD(time) {
+        function LoadCFD(time, dashboard = true) {
 
             var data = new Object();
             data.time = time;
-            data.dataIni = dataIni;//(new Date).getFullYear() + '-01-01';
-            data.dataFim = dataFim;//(new Date).getFullYear() + '-' + parseInt((new Date).getMonth() + 1) + '-' + (new Date).getDate();
+            data.dataIni = $("#dataIni").val();
+            data.dataFim = $("#dataFim").val();
+            data.dashboard = dashboard;
+            var periodo = $("#dataIni").val().split('-').reverse().join('/') + ' à ' + $("#dataFim").val().split('-').reverse().join('/');
             var descTime = $('#time :selected').text();
 
             $.ajax({
@@ -63,7 +67,7 @@
                         DataResult = datas;
                         _time = time;
                         var toggle = $("#__fase").prop('checked');
-                        renderComulativeFlow(divDados, 'CFD do time: ' + descTime, 'Source: redmine.example.com | Year: 2019', datas.Semanas, " Chamado", ' Chamado(s)', toggle ? datas.Serie : datas.SerieFase);
+                        renderComulativeFlow(divDados, 'CFD do time: ' + descTime, 'Source: redmine.example.com | Interval: '+ periodo, datas.Semanas, " Chamado", ' Chamado(s)', toggle ? datas.Serie : datas.SerieFase);
                     }
                 }
 

@@ -218,13 +218,13 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                                    var pro = new Projeto()
                                    {
                                        Id = x.Id,
-                                       Identifier = _Redmine.GetObject<Project>(x.Id, new NameValueCollection()).Identifier.ToString()
+                                       Identifier = _Redmine.GetObject<Project>(x.IdProjeto, new NameValueCollection()).Identifier.ToString()
                                    };
                                    _user.projetosRedmine.Add(pro);
                                }
                                catch
                                {
-                                   _user.projetosRedmine.Add(new Projeto() { Id = x.Id, Identifier = x.Id });
+                                   _user.projetosRedmine.Add(new Projeto() { Id = x.IdProjeto, Identifier = x.Identifier });
                                }
                            });
                 }

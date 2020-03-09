@@ -71,8 +71,7 @@
 
     var divDispersao = '_DisperssionDiagram';
     var divCountAvarage = '_CountAvarageData';
-    var divAnalizeLeadTime = '_AnalyzeLeadtime';
-    var subTitle = 'Source: redmine.example.com | Year: ' + (new Date).getFullYear();
+    var divAnalizeLeadTime = '_AnalyzeLeadtime';    
 
     $(document).ready(function () {
 
@@ -83,12 +82,12 @@
             LoadDisperssion(this.value);
         });
 
-        /*$("#pesquisar").on("click", function (e) {
-            alert('chamou disperssion');
+        $("#pesquisar").on("click", function (e) {
+            //alert('chamou disperssion');
             //Disperssions
             LimparTela();
             LoadDisperssion($("#time").val());
-        });*/
+        });
 
         $("#primeiroSalto").change(function () {
             LoadDisperssion($("#time").val(), divCountAvarage);
@@ -110,8 +109,8 @@
             
             var data = new Object();
             data.time = time;
-            data.dataIni = dataIni; //(new Date).getFullYear() + '-01-01';
-            data.dataFim = dataFim; //(new Date).getFullYear() + '-' + parseInt((new Date).getMonth() + 1) + '-' + (new Date).getDate();
+            data.dataIni = $("#dataIni").val();
+            data.dataFim = $("#dataFim").val();
             data.statusDe = 120;
             data.statusPara = 5;
             data.tipoChamado = null;
@@ -123,7 +122,8 @@
             data.programada = $('#IssueScheduled').prop('checked');
             data.gestorFiplan = $("#gestorFiplan").val();
             var descTime = $('#time :selected').text();
-
+            //var subTitle = 'Source: redmine.example.com | Interval: ' + (new Date).getFullYear();
+            var subTitle = 'Source: redmine.example.com | Interval: ' + $("#dataIni").val().split('-').reverse().join('/') + ' à ' + $("#dataFim").val().split('-').reverse().join('/');
 
             $.ajax({
                 dataType: "json",

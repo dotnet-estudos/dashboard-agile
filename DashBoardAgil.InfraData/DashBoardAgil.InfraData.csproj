@@ -71,6 +71,10 @@
     <Compile Include="Migrations\201910151738006_Add-tipochamado-processotipo-2.Designer.cs">
       <DependentUpon>201910151738006_Add-tipochamado-processotipo-2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202001311923371_add-colunaEntregue.cs" />
+    <Compile Include="Migrations\202001311923371_add-colunaEntregue.Designer.cs">
+      <DependentUpon>202001311923371_add-colunaEntregue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -99,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201910151738006_Add-tipochamado-processotipo-2.resx">
       <DependentUpon>201910151738006_Add-tipochamado-processotipo-2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202001311923371_add-colunaEntregue.resx">
+      <DependentUpon>202001311923371_add-colunaEntregue.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

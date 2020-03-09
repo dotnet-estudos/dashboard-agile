@@ -27,5 +27,6 @@ namespace DashBoardAgil.Domain.Models
         public bool ValidadoPO { get; set; }
         public bool Desenvolvimento { get; set; }
         public int Ordem { get; set; }
+        public bool Entregue { get; set; }
     }
 }
