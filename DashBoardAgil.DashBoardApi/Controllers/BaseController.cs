@@ -10,13 +10,13 @@ using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.DashBoardApi.Util;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.Services.Service;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
 {

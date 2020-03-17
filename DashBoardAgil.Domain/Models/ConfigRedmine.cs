@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DashBoardAgil.Domain.Enums;
+
 
 namespace DashBoardAgil.Domain.Models
 {

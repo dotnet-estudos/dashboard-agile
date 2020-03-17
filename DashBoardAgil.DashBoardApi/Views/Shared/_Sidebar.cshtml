@@ -1,6 +1,6 @@
 ﻿
-@using DashBoardAgil.Domain.Enums
 @using DashBoardAgil.Domain.Models
+@using DashBoardAgil.CrossCutting.Enums
 
 @{
     //carregar o menu dinamicamente
@@ -32,9 +32,9 @@
                         <ul class="nav nav-second-level">
                             @foreach (var sub in item.SubMenus)
                             {
-                            <li>
-                                <a href="@String.Format(sub.Url)" @Html.Raw(sub.IdUrl !="" ? "id='"+sub.IdUrl+"'" : "")><i class="@String.Format(sub.Icone)"></i> @Html.Raw(sub.Titulo)</a>
-                            </li>
+                                <li>
+                                    <a href="@String.Format(sub.Url)" @Html.Raw(sub.IdUrl != "" ? "id='" + sub.IdUrl + "'" : "")><i class="@String.Format(sub.Icone)"></i> @Html.Raw(sub.Titulo)</a>
+                                </li>
                             }
                         </ul>
                     }
@@ -42,7 +42,7 @@
             }
             <!--Fim Exibição menu dinâmico-->
             <!--Exemplo
-            <li> 
+            <li>
                 <a href="Home" class="active"><i class="fas fa-tachometer-alt fa-fw"></i> Teste</a>
             </li>
             <li>

@@ -10,13 +10,13 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using WebGrease.Css.Extensions;
 using WebApi.OutputCache.V2;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.DashBoardApi.Controllers.Api
 {

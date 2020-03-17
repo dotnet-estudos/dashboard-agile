@@ -9,11 +9,11 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
 using WebApi.OutputCache.V2;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.DashBoardApi.Controllers.Api
 {
@@ -23,7 +23,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         public Object Get(string time, DateTime? dataIni, DateTime? dataFim,  StatusRedmine statusDe, StatusRedmine statusPara, TipoChamadoRedmine? tipoChamado=null, PrioridadeRedmine? prioridade=null, int primeiroSalto=5, int quantidadeSaltos = 10, bool leadTime =false, bool issueCanceled = true, bool  programada=false)
         {
             #region processo
-            var proj =
+             var proj =
                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
 
             var processo = _RedmineService.GetProcessoTeam(proj);
@@ -82,7 +82,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             });
             //Fim verificar os custons fields dos times
 
-            var projectosAnalise = _RedmineService.GetCicleTimeTeam(parm, statusDe, statusPara, primeiroSalto, quantidadeSaltos, leadTime);
+            var projectosAnalise = _RedmineService.GetCicleTimeTeam(parm, statusDe, statusPara, primeiroSalto, quantidadeSaltos, leadTime, time);
 
             return projectosAnalise;
         }

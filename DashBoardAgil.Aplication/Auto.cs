@@ -9,9 +9,9 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Util;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.Services.Service;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Aplication
 {

@@ -13,16 +13,16 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.DashBoardApi.Util;
 using DashBoardAgil.Services;
-using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.InfraData.Contexto;
 using DashBoardAgil.Services.Service;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.DashBoardApi.Controllers.Api
 {
-   
+
     public class BaseApiController : ApiController
     {
 

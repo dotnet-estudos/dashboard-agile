@@ -1,5 +1,6 @@
 ﻿@using DashBoardAgil.DashBoardApi.Models
-@using DashBoardAgil.Domain.Enums
+@using DashBoardAgil.CrossCutting.Enums
+
 @using Redmine.Net.Api.Types
 @using DashBoardAgil.CrossCutting
 @{
@@ -14,17 +15,17 @@
         @*<p class="help-block">Exemplo: -level help text here.</p>*@
     </div>
     @*<div class="form-group col-lg-2">
-        <label>Data De:</label>
-        <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.ToString("yyyy")-01-01" required />
-    </div>
-    <div class="form-group col-lg-2">
-        <label>Até:</label>
-        <input type="date" id="dataFim" name="dataFim" class="form-control" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="@ConstantesCC.CAMPO_OBRIGATORIO" />
-    </div>
-    <div class="form-group col-lg-2">
-        <br/>
-        <button type="button" id="pesquisar" class="btn btn-primary">Pesquisar</button>
-    </div>*@
+            <label>Data De:</label>
+            <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.ToString("yyyy")-01-01" required />
+        </div>
+        <div class="form-group col-lg-2">
+            <label>Até:</label>
+            <input type="date" id="dataFim" name="dataFim" class="form-control" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="@ConstantesCC.CAMPO_OBRIGATORIO" />
+        </div>
+        <div class="form-group col-lg-2">
+            <br/>
+            <button type="button" id="pesquisar" class="btn btn-primary">Pesquisar</button>
+        </div>*@
 </div>
 
 
@@ -32,32 +33,34 @@
 @switch (user.Perfil)
 {
     case (PerfilDash.Cliente):
-    {
-        <div class="row">
-            @Html.Partial("_SumaryBlock")
-        </div>
-        <div class="col-lg-6 left">
-            @*@Html.Partial("_Dados")*@
-            @Html.Partial("_ThroughputRejection")
-        </div>
-    }break;
+        {
+            <div class="row">
+                @Html.Partial("_SumaryBlock")
+            </div>
+            <div class="col-lg-6 left">
+                @*@Html.Partial("_Dados")*@
+                @Html.Partial("_ThroughputRejection")
+            </div>
+        }
+        break;
     default:
-        { 
-        <div class="row">
-            @Html.Partial("_SumaryBlock")
-        </div>
+        {
+            <div class="row">
+                @Html.Partial("_SumaryBlock")
+            </div>
 
-        <div class="col-lg-6 right">
-           @Html.Partial("_ComulativeFlowDiagram")
-        </div>
-        <div class="col-lg-6 left">
-            @*@Html.Partial("_Dados")*@
-            @Html.Partial("_ThroughputRejection")
-        </div>
-        <div>
-            @Html.Partial("_DisperssionDiagram")
-        </div>
-    }break;
+            <div class="col-lg-6 right">
+                @Html.Partial("_ComulativeFlowDiagram")
+            </div>
+            <div class="col-lg-6 left">
+                @*@Html.Partial("_Dados")*@
+                @Html.Partial("_ThroughputRejection")
+            </div>
+            <div>
+                @Html.Partial("_DisperssionDiagram")
+            </div>
+        }
+        break;
 }
 <script type="text/javascript">
 
@@ -71,10 +74,10 @@
             $(this).prop("max", dataFim);
         });
 
-        $("#dateIni").prop("value",dataIni);
-        $("#dateFim").prop("value",dataFim);
+        $("#dateIni").prop("value", dataIni);
+        $("#dateFim").prop("value", dataFim);
 
     });
-    
+
 
 </script>

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Domain.Util;
-using DashBoardAgil.Domain.Interfaces.Abstracoes;
 
 namespace DashBoardAgil.Domain.Models
 {
@@ -22,7 +17,7 @@ namespace DashBoardAgil.Domain.Models
         public DateTime? DataIni { get; set; }
         public DateTime? DataFim { get; set; }
         public List<Throughput> Throughputs { get; set; }
-        public int TotalDias => Throughputs.Count>0? int.Parse(((TimeSpan) (Throughputs.Max(x => x.ClosedOn) - Throughputs.Min(x => x.ClosedOn))).TotalDays.ToString("####")): 0;
+        public int TotalDias => Throughputs.Count>1? int.Parse(((TimeSpan) (Throughputs.Max(x => x.ClosedOn) - Throughputs.Min(x => x.ClosedOn))).TotalDays.ToString("####")): 0;
         public int TotalChamados => Throughputs.Count;
         public List<int> WeekList => CrossCutting.Util.GetWeekList(DataIni ?? new DateTime(DateTime.Now.Year, 1, 1), DataFim ?? DateTime.Now.Date);
         public string Throughput => string.Format("{0:##.##}", double.Parse(this.TotalChamados.ToString())/double.Parse(this.TotalDias.ToString()));

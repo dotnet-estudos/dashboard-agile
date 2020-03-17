@@ -30,19 +30,22 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="redmine-net45-api, Version=2.0.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\redmine-api.2.0.17\lib\net45\redmine-net45-api.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Mvc">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
@@ -58,9 +61,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Constantes.cs" />
     <Compile Include="ConstantesCC.cs" />
     <Compile Include="CriptografiaAES.cs" />
     <Compile Include="Debugar.cs" />
+    <Compile Include="Enums\Flag.cs" />
+    <Compile Include="Enums\PerfilDash.cs" />
+    <Compile Include="Enums\PrioridadeRedmine.cs" />
+    <Compile Include="Enums\SituacaoSubFase.cs" />
+    <Compile Include="Enums\StatusRedmine.cs" />
+    <Compile Include="Enums\TipoChamadoRedmine.cs" />
+    <Compile Include="Enums\TipoContagem.cs" />
     <Compile Include="Enums\UsuarioPerfil.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Object\Feriado.cs" />

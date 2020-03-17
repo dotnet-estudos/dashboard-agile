@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.Web.Security;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
-using DashBoardAgil.Domain.Enums;
+
 using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.Domain.Models;
 using DashBoardAgil.Services.Service;

@@ -63,7 +63,6 @@
     <Compile Include="Service\ProcessoService.cs" />
     <Compile Include="Service\RedmineExtensions.cs" />
     <Compile Include="Service\RedmineService.cs" />
-    <Compile Include="Util\Constantes.cs" />
     <Compile Include="Util\RedmineUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

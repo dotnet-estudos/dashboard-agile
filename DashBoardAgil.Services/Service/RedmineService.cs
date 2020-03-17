@@ -12,14 +12,12 @@ using System.Runtime.InteropServices;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.Domain.Interfaces.Abstracoes;
-using DashBoardAgil.Domain.Enums;
-using DashBoardAgil.Services.Extensions;
 using DashBoardAgil.Services.Util;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using DashBoardAgil.Domain.Models;
-
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Services.Service
 {
@@ -567,29 +565,31 @@ namespace DashBoardAgil.Services.Service
             return RedmineUtil.GetDateByStatus(chamado, status, oldValue);
         }
 
-        public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false)
+        public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false, string idTeam = "0" )
         {
+            var team = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(idTeam) || x.Id.Equals(idTeam));
 
             var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
 
-            //var processo = db.Processos
-            //                 .Include(x => x.PFS)
-            //                 .Include(x => x.PFS.Select(y=>y.Fase))
-            //                 .Include(x => x.PFS.Select(y => y.SubFase))
-            //                 .FirstOrDefault();
+            if (team != null && team.ProcessoId > 0)
+            {
 
-            //processo.PFS.ForEach(x =>
-            //{
-            //    x.Processo = null;
-            //    x.SubFase.PFS = null;
-            //    x.Fase.PFS = null;
-            //});
+                var processo = db.Processos
+                                 .Include(x => x.PFS)
+                                 .Include(x => x.PFS.Select(y => y.Fase))
+                                 .Include(x => x.PFS.Select(y => y.SubFase))
+                                 .FirstOrDefault(x => x.ProcessoId == team.ProcessoId);
 
+                processo.PFS.ForEach(x =>
+                {
+                    x.Processo = null;
+                    x.SubFase.PFS = null;
+                    x.Fase.PFS = null;
+                });
 
+                team.Processo = processo;
+            }
             // var conteudo = JsonConvert.SerializeObject(processo);
-
-
-
             //Global.Instance.GravarArquivo(System.AppDomain.CurrentDomain.BaseDirectory, conteudo, "ProcessoBanco.json");
 
             var chamados = leadTime ? _manager.GetObjects<Issue>(parms) : _manager.GetObjectsWithJournals(parms);
@@ -632,9 +632,9 @@ namespace DashBoardAgil.Services.Service
 
             });
 
-            var leadsControl = new LeadTimeControl(primeiroSalto, quantidadeSaltos);
+            var leadsControl = new LeadTimeControl(chamados, team,primeiroSalto, quantidadeSaltos);
             leadsControl.LeadTimes = leadsTimes.ToList();
-            leadsControl.UniversoChamados = chamados;
+           // leadsControl.UniversoChamados = chamados;
             //var max = LeadsTimes.Max(x=>x.LeadBrutoDays);
 
             return leadsControl;
@@ -759,13 +759,9 @@ namespace DashBoardAgil.Services.Service
 
             try
             {
-
-
                 Debugar.WriteLine(String.Format("{0} - {1}", "Comecou ", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));
 
-
-
-                processo.PFS.OrderBy(x => x.Ordem).ToList().ForEach((pfs) =>
+                processo.PFS.OrderByDescending(x => x.Ordem).ToList().ForEach((pfs) =>
                       {
                           //var listFluxo = new List<object>();
                           var listSerie = new List<int>();
@@ -774,10 +770,16 @@ namespace DashBoardAgil.Services.Service
                           {
                               var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
                                                        //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() == semana) ||
-                                                        ch.Journals.Any(y => ((pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null? (DateTime)ch.ClosedOn : (DateTime)y.CreatedOn)).GetWeekOfYear() == semana
-                                                                    && y.Details.Any(det => det.Property.Equals("attr")
+                                                        ch.Journals.Any(y => 
+                                                                   ( (pfs.Situacao == SituacaoSubFase.Fechamento ?  (((DateTime)y.CreatedOn)).GetWeekOfYear() <= semana : (((DateTime)y.CreatedOn)).GetWeekOfYear() == semana)
+                                                                   
+                                                                   ) && y.Details.Any(det => det.Property.Equals("attr")
                                                                     && det.Name.Equals(RedmineKeys.STATUS_ID)
-                                                                    && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue)))).Select(x => x.Id).ToList();
+                                                                    && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue))))
+                                                   
+                                                     .Select(x => x.Id)
+                                                     .Where(ch => !dicSerieFase.Any(dic => dic.Key.Value == semana && !dic.Value.Value.Contains(ch)))
+                                                     .ToList();
                               //listFluxo.Add(new { Semana = semana, Quantidade = count });
                               var chave = new KeyValuePair<int, int>(pfs.SubFaseId, semana);
                               var value = new KeyValuePair<int, List<int>>(pfs.FaseId, count);
@@ -819,6 +821,7 @@ namespace DashBoardAgil.Services.Service
 
                 throw;
             }
+
             return new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
         }
 
@@ -906,16 +909,13 @@ namespace DashBoardAgil.Services.Service
                     //});
 
                     #endregion
-
             }
             catch (Exception ex)
             {
-
                 throw;
             }
             return null; //new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
         }
-
 
         public ConsumoHorasControl ConsumptionHoursByProject(NameValueCollection parms, string project, string time)
         {

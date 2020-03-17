@@ -9,7 +9,7 @@
         {"Info", "fas fa-info-circle"},
         {"Prioridade", "fas fa-chart-bar"},
         {"Tipo", "fas fa-chart-bar"},
-       // {"Pizza", "fas fa-chart-pie"},
+        {"Pizza", "fas fa-chart-pie"},
         {"Dados", "fas fa-list-alt"},
 
     };
@@ -182,7 +182,7 @@
             renderTable(result);
             renderCollumChart("prioridade", "Prioridade", "", CategoriaPrioridade, "Dias", "dias", seriePrioridade);
             renderCollumChart("tipo", "Tipo", "", CategoriaPrioridade, "Dias", "dias", serieTipo);
-            //  renderPizzaChart("pizza", "", "", result.ByProcess.series, result.ByProcess.drilldown, "dias");
+            renderPizzaChart("pizza", "", "", result.ByProcess.series, result.ByProcess.drilldown, "dias");
         }
 
         $("#pesquisar").on("click", function(e) {

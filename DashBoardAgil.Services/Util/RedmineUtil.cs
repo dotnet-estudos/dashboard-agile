@@ -5,24 +5,23 @@ using System.Globalization;
 using System.Linq;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
-using DashBoardAgil.Services.Util;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
+using DashBoardAgil.CrossCutting.Enums;
 
-namespace DashBoardAgil.Services.Extensions
+namespace DashBoardAgil.Services.Util
 {
     public static class RedmineUtil
     {
         public static TimeSpan TempoMedio(this List<Periodo> listaPeriodo)
         {
             double tempoMedio = 0d;
-            List<Periodo> tmpList = listaPeriodo.Where((x => x.DataFinal.HasValue)).ToList();
+            List<Periodo> tmpList = listaPeriodo.Where(x => x.DataFinal.HasValue).ToList();
 
             foreach (Periodo item in tmpList)
             {
                 TimeSpan ts = item.DataFinal.Value.Subtract(item.DataInicial);
-                tempoMedio += (ts.Ticks / (double)tmpList.Count);
+                tempoMedio += ts.Ticks / (double)tmpList.Count;
             }
 
             return new TimeSpan((long)tempoMedio);
@@ -34,12 +33,12 @@ namespace DashBoardAgil.Services.Extensions
 
             string dataFinal = periodo.DataFinal?.ToString(formato) ?? "";
 
-            return String.Format("><{0}|{1}", periodo.DataInicial.ToString(formato), dataFinal);
+            return string.Format("><{0}|{1}", periodo.DataInicial.ToString(formato), dataFinal);
         }
 
         public static string ChamadosAvaliarProducao()
         {
-            return String.Format("{0}|{1}", StatusRedmine.AvaliarProducao.GetHashCode(), StatusRedmine.ProducaoAvaliar.GetHashCode());
+            return string.Format("{0}|{1}", StatusRedmine.AvaliarProducao.GetHashCode(), StatusRedmine.ProducaoAvaliar.GetHashCode());
         }
 
         public static DateTime AddDiasUteis(this DateTime data, int dias)
@@ -71,13 +70,13 @@ namespace DashBoardAgil.Services.Extensions
                 case TipoContagem.Ano:
                     {
 
-                        valorCalc += (prazo * 12) * 30;
+                        valorCalc += prazo * 12 * 30;
                         dataRef = data.AddDiasUteis((int)valorCalc);
                     }
                     break;
                 case TipoContagem.Mes:
                     {
-                        valorCalc += (prazo * 30);
+                        valorCalc += prazo * 30;
                         dataRef = data.AddDiasUteis((int)valorCalc);
                     }
                     break;
@@ -87,9 +86,9 @@ namespace DashBoardAgil.Services.Extensions
                     }
                     break;
                 case TipoContagem.Hora:
-                {
-                    return data.AddHoraUtil(prazo) >= datePara;
-                }
+                    {
+                        return data.AddHoraUtil(prazo) >= datePara;
+                    }
                     break;
                 default: return false;
             }
@@ -103,10 +102,10 @@ namespace DashBoardAgil.Services.Extensions
 
         public static double Diferenca(this DateTime data, DateTime datePara, TipoContagem tipoRetorno, bool ultil = false)
         {
-            if(!ultil) return datePara.SubtractByTipoConagem(data, tipoRetorno);
+            if (!ultil) return datePara.SubtractByTipoConagem(data, tipoRetorno);
 
             var valorReturn = 0.0;
-            var dataRef =  (DateTime)data;
+            var dataRef = data;
             while (datePara > dataRef)
             {
                 valorReturn++;
@@ -114,17 +113,17 @@ namespace DashBoardAgil.Services.Extensions
                 {
                     case TipoContagem.Ano:
                         {
-                            dataRef = dataRef.AddDiasUteis((int)1 * 30 * 12);
+                            dataRef = dataRef.AddDiasUteis(1 * 30 * 12);
                         }
                         break;
                     case TipoContagem.Mes:
                         {
-                            dataRef= dataRef.AddDiasUteis((int)1 * 30);
+                            dataRef = dataRef.AddDiasUteis(1 * 30);
                         }
                         break;
                     case TipoContagem.Dia:
                         {
-                            dataRef = dataRef.AddDiasUteis((int)1);
+                            dataRef = dataRef.AddDiasUteis(1);
                         }
                         break;
                     case TipoContagem.Hora:
@@ -232,7 +231,7 @@ namespace DashBoardAgil.Services.Extensions
 
             }
         }
-        
+
         public static double FatorHoraUtil(this DateTime dateIni)
         {
             return GetFatorHoraUtil(dateIni, dateIni);
@@ -246,7 +245,7 @@ namespace DashBoardAgil.Services.Extensions
 
             for (var i = 0; i < unsignedDays; i++)
             {
-                do{ dateRef = dateRef.AddHours(sign);}
+                do { dateRef = dateRef.AddHours(sign); }
                 while (!DateUnderExpPeriod(dateRef));
             }
 
@@ -266,12 +265,14 @@ namespace DashBoardAgil.Services.Extensions
                 case DayOfWeek.Wednesday:
                 case DayOfWeek.Thursday:
                     {
-                        return (date >= horaIni && date <= horaFim);
-                    }break;
+                        return date >= horaIni && date <= horaFim;
+                    }
+                    break;
                 case DayOfWeek.Friday:
                     {
-                        return (date >= horaIni && date <= horaFim.AddHours(-2));
-                    }break;
+                        return date >= horaIni && date <= horaFim.AddHours(-2);
+                    }
+                    break;
                 case DayOfWeek.Saturday:
                 case DayOfWeek.Sunday:
                 default:
@@ -306,11 +307,11 @@ namespace DashBoardAgil.Services.Extensions
 
             if (dataFimRef.DayOfWeek == DayOfWeek.Saturday)
             {
-                dataFimRef = dataFimRef.Date.AddDays(2).AddHours(ConstantesCC.HORA_INI_EXP+1);
+                dataFimRef = dataFimRef.Date.AddDays(2).AddHours(ConstantesCC.HORA_INI_EXP + 1);
             }
             else if (dataFimRef.DayOfWeek == DayOfWeek.Sunday)
             {
-                dataFimRef = dataFimRef.Date.AddDays(1).AddHours(ConstantesCC.HORA_INI_EXP+1);
+                dataFimRef = dataFimRef.Date.AddDays(1).AddHours(ConstantesCC.HORA_INI_EXP + 1);
             }
             #endregion
 
@@ -330,15 +331,15 @@ namespace DashBoardAgil.Services.Extensions
 
             if (dataFimRef.TimeOfDay < dataHoraExp.TimeOfDay)
             {
-                dataFimRef = dataFimRef.Date.AddHours(ConstantesCC.HORA_INI_EXP+1);
+                dataFimRef = dataFimRef.Date.AddHours(ConstantesCC.HORA_INI_EXP + 1);
             }
             else if (dataFimRef.TimeOfDay > dataHoraFim.TimeOfDay)
             {
-                dataFimRef = dateRef.Date.AddDays(1).AddHours(ConstantesCC.HORA_INI_EXP+1);
+                dataFimRef = dateRef.Date.AddDays(1).AddHours(ConstantesCC.HORA_INI_EXP + 1);
             }
 
             #endregion
-            
+
 
             while (dateRef < dataFimRef)
             {
@@ -348,7 +349,7 @@ namespace DashBoardAgil.Services.Extensions
             }
 
 
-            if (dataFimRef < dateRef )
+            if (dataFimRef < dateRef)
             {
                 dateRef = dateRef.AddHours(-1);
                 retorno += dateRef.Subtract(dataFimRef).TotalHours;
@@ -403,36 +404,10 @@ namespace DashBoardAgil.Services.Extensions
 
         public static DateTime? GetDateByStatus(Issue chamado, StatusRedmine status, bool oldValue = false)
         {
-            switch (status)
-            {
-                case StatusRedmine.BacklogNovo:
-                case StatusRedmine.Novo:
-                    {
-                        return oldValue ? (GetFristJournalByStatus(status, chamado, true)?.CreatedOn ?? null) : chamado.CreatedOn;
-                    }
-                case StatusRedmine.Cancelado:
-                case StatusRedmine.Fechado:
-                    {
-                        return chamado.ClosedOn;
-                    }
-                default:
-                    {
-                        var retorno = GetFristJournalByStatus(status, chamado, oldValue);
-                        return retorno?.CreatedOn ?? null;
-                    }
-            }
+            return CrossCutting.Util.GetDateByStatus(chamado, status, oldValue);
         }
 
-        private static Journal GetFristJournalByStatus(StatusRedmine status, Issue chamado, bool oldValue = false)
-        {
-            var retorno = chamado?.Journals?.FirstOrDefault(x =>
-            x.Details.Any(Constantes.GetDetail(status.GetHashCode().ToString(), //new Value
-                                                 RedmineKeys.STATUS_ID, //Name Pardao status
-                                                 ConstantesCC.Details.Name_Attr, //property 
-                                                 oldValue //Verificar a Saida do Status
-                                               ))) ?? null;
-            return retorno;
-        }
+       
 
         public static List<Rejection> GetRejectionsList(List<Issue> chamados)
         {
@@ -444,8 +419,8 @@ namespace DashBoardAgil.Services.Extensions
                         Tipo = (TipoChamadoRedmine)chamado.Tracker.Id,
                         Prioridade = (PrioridadeRedmine)chamado.Priority.Id,
                         //HasRejection = ((!(chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(x => x.Info?.Equals("Sim") ?? false)) ?? false) && chamado.Journals.Any(x => x.Details.Any(y => y.Name == Constantes.Details.Name_Tag && (y.NewValue.Contains(Constantes.Details.Value_Rejeitado)))))),
-                        RejectedDate = chamado.Journals?.FirstOrDefault(x => x.Details.Any(y => y.Name == ConstantesCC.Details.Name_Tag && (y.NewValue.Contains(ConstantesCC.Details.Value_Rejeitado))))?.CreatedOn ?? null,
-                        HasIR = chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(val => (val.Info?.Equals("Sim")?? false)))?? false,
+                        RejectedDate = chamado.Journals?.FirstOrDefault(x => x.Details.Any(y => y.Name == ConstantesCC.Details.Name_Tag && y.NewValue.Contains(ConstantesCC.Details.Value_Rejeitado)))?.CreatedOn ?? null,
+                        HasIR = chamado.CustomFields?.Any(cf => cf.Name.Equals("IR") && cf.Values.Any(val => val.Info?.Equals("Sim") ?? false)) ?? false,
                         ClosedOn = chamado.ClosedOn ?? null,
                         CreatedOn = chamado.CreatedOn ?? new DateTime(1900, 1, 1),
                         Projeto = chamado.Project.Name

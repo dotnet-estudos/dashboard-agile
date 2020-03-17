@@ -7,9 +7,9 @@ using System.Net.Http;
 using System.Web.Http;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
 using Microsoft.Ajax.Utilities;
 using Redmine.Net.Api;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.DashBoardApi.Controllers.Api
 {
