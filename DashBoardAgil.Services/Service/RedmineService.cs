@@ -829,6 +829,8 @@ namespace DashBoardAgil.Services.Service
         {
             var chamados = _manager.GetObjectsWithJournals(parms);
 
+            
+
             #region Fluxo para Status
 
             try
@@ -887,34 +889,35 @@ namespace DashBoardAgil.Services.Service
 
                     Debugar.WriteLine(String.Format("{0} - {1}", "Terminou ",
                         DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));
+                return new { Semanas = weekList, Serie = cfdControl.ComulativeFlow, SerieFase = cfdControl.ComulativeFlow };
 
-                    #endregion
+                #endregion
 
-                    #region Fase
+                #region Fase
 
-                    //var fases = processo.PFS.OrderBy(x => x.Ordem).Select(x => x.Fase).Distinct().ToList();
-                    //fases.ForEach((fase) =>
-                    //{
-                    //    var listSerie = new List<int>();
-                    //    weekList.ForEach(semana =>
-                    //    {
-                    //        var count = new List<int>();
-                    //        dicSerieFase.Where(x => x.Value.Key == fase.FaseId && x.Key.Value == semana).ToList().ForEach(x =>
-                    //        {
-                    //            count.AddRange(x.Value.Value);
-                    //        });
-                    //        listSerie.Add(count.Distinct().Count());
-                    //    });
-                    //    serieFase.Add(new { name = fase.Descricao, data = listSerie });
-                    //});
+                //var fases = processo.PFS.OrderBy(x => x.Ordem).Select(x => x.Fase).Distinct().ToList();
+                //fases.ForEach((fase) =>
+                //{
+                //    var listSerie = new List<int>();
+                //    weekList.ForEach(semana =>
+                //    {
+                //        var count = new List<int>();
+                //        dicSerieFase.Where(x => x.Value.Key == fase.FaseId && x.Key.Value == semana).ToList().ForEach(x =>
+                //        {
+                //            count.AddRange(x.Value.Value);
+                //        });
+                //        listSerie.Add(count.Distinct().Count());
+                //    });
+                //    serieFase.Add(new { name = fase.Descricao, data = listSerie });
+                //});
 
-                    #endregion
+                #endregion
             }
             catch (Exception ex)
             {
                 throw;
             }
-            return null; //new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
+            return null;// new { Semanas = weekList, Serie = cfdControl.ComulativeFlow, SerieFase = serieFase };
         }
 
         public object GetCumulativeFlowDiagram3(NameValueCollection parms, List<int> weekList, Processo processo)
@@ -925,6 +928,8 @@ namespace DashBoardAgil.Services.Service
             var serie = new List<object>();
             var serieFase = new List<object>();
             var dicSerieFase = new List<dynamic>();
+
+
 
 
 
