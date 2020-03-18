@@ -20,12 +20,12 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
     public class ComulativeFlowDiagramController : BaseApiController
     {
 
-       [CacheOutput(ServerTimeSpan = 1 * (60))]
+       //[CacheOutput(ServerTimeSpan = 1 * (60))]
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool dashboard = true)
         {
 
-            var proj =
-                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+            var proj = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+
             #region processo
             var processo = _RedmineService.GetProcessoTeam(proj);
             var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
@@ -73,7 +73,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
             var comulativeFlow = dashboard ?
                                  JsonConvert.DeserializeObject(Global.Instance.LerArquivo(Path.Combine(ConstantesCC.PATH_CFD_DIAGRAM, String.Format("{0}.json", time)))) :
-                                _RedmineService.GetCumulativeFlowDiagram(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim), processo);
+                                _RedmineService.GetCumulativeFlowDiagram3(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim), processo);
 
             //Debugar.WriteLine(string.Format("Fim: {0}", DateTime.Now.ToString("G")));
             return comulativeFlow;

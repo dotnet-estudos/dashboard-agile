@@ -480,6 +480,7 @@
     <Content Include="Views\Configuracao\ItensMenu.cshtml" />
     <Content Include="Views\Relatorio\LeadTime.cshtml" />
     <Content Include="Views\Relatorio\DiaDesenvolvedor.cshtml" />
+    <Content Include="Views\Relatorio\ComulativeFlow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

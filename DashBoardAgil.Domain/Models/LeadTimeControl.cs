@@ -369,8 +369,8 @@ namespace DashBoardAgil.Domain.Models
                        {
 
                            name = flux.Fase.Descricao,
-                           id = flux.Fase.Descricao.ToString(),
-                           data = dicClicleTime.Where(x => flux.Fase.FaseId == x.FaseId).Select(x => new { name = flux.SubFase.Descricao, y = x.Avarage, value = x.Avarage }).ToArray()
+                           id = flux.Fase.FaseId.ToString(),
+                           data = dicClicleTime.Where(x => flux.Fase.FaseId == x.FaseId).ToList().Select(x => new { name = flux.SubFase.Descricao, y = x.Avarage, value = x.Avarage }).ToArray()
                        });
 
                     var retorno = new

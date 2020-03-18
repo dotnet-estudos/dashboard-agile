@@ -917,6 +917,20 @@ namespace DashBoardAgil.Services.Service
             return null; //new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
         }
 
+        public object GetCumulativeFlowDiagram3(NameValueCollection parms, List<int> weekList, Processo processo)
+        {
+            var chamados = _manager.GetObjectsWithJournals(parms);
+
+            var retorno = new List<object>();
+            var serie = new List<object>();
+            var serieFase = new List<object>();
+            var dicSerieFase = new List<dynamic>();
+
+
+
+            return null;
+        }
+
         public ConsumoHorasControl ConsumptionHoursByProject(NameValueCollection parms, string project, string time)
         {
             var retorno = new ConsumoHorasControl();

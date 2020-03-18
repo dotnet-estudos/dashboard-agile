@@ -96,5 +96,14 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             return View();
         }
 
+        public ActionResult ComulativeFlow()
+        {
+            ViewBag.title = "Comulative Flow";
+            GetSelectTime(null, false);
+            //GetSelectTipoChamado(null, false);
+            //GetSelectPrioridadeRedmine(null, false);
+            return View();
+        }
+
     }
 }

@@ -24,7 +24,9 @@ namespace DashBoardAgil.Domain.Interfaces
         ConsumoHorasControl ConsumptionHoursByProject(NameValueCollection parms, string project, string time);
         object GetComparativeObject(NameValueCollection parms);
         object GetCumulativeFlowDiagram(NameValueCollection parms, List<int> weeks, Processo processo);
-	    DiaDevControl GetDiaDevControl(NameValueCollection parms, Projeto projeto, NameValueCollection parmIssues, DateTime dataIni, DateTime dataFim);
+        object GetCumulativeFlowDiagram2(NameValueCollection parms, List<int> weeks, Processo processo);
+        object GetCumulativeFlowDiagram3(NameValueCollection parms, List<int> weeks, Processo processo);
+        DiaDevControl GetDiaDevControl(NameValueCollection parms, Projeto projeto, NameValueCollection parmIssues, DateTime dataIni, DateTime dataFim);
         CreatedClosedControl GetCreatedClosed(NameValueCollection parms, DateTime DataIni, DateTime DataFim);
 	    EntregasControl GetEntregasPeriodo(NameValueCollection parms, Projeto projeto, DateTime dataIni, DateTime dataFim);
         Processo GetProcessoTeam(Projeto time);
