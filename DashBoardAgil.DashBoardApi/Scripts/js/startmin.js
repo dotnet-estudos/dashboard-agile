@@ -1,4 +1,4 @@
-﻿$(function() {
+﻿$(function () {
 
     $('#side-menu').metisMenu();
 
@@ -7,8 +7,8 @@
 //Loads the correct sidebar on window load,
 //collapses the sidebar on window resize.
 // Sets the min-height of #page-wrapper to window size
-$(function() {
-    $(window).bind("load resize", function() {
+$(function () {
+    $(window).bind("load resize", function () {
         topOffset = 50;
         width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
         if (width < 768) {
@@ -30,7 +30,7 @@ $(function() {
     });
 
     var url = window.location;
-    var element = $('ul.nav a').filter(function() {
+    var element = $('ul.nav a').filter(function () {
         return (this.href == url || url.href.indexOf(this.href) == 0) && this.id != "__agent";
     }).addClass('active').parent().parent().addClass('in').parent(); //
     if (element.is('li')) {
@@ -52,7 +52,7 @@ $(function() {
     });
 });
 function chartSizeble() {
-   
+
     $(".chartSizeble").each(function () {
         if ($(this).highcharts()) {
             $(this).highcharts().reflow();
@@ -147,14 +147,14 @@ function renderComulativeFlow(div, title, subtitle, categories, yTitles, valueSu
         },
         xAxis: {
             //categories: ['1750', '1800', '1850', '1900', '1950', '1999', '2050'],
-            categories:  categories,//['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+            categories: categories,//['1', '2', '3', '4', '5', '6', '7', '8', '9'],
             tickmarkPlacement: 'on',
             title: {
                 enabled: true
             },
             labels: {
                 formatter: function () {
-                    return this.value; //dateFromDay(2019, this.value);
+                    return this.value; // this.value + ' - ('+ getDateRangeOfWeek(this.value, 2020) + ')'; // this.value; //dateFromDay(2019, this.value);
                 }
             }
         },
@@ -169,10 +169,17 @@ function renderComulativeFlow(div, title, subtitle, categories, yTitles, valueSu
             }
         },
         tooltip: {
-            split: true,
-            valueSuffix: valueSuffix  // ' Chamado(s)'
+            split: false,
+            valueSuffix: valueSuffix , // ' Chamado(s)'
+             
+
         },
         plotOptions: {
+            series: {
+                marker: {
+                    enabled: false
+                }
+            },
             area: {
                 stacking: 'normal',
                 lineColor: '#666666',
@@ -213,20 +220,20 @@ function GetFormattedDate(date) {
 }
 
 function dateFromDay(year, day) {
-    
+
     var date = new Date(year, 0); // initialize a date in `year-01-01`
     return GetFormattedDate(new Date(date.setDate(day))); // add the number of days
 }
 
-function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMediana, _serie, _year) {
+function renderDispersionDiagram(div, _title, _subtitle, _avarage, _avarageMediana, _serie, _year) {
 
     var yValueAvarage = 15;
     var yValueAvarageMediana = 15;
 
     if (_avarage > _avarageMediana) {
-        yValueAvarage = (yValueAvarage-10) * -1;
+        yValueAvarage = (yValueAvarage - 10) * -1;
     } else {
-        yValueAvarageMediana = (yValueAvarageMediana-10) * -1;
+        yValueAvarageMediana = (yValueAvarageMediana - 10) * -1;
     }
 
     Highcharts.chart(div, {
@@ -245,8 +252,8 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMedian
                 enabled: true,
                 text: 'Data'
             },
-            labels:{
-                formatter: function() {
+            labels: {
+                formatter: function () {
                     return dateFromDay(_year, this.value);
                 }
             },
@@ -330,7 +337,7 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMedian
             }
         },
         series: _serie//[{}] 
-        });
+    });
 
     /*
     {
@@ -360,7 +367,7 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage,_avarageMedian
     */
 }
 
-function renderTaleDiagram(div, _title, _subtitle, _titleBarra, _TitleLine,_year, _avarage, _Categoria, _serieBarra, _SerieLine ) {
+function renderTaleDiagram(div, _title, _subtitle, _titleBarra, _TitleLine, _year, _avarage, _Categoria, _serieBarra, _SerieLine) {
 
     Highcharts.chart(div, {
         chart: {
@@ -425,7 +432,7 @@ function renderTaleDiagram(div, _title, _subtitle, _titleBarra, _TitleLine,_year
                 valueSuffix: ' Chamados'
             }
 
-        },{
+        }, {
             name: 'Porcentagem',
             type: 'spline',
             data: _SerieLine,
@@ -437,85 +444,88 @@ function renderTaleDiagram(div, _title, _subtitle, _titleBarra, _TitleLine,_year
 }
 
 function renderRejectionThroughput(div, _title, _subtitle, _Categoria, _serie, _avarageThroughput, _avarageRejection) {
+
+    var year = new Date().getFullYear();
+
     Highcharts.chart(div, {
 
-    chart: {
-        type: 'column'
-    },
+        chart: {
+            type: 'column'
+        },
 
-    title: {
-        text: _title
-    },
-    subtitle: {
-        text: _subtitle
-    },
-    legend: {
-        labelFormatter: function () {
-            return this.name + ' (' + this.userOptions.stack + ')';
-        }
-    },
-    xAxis: {
-        categories: _Categoria
-    },
-
-    yAxis: {
-        allowDecimals: false,
-        min: 0,
         title: {
-            text: 'Qtd (Média: ' + _avarageThroughput + ' Rejeição: ' + _avarageRejection + ')'
+            text: _title
         },
-        //plotLines: [{
-        //        color: 'blue',
-        //        dashStyle: 'line', //dot, line
-        //        width: 2,
-        //        value: parseInt(_avarageThroughput),
-        //        label: {
-        //            rotation: 0,
-        //            y: 15,
-        //            style: {
-        //                fontStyle: 'italic',
-        //                color: 'blue'
-        //            },
-        //            text: 'Throughput Médio: ' + _avarageThroughput
-        //        },
-        //        zIndex: 1000
-        //},
-        //{
-        //    color: 'red',
-        //    dashStyle: 'line', //dot, line
-        //    width: 2,
-        //    value: parseFloat(_avarageRejection),
-        //    label: {
-        //        rotation: 0,
-        //        y: 15,
-        //        style: {
-        //            fontStyle: 'italic',
-        //            color: 'red'
-        //        },
-        //        text: 'Taxa de Rejeição Média: ' + _avarageRejection
-        //    },
-        //    zIndex: 1000
-        //}]
-    },
-
-    tooltip: {
-        formatter: function () {
-            return '<b> Semana: ' + this.x + '</b><br/>' +
-              '<b>' + this.series.userOptions.stack + ': <span style="color:' + this.series.color + '"> ∎ </span><i><b>' + this.series.name + ':</b></i> ' + this.y + ' (<b>' + this.percentage.toFixed(1) + '%</b>)<br/>' +
-                '<b>Total:</b> ' + this.point.stackTotal;
+        subtitle: {
+            text: _subtitle
         },
-        //pointFormat: '<b> Semana: {point.x}</b><br/>'+'<span style="color:{series.color}"></span> {series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y})<br/>',
-        //pointformat: '<b> Semana: {point.x}</b><br/><b> {point.series.userOptions.stack} : <span style="color:{series.color};">{point.series.name}:</span>{point.y}(<b>{point.percentage:.1f} %</b>)<br/><b>Total:</b> {point.point.stackTotal}'
+        legend: {
+            labelFormatter: function () {
+                return this.name + ' (' + this.userOptions.stack + ')';
+            }
+        },
+        xAxis: {
+            categories: _Categoria
+        },
 
-    },
-    plotOptions: {
-        column: {
-            stacking: 'normal',
-        }
-    },
+        yAxis: {
+            allowDecimals: false,
+            min: 0,
+            title: {
+                text: 'Qtd (Média: ' + _avarageThroughput + ' Rejeição: ' + _avarageRejection + ')'
+            },
+            //plotLines: [{
+            //        color: 'blue',
+            //        dashStyle: 'line', //dot, line
+            //        width: 2,
+            //        value: parseInt(_avarageThroughput),
+            //        label: {
+            //            rotation: 0,
+            //            y: 15,
+            //            style: {
+            //                fontStyle: 'italic',
+            //                color: 'blue'
+            //            },
+            //            text: 'Throughput Médio: ' + _avarageThroughput
+            //        },
+            //        zIndex: 1000
+            //},
+            //{
+            //    color: 'red',
+            //    dashStyle: 'line', //dot, line
+            //    width: 2,
+            //    value: parseFloat(_avarageRejection),
+            //    label: {
+            //        rotation: 0,
+            //        y: 15,
+            //        style: {
+            //            fontStyle: 'italic',
+            //            color: 'red'
+            //        },
+            //        text: 'Taxa de Rejeição Média: ' + _avarageRejection
+            //    },
+            //    zIndex: 1000
+            //}]
+        },
 
-    series: _serie
-});
+        tooltip: {
+            formatter: function () {
+                return '<b> Semana: ' + this.x + '</b>  (<i>' + getDateRangeOfWeek(this.x, year)+ '</i>)</b><br/>' +
+                    '<b>' + this.series.userOptions.stack + ': <span style="color:' + this.series.color + '"> ∎ </span><i><b>' + this.series.name + ':</b></i> ' + this.y + ' (<b>' + this.percentage.toFixed(1) + '%</b>)<br/>' +
+                    '<b>Total:</b> ' + this.point.stackTotal;
+            },
+            //pointFormat: '<b> Semana: {point.x}</b><br/>'+'<span style="color:{series.color}"></span> {series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y})<br/>',
+            //pointformat: '<b> Semana: {point.x}</b><br/><b> {point.series.userOptions.stack} : <span style="color:{series.color};">{point.series.name}:</span>{point.y}(<b>{point.percentage:.1f} %</b>)<br/><b>Total:</b> {point.point.stackTotal}'
+
+        },
+        plotOptions: {
+            column: {
+                stacking: 'normal',
+            }
+        },
+
+        series: _serie
+    });
 }
 
 function renderGaugeGoogle(div, data, options) {
@@ -530,7 +540,7 @@ function renderGaugeGoogle(div, data, options) {
 
     ArrayData.push(arrAux);
     ArrayData.push(arrAux1);
-   
+
     var chart = new google.visualization.Gauge(document.getElementById(div));
     var dataTableData = new google.visualization.arrayToDataTable(ArrayData);
     console.log(dataTableData);
@@ -539,7 +549,7 @@ function renderGaugeGoogle(div, data, options) {
 }
 
 function renderDrildownChart(_div, _title, _subtitle, _yTitle, _serie, _drilldrown) {
-    
+
     Highcharts.chart(_div, {
         chart: {
             type: 'column'
@@ -652,7 +662,7 @@ function renderLineChart(_div, _title, _subtitle, _serie, _categories) {
 }
 
 function renderGaugeGoogleAll(elemnts) {
-    elemnts.forEach(function(iten, index) {
+    elemnts.forEach(function (iten, index) {
         renderGaugeGoogle(iten.element, iten.GaugeGoogle.data, iten.GaugeGoogle.options);
     });
 }
@@ -664,7 +674,7 @@ function blockCampos(block) {
 }
 
 function getWeekByWeekNum(weekNum) {
-    
+
 }
 
 $(document).ready(function () {
@@ -696,5 +706,5 @@ $(document).ready(function () {
     });
 
     $.switcher('input[type=checkbox]');
-    
+
 });

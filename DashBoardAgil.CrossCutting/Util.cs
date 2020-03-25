@@ -752,7 +752,7 @@ namespace DashBoardAgil.CrossCutting
             var ini = myCal.GetWeekOfYear(dataIni , myCWR, myFirstDOW);
             var fim = myCal.GetWeekOfYear(dataFim , myCWR, myFirstDOW);
 
-            for (int i = ini; i < fim; i++)
+            for (int i = ini; i <= fim; i++)
             {
                 retorno.Add(i);
             }

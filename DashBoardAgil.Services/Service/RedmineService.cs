@@ -164,6 +164,7 @@ namespace DashBoardAgil.Services.Service
             var lststr = lsitTipo.Select(x => x.Id.ToString()).ToList();
             String time = null;
             GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.ForEach(team =>
+           // GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x=>x.Identifier== "time-traiket").ToList().ForEach(team =>
             {
                 try
                 {
