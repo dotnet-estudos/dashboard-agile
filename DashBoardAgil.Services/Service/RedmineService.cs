@@ -889,7 +889,7 @@ namespace DashBoardAgil.Services.Service
 
                     Debugar.WriteLine(String.Format("{0} - {1}", "Terminou ",
                         DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));
-                return new { Semanas = weekList, Serie = cfdControl.ComulativeFlow, SerieFase = cfdControl.ComulativeFlow };
+                return new { Semanas = weekList, Serie = cfdControl.ComulativeFlowDay, SerieFase = cfdControl.ComulativeFlowDay };
 
                 #endregion
 

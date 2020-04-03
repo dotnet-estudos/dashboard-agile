@@ -15,7 +15,7 @@ namespace DashBoardAgil.Domain.Models
         }
         private List<CumulativeFlowDiagram> ListChamados { get;  }
         private Processo Processo { get; set; }
-        public List<CumulativeFlowDiagram> ComulativeFlow
+        public List<CumulativeFlowDiagram> ComulativeFlowDay
         {
             get
             {
