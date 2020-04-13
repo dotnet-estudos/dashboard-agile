@@ -5,7 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Services;
 using Newtonsoft.Json;
 
@@ -93,6 +93,15 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             ViewBag.SelectStatusRedminePara = GetSelectStatusRedmine(StatusRedmine.BacklogAberto);
             GetSelectTipoChamado(null, false);
             GetSelectPrioridadeRedmine(null, false);
+            return View();
+        }
+
+        public ActionResult ComulativeFlow()
+        {
+            ViewBag.title = "Comulative Flow";
+            GetSelectTime(null, false);
+            //GetSelectTipoChamado(null, false);
+            //GetSelectPrioridadeRedmine(null, false);
             return View();
         }
 

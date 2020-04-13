@@ -8,7 +8,6 @@ using System.Web.Http;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
-using DashBoardAgil.Services.Util;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using WebApi.OutputCache.V2;

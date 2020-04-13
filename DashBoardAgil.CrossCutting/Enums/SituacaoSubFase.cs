@@ -1,4 +1,4 @@
-﻿namespace DashBoardAgil.Domain.Enums
+﻿namespace DashBoardAgil.CrossCutting.Enums
 {
     public enum SituacaoSubFase
     {

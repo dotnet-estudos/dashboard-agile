@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using DashBoardAgil.Services.Extensions;
+using DashBoardAgil.Services.Util;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Services.Service
 {

@@ -4,6 +4,8 @@ using DashBoardAgil.Domain.Models;
 using DashBoardAgil.CrossCutting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using DashBoardAgil.InfraData.Contexto;
+using System.Linq;
 
 namespace DashBoardAgil.Services
 {
@@ -48,7 +50,10 @@ namespace DashBoardAgil.Services
 			{
 				string json = sr.ReadToEnd();
 				ConfiguracaoRedmine = JsonConvert.DeserializeObject<ConfigRedmine>(json);
-			}
+                var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
+                ConfiguracaoRedmine.AllowList = db.Projetos.ToList();
+
+            }
 		}
 
 	    public void GravarConfig()

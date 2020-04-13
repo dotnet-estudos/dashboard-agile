@@ -1,0 +1,74 @@
+﻿@model DashBoardAgil.Domain.Models.Projeto
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Projeto</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Processo.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Processo.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Descricao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdProjeto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdProjeto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Identifier)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Identifier)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ativo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HorasContratadas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HorasContratadas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuantidadeDesenvolvedores)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuantidadeDesenvolvedores)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

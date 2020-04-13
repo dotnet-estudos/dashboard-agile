@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DashBoardAgil.Domain.Enums
+namespace DashBoardAgil.CrossCutting.Enums
 {
     public enum PrioridadeRedmine
     {

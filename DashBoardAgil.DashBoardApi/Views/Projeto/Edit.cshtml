@@ -1,46 +1,43 @@
-﻿@using DashBoardAgil.DashBoardApi.Common
-@model DashBoardAgil.Domain.Models.Projeto
+﻿@model DashBoardAgil.Domain.Models.Projeto
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
 
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
+    
     <div class="form-horizontal">
         <h4>Projeto</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
-        @Html.Hidden("tipo", (string)ViewBag.tipo)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.IdProjeto, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Id, new { htmlAttributes = new { @class = "form-control", disabled = true } })
+                @Html.EditorFor(model => model.IdProjeto, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IdProjeto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Identifier, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Identifier, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Identifier, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Identifier, htmlAttributes: new {@class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Identifier, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Identifier, "", new {@class = "text-danger"})
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.QuantidadeDesenvolvedores, htmlAttributes: new {@class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.QuantidadeDesenvolvedores, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.QuantidadeDesenvolvedores, "", new {@class = "text-danger"})
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.ProcessoId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ProcessoId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ProcessoId, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -53,54 +50,41 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <table id="slaTable" class="table table-striped table-bordered">
-                <thead>
-                <th>#</th>
-                <th>Descricao</th>
-                <th>Tempo</th>
-                <th>Tipo Contagem</th>
-                <th>Util</th>
-                </thead>
-                <tbody>
-                    @for (int i = 0; i < Model.Slas.Count; i++)
-                {
-                        <tr data-Sla_idSla="@Model.Slas[i].Sla.IdSla">
-                            <td>@String.Format((i + 1).ToString())</td>
-                            <td>@String.Format(Model.Slas[i].Sla.Identificador)</td>
-                            @Html.HiddenFor(model => model.Slas[i].IdSla)
-                            @Html.HiddenFor(model => model.Slas[i].Sla.Identificador)
-                            @Html.HiddenFor(model => model.Slas[i].Sla.StatusDe)
-                            @Html.HiddenFor(model => model.Slas[i].Sla.StatusPara)
-                            @Html.HiddenFor(model => model.Slas[i].Sla.IdSla)
-                            <td>@String.Format(Model.Slas[i].Tempo.ToString())</td>
-                            @Html.HiddenFor(model => model.Slas[i].Tempo)
-                            <td>@String.Format(Model.Slas[i].TipoContagemTempo.DisplayName())</td>
-                            @Html.HiddenFor(model => model.Slas[i].TipoContagemTempo)
-                            <td>@String.Format(Model.Slas[i].TempoUltil ? "Sim" : "Não")</td>
-                            @Html.HiddenFor(model => model.Slas[i].TempoUltil)
-                        </tr>
-                    }
-                </tbody>
-            </table>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HorasContratadas, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HorasContratadas, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HorasContratadas, "", new { @class = "text-danger" })
+            </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.QuantidadeDesenvolvedores, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.QuantidadeDesenvolvedores, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.QuantidadeDesenvolvedores, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProcessoId, "ProcessoId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ProcessoId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProcessoId, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                @Html.ActionLink("Voltar", String.Format("Projetos{0}s", (string)ViewBag.tipo), "Configuracao",null, htmlAttributes: new { @class = "btn btn-primary" })
-                <input type="submit" value="Salvar" class="btn btn-primary"/>
+                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
-<script>
-    renderDatatable("slaTable");
-</script>
-
 <div>
-    
+    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

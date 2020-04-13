@@ -1,5 +1,11 @@
 ﻿@model DashBoardAgil.Domain.Models.Projeto
 
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
 
 @using (Html.BeginForm()) 
 {
@@ -9,7 +15,6 @@
         <h4>Projeto</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.Hidden("tipo", (string)ViewBag.tipo)
         <div class="form-group">
             @Html.LabelFor(model => model.Id, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -19,9 +24,25 @@
         </div>
 
         <div class="form-group">
+            @Html.LabelFor(model => model.Descricao, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Descricao, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Descricao, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.IdProjeto, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.IdProjeto, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.IdProjeto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.Identifier, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Identifier, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.EditorFor(model => model.Identifier, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Identifier, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -36,35 +57,40 @@
             </div>
         </div>
 
-        @Html.Label("Projeto Pai")
         <div class="form-group">
-            @Html.LabelFor(model => model.Parent.Id, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.HorasContratadas, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Parent.Id, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Id, "", new { @class = "text-danger" })
-            </div>
-        </div>
-       
-        <div class="form-group">
-            @Html.LabelFor(model => model.Parent.Identifier, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Parent.Identifier, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Identifier, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.HorasContratadas, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HorasContratadas, "", new { @class = "text-danger" })
             </div>
         </div>
 
+        <div class="form-group">
+            @Html.LabelFor(model => model.QuantidadeDesenvolvedores, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.QuantidadeDesenvolvedores, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.QuantidadeDesenvolvedores, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ProcessoId, "ProcessoId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ProcessoId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProcessoId, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Create" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @*@Html.ActionLink("Back to List", "Index")*@
-    @Html.ActionLink("Back to List", "ProjetosHabilitados", "Configuracao", new { tipo = ViewBag.Tipo }, htmlAttributes: new { @class = "btn btn-primary" })
+    @Html.ActionLink("Back to List", "Index")
 </div>
 
 @section Scripts {

@@ -5,16 +5,16 @@
 
 @{
     var ListAbas = new Dictionary<string, string>()
-    {
+{
         {"Info", "fas fa-info-circle"},
-        {"Prioridade", "fas fa-chart-bar"},
-        {"Tipo", "fas fa-chart-bar"},
-       // {"Pizza", "fas fa-chart-pie"},
+       // {"Prioridade", "fas fa-chart-bar"},
+       // {"Tipo", "fas fa-chart-bar"},
+      //  {"Pizza", "fas fa-chart-pie"},
         {"Dados", "fas fa-list-alt"},
 
     };
 
-    var listTable = new List<string> {"#", "Projeto", "Status", "Total(Horas)"};
+    var listTable = new List<string> { "#", "Projeto", "Status"};
 }
 
 <div class="row">
@@ -30,7 +30,7 @@
                             <div class="form-group col-lg-6">
                                 <label>Time:</label>
                                 @*<input class="form-control" >*@
-                                @Html.DropDownList("time", (SelectList) ViewBag.SelectTime, "Selecione", htmlAttributes: new {@class = "form-control lockable", required = true})
+                                @Html.DropDownList("time", (SelectList)ViewBag.SelectTime, "Selecione", htmlAttributes: new { @class = "form-control lockable", required = true })
                                 @*<p class="help-block">Exemplo: -level help text here.</p>*@
                             </div>
                             <div class="form-group col-lg-6">
@@ -41,42 +41,20 @@
                                 </select>
                                 @*<p class="help-block">Exemplo: -level help text here.</p>*@
                             </div>
-                            <div class="form-group col-lg-3">
-                                <label>Sla: De</label>
-                                @*<input class="form-control" >*@
-                                @Html.DropDownList("redmineDe", (SelectList) ViewBag.SelectStatusRedmineDe, "Selecione", htmlAttributes: new {@class = "form-control", required = true})
-                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label>Para</label>
-                                @*<input class="form-control" >*@
-                                @Html.DropDownList("redminePara", (SelectList) ViewBag.SelectStatusRedminePara, "Selecione", htmlAttributes: new {@class = "form-control", required = true})
-                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label>Prioridade: </label>
-                                @*<input class="form-control" >*@
-                                @Html.DropDownList("prioidade", (SelectList) ViewBag.SelectPrioridadeRedmine, "Selecione", htmlAttributes: new {@class = "form-control", required = true})
-                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
-                            </div>
-                            <div class="form-group col-lg-3">
-                                <label>Tipo: </label>
-                                @*<input class="form-control" >*@
-                                @Html.DropDownList("tipoChamado", (SelectList) ViewBag.SelectTipoChamado, "Selecione", htmlAttributes: new {@class = "form-control", required = true})
-                                @*<p class="help-block">Exemplo: -level help text here.</p>*@
-                            </div>
                             <div class="form-group col-lg-6">
                                 <label>Periodo: Inicio</label>
                                 @*<input class="form-control" >*@
-                                <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.AddDays(-30).ToString("yyyy-MM-dd")" required/>
+                                <input type="date" id="dataIni" name="dataIni" class="form-control" value="@DateTime.Now.Date.AddDays(-30).ToString("yyyy-MM-dd")" required />
                                 @*<p class="help-block">Exemplo: -level help text here.</p>*@
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Fim</label>
                                 @*<input class="form-control" >*@
-                                <input type="date" id="dataFim" name="dataFim" class="form-control" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="@ConstantesCC.CAMPO_OBRIGATORIO"/>
+                                <input type="date" id="dataFim" name="dataFim" class="form-control" value="@DateTime.Now.Date.ToString("yyyy-MM-dd")" required="@ConstantesCC.CAMPO_OBRIGATORIO" />
                                 @*<p class="help-block">Exemplo: -level help text here.</p>*@
                             </div>
+                            <div class="pull-right">Status: <input type="checkbox" id="__fase" value="" /></div>
+
                             <div class="form-group col-lg-12">
                                 <button type="button" id="pesquisar" class="btn btn-primary">Pesquisar</button>
                             </div>
@@ -143,7 +121,6 @@
                 //result.LeadTimes[index].link = '<a target="_blank" href="http://redmine.example.com/issues/' + item.IdChamado + '">' + item.IdChamado + '</a>';
             });
 
-            console.log(result.LeadTimes);
           var  dataTable =   $('#dado_table').DataTable({
               data: dataset,
                 columns: [
@@ -153,7 +130,6 @@
                     { title: "Status.", DataProp: "Status.Name" },
                     { title: "Tipo", DataProp: "TipoString" },
                     { title: "Prioridade", DataProp: "PrioridadeString" },
-                    { title: "Tempo (Dias)", DataProp: "LeadBrutoDays" }
                 ]
           });
             dataTable.destroy();
@@ -161,46 +137,23 @@
         }
 
         function renderGraficos(result) {
+            var toggle = $("#__fase").prop('checked');
+            renderComulativeFlow("info", 'CFD do time: ' + time, 'Source: redmine.example.com | Year:' + (new Date).getFullYear(), result.Semanas, " Chamado", ' Chamado(s)', toggle ? result.Serie : result.SerieFase);
 
-            var CategoriaPrioridade = new Array();
-            CategoriaPrioridade.push("Media Geral");
-            var seriePrioridade = new Array();
-            result.ByPriority.forEach(function(item) {
-                var SerieObject = new Object();
-                SerieObject.name = item.Prioridade;
-                SerieObject.data = [item.LeadBruto / 24];
-                seriePrioridade.push(SerieObject);
-            });
-
-            var serieTipo = new Array();
-            result.ByType.forEach(function(item) {
-                var SerieObject = new Object();
-                SerieObject.name = item.Tipo;
-                SerieObject.data = [item.LeadBruto / 24];
-                serieTipo.push(SerieObject);
-            });
-
-            renderTable(result);
-            renderCollumChart("prioridade", "Prioridade", "", CategoriaPrioridade, "Dias", "dias", seriePrioridade);
-            renderCollumChart("tipo", "Tipo", "", CategoriaPrioridade, "Dias", "dias", serieTipo);
-            //  renderPizzaChart("pizza", "", "", result.ByProcess.series, result.ByProcess.drilldown, "dias");
         }
 
         $("#pesquisar").on("click", function(e) {
 
             var data = new Object();
             data.time = $("#projetos").val()? $("#projetos").val():  $("#time").val();
-            data.prioridade = $("#prioidade").val();
-            data.tipoChamado = $("#tipoChamado").val();
-            data.statusDe = $("#redmineDe").val();
-            data.statusPara = $("#redminePara").val();
             data.dataIni = $("#dataIni").val();
             data.dataFim = $("#dataFim").val();
+            data.dashboard = false;
 
             if (valid(data)) {
 
                 $.ajax({
-                    url: "@Url.Action("", "api/CicleTime")",
+                    url: "@Url.Action("", "api/ComulativeFlowDiagram")",
                     data: data,
                     method: "GET",
                     beforeSend: function() {

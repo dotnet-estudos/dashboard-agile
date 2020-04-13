@@ -8,11 +8,11 @@ using System.Web.Http;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
 using DashBoardAgil.Services;
 using Microsoft.Ajax.Utilities;
 using Redmine.Net.Api;
 using WebApi.OutputCache.V2;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.DashBoardApi.Controllers.Api
 {

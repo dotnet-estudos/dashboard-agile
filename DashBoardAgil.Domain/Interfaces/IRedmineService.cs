@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
 using Redmine.Net.Api.Types;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Domain.Interfaces
 {
-	public interface IRedmineService
+    public interface IRedmineService
 	{
 		List<Issue> GetObjectsById(string[] ids);
 		List<Issue> GetObjectsByProjects(string[] projectIds, NameValueCollection parameters);
@@ -18,13 +18,15 @@ namespace DashBoardAgil.Domain.Interfaces
         TimeSpan? LeadTime();
 	    SlaControl GetSla(Projeto time, SlaProjeto slaProjeto, NameValueCollection chamados);
 	    PrazoControl GetPrazo(NameValueCollection parms, bool efetiva, StatusRedmine statusRedmine);
-	    LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto, int quantidadeSaltos, bool leadtime=false);
+	    LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto, int quantidadeSaltos, bool leadtime=false, Projeto idTeam=null);
         RejectionControl GetRejectionRate(NameValueCollection parms);
         ThroughputControl GetThroughputRate(NameValueCollection parms);
         ConsumoHorasControl ConsumptionHoursByProject(NameValueCollection parms, string project, string time);
         object GetComparativeObject(NameValueCollection parms);
         object GetCumulativeFlowDiagram(NameValueCollection parms, List<int> weeks, Processo processo);
-	    DiaDevControl GetDiaDevControl(NameValueCollection parms, Projeto projeto, NameValueCollection parmIssues, DateTime dataIni, DateTime dataFim);
+        object GetCumulativeFlowDiagram2(NameValueCollection parms, List<int> weeks, Processo processo);
+        object GetCumulativeFlowDiagram3(NameValueCollection parms, List<int> weeks, Processo processo);
+        DiaDevControl GetDiaDevControl(NameValueCollection parms, Projeto projeto, NameValueCollection parmIssues, DateTime dataIni, DateTime dataFim);
         CreatedClosedControl GetCreatedClosed(NameValueCollection parms, DateTime DataIni, DateTime DataFim);
 	    EntregasControl GetEntregasPeriodo(NameValueCollection parms, Projeto projeto, DateTime dataIni, DateTime dataFim);
         Processo GetProcessoTeam(Projeto time);

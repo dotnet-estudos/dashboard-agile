@@ -20,6 +20,8 @@ using System.Web.Mvc;
 using System.Web;
 using DashBoardAgil.CrossCutting.Object;
 using Encoding = System.Text.Encoding;
+using Redmine.Net.Api.Types;
+using Redmine.Net.Api;
 
 namespace DashBoardAgil.CrossCutting
 {
@@ -512,7 +514,7 @@ namespace DashBoardAgil.CrossCutting
         /// <param name="mensagem">Mensagem Desejada.</param>
         public static void AddLog(string mensagem)
         {
-            File.AppendAllText(HttpContext.Current.Request.PhysicalApplicationPath + "//logMensagem.txt", mensagem);
+            System.IO.File.AppendAllText(HttpContext.Current.Request.PhysicalApplicationPath + "//logMensagem.txt", mensagem);
         }
 
         public static IEnumerable<string> ObtemListaMeses()
@@ -859,6 +861,39 @@ namespace DashBoardAgil.CrossCutting
         public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> first, Expression<Func<T, bool>> second)
         {
             return first.Compose(second, Expression.Or);
+        }
+
+        public static DateTime? GetDateByStatus(Issue chamado, StatusRedmine status, bool oldValue = false)
+        {
+            switch (status)
+            {
+                case StatusRedmine.BacklogNovo:
+                case StatusRedmine.Novo:
+                    {
+                        return oldValue ? GetFristJournalByStatus(status, chamado, true)?.CreatedOn ?? null : chamado.CreatedOn;
+                    }
+                case StatusRedmine.Cancelado:
+                case StatusRedmine.Fechado:
+                    {
+                        return chamado.ClosedOn;
+                    }
+                default:
+                    {
+                        var retorno = GetFristJournalByStatus(status, chamado, oldValue);
+                        return retorno?.CreatedOn ?? null;
+                    }
+            }
+        }
+
+        public static Journal GetFristJournalByStatus(StatusRedmine status, Issue chamado, bool oldValue = false)
+        {
+            var retorno = chamado?.Journals?.FirstOrDefault(x =>
+            x.Details.Any(Constantes.GetDetail(status.GetHashCode().ToString(), //new Value
+                                                 RedmineKeys.STATUS_ID, //Name Pardao status
+                                                 ConstantesCC.Details.Name_Attr, //property 
+                                                 oldValue //Verificar a Saida do Status
+                                               ))) ?? null;
+            return retorno;
         }
 
 

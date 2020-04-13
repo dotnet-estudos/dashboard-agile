@@ -9,7 +9,7 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
@@ -29,6 +29,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
             var processo = _RedmineService.GetProcessoTeam(proj);
             var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
+            proj.Processo = processo;
             #endregion
 
             var parm = new NameValueCollection
@@ -83,7 +84,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             });
             //Fim verificar os custons fields dos times
 
-            var projectosAnalise = _RedmineService.GetCicleTimeTeam(parm, statusDe, statusPara, primeiroSalto, quantidadeSaltos, leadTime);
+            var projectosAnalise = _RedmineService.GetCicleTimeTeam(parm, statusDe, statusPara, primeiroSalto, quantidadeSaltos, leadTime, proj);
 
             return projectosAnalise;
         }

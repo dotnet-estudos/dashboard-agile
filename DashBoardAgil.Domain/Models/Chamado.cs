@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Domain.Models
 {

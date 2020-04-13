@@ -1,159 +1,133 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using WebGrease.Css.Extensions;
+using DashBoardAgil.InfraData.Contexto;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
 {
-    public class ProjetoController : BaseController
+    public class ProjetoController : Controller
     {
+        private Contexto db = new Contexto();
+
         // GET: Projeto
         public ActionResult Index()
         {
-            return View();
+            var projetos = db.Projetos.Include(p => p.Processo);
+            return View(projetos.ToList());
         }
 
         // GET: Projeto/Details/5
-        public ActionResult Details(string id, string tipo)
+        public ActionResult Details(string id)
         {
-            GlobalConfig.Instance.CarregarConfig();
-            return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Concat(GlobalConfig.Instance.ConfiguracaoRedmine.DenyList).ToList().FirstOrDefault(x => x.Id == id));
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Projeto projeto = db.Projetos.Find(id);
+            if (projeto == null)
+            {
+                return HttpNotFound();
+            }
+            return View(projeto);
         }
 
         // GET: Projeto/Create
-        public ActionResult Create(string tipo)
+        public ActionResult Create()
         {
-            ViewBag.Tipo = ViewBag.Title = tipo;
+            ViewBag.ProcessoId = new SelectList(db.Processos, "ProcessoId", "Nome");
             return View();
         }
 
         // POST: Projeto/Create
+        // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 
+        // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(Projeto collection, string Tipo)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,Descricao,IdProjeto,Identifier,Ativo,HorasContratadas,QuantidadeDesenvolvedores,ProcessoId")] Projeto projeto)
         {
-            try
+            if (ModelState.IsValid)
             {
-                GlobalConfig.Instance.CarregarConfig();
-                if (Tipo.Equals("Habilitado"))
-                {
-                    GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Add(collection);
-                }
-                else
-                {   
-                    GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Add(collection);
-                }
+                db.Projetos.Add(projeto);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
 
-                GlobalConfig.Instance.GravarConfig();
-                
-                return RedirectToAction(String.Format("Projetos{0}s", Tipo), "Configuracao").MensagemSucesso("Salvo Com Sucesso!");
-            }
-            catch(Exception ex)
-            {
-                Debugar.WriteLine(string.Format("Error [Create projetc]: Exceptiion: {0}, inner {1}", ex.Message, ex.InnerException?.Message??""));
-                return View().MensagemErro("Erro na tentativa de execução"); ;
-            }
+            ViewBag.ProcessoId = new SelectList(db.Processos, "ProcessoId", "Nome", projeto.ProcessoId);
+            return View(projeto);
         }
 
         // GET: Projeto/Edit/5
-        public ActionResult Edit(string id, string tipo)
+        public ActionResult Edit(string id)
         {
-            GlobalConfig.Instance.CarregarConfig();
-            ViewBag.Tipo = ViewBag.Title = tipo;
-            return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Concat(GlobalConfig.Instance.ConfiguracaoRedmine.DenyList).ToList().FirstOrDefault(x => x.Id == id));
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Projeto projeto = db.Projetos.Find(id);
+            if (projeto == null)
+            {
+                return HttpNotFound();
+            }
+            ViewBag.ProcessoId = new SelectList(db.Processos, "ProcessoId", "Nome", projeto.ProcessoId);
+            return View(projeto);
         }
 
         // POST: Projeto/Edit/5
+        // Para se proteger de mais ataques, ative as propriedades específicas a que você quer se conectar. Para 
+        // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit(string id, Projeto collection, string Tipo)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,Descricao,IdProjeto,Identifier,Ativo,HorasContratadas,QuantidadeDesenvolvedores,ProcessoId")] Projeto projeto)
         {
-            try
+            if (ModelState.IsValid)
             {
-                GlobalConfig.Instance.CarregarConfig();
-                if (Tipo.Equals("Habilitado"))
-                {
-                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id == id);
-                    if (edit != null)
-                    {
-                        GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Remove(edit);
-                        GlobalConfig.Instance.GravarConfig();
-
-                        edit.Identifier = collection.Identifier;
-                        edit.Ativo = collection.Ativo;
-                        edit.QuantidadeDesenvolvedores = collection.QuantidadeDesenvolvedores;
-                        edit.ProcessoId = collection.ProcessoId;
-
-                        GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Add(edit);
-                    }
-                    else
-                    {
-                        Debugar.WriteLine(String.Format("[Error:] edit {0} não encontrado;", id??"NULL"));
-                    }
-                }
-                else
-                {
-                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.FirstOrDefault(x => x.Id == id);
-                    if (edit != null)
-                    {
-                        GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Remove(edit);
-                    GlobalConfig.Instance.GravarConfig();
-                    edit.Identifier = collection.Identifier;
-                    edit.Ativo = collection.Ativo;
-                    GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Add(edit);
-                    }
-                    else
-                    {
-                        Debugar.WriteLine(String.Format("[Error:] edit {0} não encontrado;", id ?? "NULL"));
-                    }
-                }
-
-                GlobalConfig.Instance.GravarConfig();
-                //var result = Global.ReflectObjec(collection, edit);
-
-                return RedirectToAction(String.Format("Projetos{0}s", Tipo), "Configuracao").MensagemSucesso("Salvo Com Sucesso!");
+                db.Entry(projeto).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            catch
-            {
-                return View().MensagemErro("Erro na tentativa de execução"); ;
-            }
+            ViewBag.ProcessoId = new SelectList(db.Processos, "ProcessoId", "Nome", projeto.ProcessoId);
+            return View(projeto);
         }
 
         // GET: Projeto/Delete/5
-        public ActionResult Delete(int id, string Tipo)
+        public ActionResult Delete(string id)
         {
-            ViewBag.Tipo = ViewBag.Title = Tipo;
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Projeto projeto = db.Projetos.Find(id);
+            if (projeto == null)
+            {
+                return HttpNotFound();
+            }
+            return View(projeto);
         }
 
         // POST: Projeto/Delete/5
-        [HttpPost]
-        public ActionResult Delete(string id, Projeto collection, string Tipo)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(string id)
         {
-            try
-            {
-                GlobalConfig.Instance.CarregarConfig();
-                if (Tipo.Equals("Habilitado"))
-                {
-                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id == id);
-                    GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Remove(edit);
-                }
-                else
-                {
-                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.FirstOrDefault(x => x.Id == id);
-                    GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Remove(edit);
-                }
+            Projeto projeto = db.Projetos.Find(id);
+            db.Projetos.Remove(projeto);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
 
-                GlobalConfig.Instance.GravarConfig();
-                return RedirectToAction(String.Format("Projetos{0}s", Tipo), "Configuracao").MensagemSucesso("Excluído Com Sucesso!");
-            }
-            catch
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
             {
-                return View().MensagemErro("Erro na tentativa de execução");
+                db.Dispose();
             }
+            base.Dispose(disposing);
         }
     }
 }

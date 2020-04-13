@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Domain.Util
 {
@@ -18,28 +18,36 @@ namespace DashBoardAgil.Domain.Util
             {
                 case TipoChamadoRedmine.Adaptativa:
                 case TipoChamadoRedmine.FiplanAdaptativa:
-                case TipoChamadoRedmine.SacHistoriaUsuario:
+                case TipoChamadoRedmine.HistoriaUsuario:
+                case TipoChamadoRedmine.HistoriaProposta:
                     {
                         retorno += string.Format(formato, 255, 102, 0);
                     }
                     break;
                 case TipoChamadoRedmine.Consulta:
                 case TipoChamadoRedmine.SacItemMelhoria:
-					{
+                    {
 
                         retorno += string.Format(formato, 140, 140, 140);
                     }
                     break;
                 case TipoChamadoRedmine.Corretiva:
                 case TipoChamadoRedmine.FiplanCorretiva:
-                case TipoChamadoRedmine.SacDefeito:
-                {
+                case TipoChamadoRedmine.Defeito:
+                    {
                         retorno += string.Format(formato, 0, 153, 0);
                     }
                     break;
                 case TipoChamadoRedmine.Evolutiva:
                 case TipoChamadoRedmine.FiplanEvolutiva:
-                {
+                case TipoChamadoRedmine.DefeitoHomologacao:
+
+                    {
+                        retorno += string.Format(formato, 255, 255, 0);
+                    }
+                    break;
+                case TipoChamadoRedmine.TarefaGeral:
+                    {
                         retorno += string.Format(formato, 255, 255, 0);
                     }
                     break;

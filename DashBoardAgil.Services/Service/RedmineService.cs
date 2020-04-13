@@ -12,14 +12,13 @@ using System.Runtime.InteropServices;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.Domain.Interfaces.Abstracoes;
-using DashBoardAgil.Domain.Enums;
-using DashBoardAgil.Services.Extensions;
 using DashBoardAgil.Services.Util;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
-using DashBoardAgil.Domain.Models;
 
+using DashBoardAgil.Domain.Models;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Services.Service
 {
@@ -576,29 +575,31 @@ namespace DashBoardAgil.Services.Service
             return RedmineUtil.GetDateByStatus(chamado, status, oldValue);
         }
 
-        public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false)
+        public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false, Projeto idTeam = null )
         {
+            var team = idTeam; //GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(idTeam) || x.Id.Equals(idTeam));
 
             var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
 
-            //var processo = db.Processos
-            //                 .Include(x => x.PFS)
-            //                 .Include(x => x.PFS.Select(y=>y.Fase))
-            //                 .Include(x => x.PFS.Select(y => y.SubFase))
-            //                 .FirstOrDefault();
+            if (team != null && team.ProcessoId > 0)
+            {
 
-            //processo.PFS.ForEach(x =>
-            //{
-            //    x.Processo = null;
-            //    x.SubFase.PFS = null;
-            //    x.Fase.PFS = null;
-            //});
+                var processo = db.Processos
+                                 .Include(x => x.PFS)
+                                 .Include(x => x.PFS.Select(y => y.Fase))
+                                 .Include(x => x.PFS.Select(y => y.SubFase))
+                                 .FirstOrDefault(x => x.ProcessoId == team.ProcessoId);
 
+                processo.PFS.ForEach(x =>
+                {
+                    x.Processo = null;
+                    x.SubFase.PFS = null;
+                    x.Fase.PFS = null;
+                });
 
+                team.Processo = processo;
+            }
             // var conteudo = JsonConvert.SerializeObject(processo);
-
-
-
             //Global.Instance.GravarArquivo(System.AppDomain.CurrentDomain.BaseDirectory, conteudo, "ProcessoBanco.json");
 
             var chamados = leadTime ? _manager.GetObjects<Issue>(parms) : _manager.GetObjectsWithJournals(parms);
@@ -641,9 +642,9 @@ namespace DashBoardAgil.Services.Service
 
             });
 
-            var leadsControl = new LeadTimeControl(primeiroSalto, quantidadeSaltos);
+            var leadsControl = new LeadTimeControl(chamados, team,primeiroSalto, quantidadeSaltos);
             leadsControl.LeadTimes = leadsTimes.ToList();
-            leadsControl.UniversoChamados = chamados;
+           // leadsControl.UniversoChamados = chamados;
             //var max = LeadsTimes.Max(x=>x.LeadBrutoDays);
 
             return leadsControl;
@@ -722,7 +723,7 @@ namespace DashBoardAgil.Services.Service
             // Debugar.WriteLine(string.Format("Fim Redmine: {0}", DateTime.Now.ToString("G")));
 
             var retorno = new List<object>();
-            var serie = new List<object>();
+            var serie = new List<dynamic>();
             var serieFase = new List<object>();
             var dicSerieFase = new Dictionary<KeyValuePair<int, int>, KeyValuePair<int, List<int>>>();
             // var processo = JsonConvert.DeserializeObject<Processo>(Global.Instance.LerArquivo(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Json", "processo.json")));
@@ -768,25 +769,29 @@ namespace DashBoardAgil.Services.Service
 
             try
             {
-
-
                 Debugar.WriteLine(String.Format("{0} - {1}", "Comecou ", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));
 
-
-
-                processo.PFS.OrderBy(x => x.Ordem).ToList().ForEach((pfs) =>
+                processo.PFS.OrderByDescending(x => x.Ordem).ToList().ForEach((pfs) =>
                       {
                           //var listFluxo = new List<object>();
                           var listSerie = new List<int>();
 
                           weekList.ForEach(semana =>
                           {
-                          var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
-                                                   //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() <= semana) ||
-                                                    ch.Journals.Any(y => ( (!pfs.Entregue && (((DateTime)y.CreatedOn)).GetWeekOfYear() == semana ) || (pfs.Entregue && (((DateTime)y.CreatedOn)).GetWeekOfYear() <= semana))
-                                                                    && y.Details.Any(det => det.Property.Equals("attr")
+
+                              var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
+                                                       //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() == semana) ||
+                                                        ch.Journals.Any(y => 
+                                                                   ( (pfs.Situacao == SituacaoSubFase.Fechamento ?  (((DateTime)y.CreatedOn)).GetWeekOfYear() <= semana : (((DateTime)y.CreatedOn)).GetWeekOfYear() == semana)
+                                                                   
+                                                                   ) && y.Details.Any(det => det.Property.Equals("attr")
+
                                                                     && det.Name.Equals(RedmineKeys.STATUS_ID)
-                                                                    && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue)))).Select(x => x.Id).ToList();
+                                                                    && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue))))
+                                                   
+                                                     .Select(x => x.Id)
+                                                     //.Where(ch => !dicSerieFase.Any(dic => dic.Key.Value == semana && !dic.Value.Value.Contains(ch)))
+                                                     .ToList();
                               //listFluxo.Add(new { Semana = semana, Quantidade = count });
                               var chave = new KeyValuePair<int, int>(pfs.SubFaseId, semana);
                               var value = new KeyValuePair<int, List<int>>(pfs.FaseId, count);
@@ -796,7 +801,7 @@ namespace DashBoardAgil.Services.Service
                           });
 
                           //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
-                          serie.Add(new { name = pfs.SubFase.Descricao, data = listSerie });
+                          serie.Add(new { name = pfs.SubFase.Descricao, data = listSerie, ordem = pfs.Ordem });
 
                       });
 
@@ -828,12 +833,15 @@ namespace DashBoardAgil.Services.Service
 
                 throw;
             }
-            return new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
+
+            return new { Semanas = weekList, Serie = serie.OrderBy(x=>x.ordem), SerieFase = serieFase };
         }
 
         public object GetCumulativeFlowDiagram2(NameValueCollection parms, List<int> weekList, Processo processo)
         {
             var chamados = _manager.GetObjectsWithJournals(parms);
+
+            
 
             #region Fluxo para Status
 
@@ -893,38 +901,78 @@ namespace DashBoardAgil.Services.Service
 
                     Debugar.WriteLine(String.Format("{0} - {1}", "Terminou ",
                         DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));
+                return new { Semanas = weekList, Serie = cfdControl.ComulativeFlowDay, SerieFase = cfdControl.ComulativeFlowDay };
 
-                    #endregion
+                #endregion
 
-                    #region Fase
+                #region Fase
 
-                    //var fases = processo.PFS.OrderBy(x => x.Ordem).Select(x => x.Fase).Distinct().ToList();
-                    //fases.ForEach((fase) =>
-                    //{
-                    //    var listSerie = new List<int>();
-                    //    weekList.ForEach(semana =>
-                    //    {
-                    //        var count = new List<int>();
-                    //        dicSerieFase.Where(x => x.Value.Key == fase.FaseId && x.Key.Value == semana).ToList().ForEach(x =>
-                    //        {
-                    //            count.AddRange(x.Value.Value);
-                    //        });
-                    //        listSerie.Add(count.Distinct().Count());
-                    //    });
-                    //    serieFase.Add(new { name = fase.Descricao, data = listSerie });
-                    //});
+                //var fases = processo.PFS.OrderBy(x => x.Ordem).Select(x => x.Fase).Distinct().ToList();
+                //fases.ForEach((fase) =>
+                //{
+                //    var listSerie = new List<int>();
+                //    weekList.ForEach(semana =>
+                //    {
+                //        var count = new List<int>();
+                //        dicSerieFase.Where(x => x.Value.Key == fase.FaseId && x.Key.Value == semana).ToList().ForEach(x =>
+                //        {
+                //            count.AddRange(x.Value.Value);
+                //        });
+                //        listSerie.Add(count.Distinct().Count());
+                //    });
+                //    serieFase.Add(new { name = fase.Descricao, data = listSerie });
+                //});
 
-                    #endregion
-
+                #endregion
             }
             catch (Exception ex)
             {
-
                 throw;
             }
-            return null; //new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
+            return null;// new { Semanas = weekList, Serie = cfdControl.ComulativeFlow, SerieFase = serieFase };
         }
 
+        public object GetCumulativeFlowDiagram3(NameValueCollection parms, List<int> weekList, Processo processo)
+        {
+            var chamados = _manager.GetObjectsWithJournals(parms);
+
+            var retorno = new List<object>();
+            var serie = new List<dynamic>();
+            var serieFase = new List<object>();
+            var dicSerieFase = new List<dynamic>();
+            var listSerie = new List<int>();
+
+            processo.PFS.OrderByDescending(x => x.Ordem).ToList().ForEach(pfs =>
+              {
+                  weekList.ForEach(semana =>
+                  {
+                      var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
+                                                //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() == semana) ||
+                                                ch.Journals.Any(y =>
+                                                           ((pfs.Situacao == SituacaoSubFase.Fechamento ? (((DateTime)y.CreatedOn)).GetWeekOfYear() <= semana : (((DateTime)y.CreatedOn)).GetWeekOfYear() == semana)
+
+                                                           ) && y.Details.Any(det => det.Property.Equals("attr")
+                                                            && det.Name.Equals(RedmineKeys.STATUS_ID)
+                                                            && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue))))
+
+                                             .Select(x => x.Id)
+                                             .Where(ch => !dicSerieFase.Any(dic => dic.Semana == semana && !dic.Chamados.Contains(ch)))
+                                             .ToList();
+                      //listFluxo.Add(new { Semana = semana, Quantidade = count });
+                      var chave = new KeyValuePair<int, int>(pfs.SubFaseId, semana);
+                      var value = new KeyValuePair<int, List<int>>(pfs.FaseId, count);
+
+                      dicSerieFase.Add(new { pfs.FaseId, pfs.SubFaseId, Semana = semana, Chamados = count });
+                      listSerie.Add(count.Count());
+                  });
+
+                  //retorno.Add(new { Fluxo = flux.Descricao, Dados = listFluxo });
+                  serie.Add(new { name = pfs.SubFase.Descricao, data = listSerie });
+
+              });
+
+            return new { Semanas = weekList, Serie = serie, SerieFase = serieFase };
+        }
 
         public ConsumoHorasControl ConsumptionHoursByProject(NameValueCollection parms, string project, string time)
         {
