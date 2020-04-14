@@ -31,6 +31,7 @@ namespace DashBoardAgil.Domain.Interfaces
 	    EntregasControl GetEntregasPeriodo(NameValueCollection parms, Projeto projeto, DateTime dataIni, DateTime dataFim);
         Processo GetProcessoTeam(Projeto time);
         Projeto GetTime(string time);
+        List<Projeto> GetTime();
 
 
 

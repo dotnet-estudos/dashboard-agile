@@ -7,13 +7,13 @@ namespace DashBoardAgil.InfraData.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class Desenvolvimento_PFS : IMigrationMetadata
+    public sealed partial class Inicial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Desenvolvimento_PFS));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Inicial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201910151217355_Desenvolvimento_PFS"; }
+            get { return "202004131559239_Inicial"; }
         }
         
         string IMigrationMetadata.Source

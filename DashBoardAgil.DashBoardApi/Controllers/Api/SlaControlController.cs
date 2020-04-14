@@ -28,7 +28,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         {
            
             var proj =
-               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(id));
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(id));
 
             var parametros = new NameValueCollection
             {
@@ -46,7 +46,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             //Fim verificar os custons fields dos times
 
             var chamados = _Redmine.GetObjects<Issue>(parametros);
-            // chamados = chamados.Select(x => _Redmine.GetObject<Issue>(x.Id.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } })).ToList();
+            // chamados = chamados.Select(x => _Redmine.GetObject<Issue>(x.ProjetoId.ToString(), new NameValueCollection { { RedmineKeys.INCLUDE, RedmineKeys.JOURNALS } })).ToList();
 
             return chamados;
 
@@ -57,8 +57,8 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         {
             try
             {
-                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(time));
-                //.ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(time));
+                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(time));
+                //.ProjetosAtivos().FirstOrDefault(x => x.ProjetoId.Equals(time));
 
 
                 if (projeto.Identifier.IsNullOrWhiteSpace())
@@ -110,7 +110,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
                 var retorno = new List<SlaControl>();
 
-                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Id.Equals(time) || time.Equals("0")).ForEach(
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.ProjetoId.Equals(time) || time.Equals("0")).ForEach(
                     (team) =>
                     {
                         // var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().FirstOrDefault(x => x.Identifier.Equals(team.Identifier));

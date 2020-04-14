@@ -31,12 +31,12 @@ namespace DashBoardAgil.Domain.Models
         [field: NonSerialized()]
         public virtual List<Projeto> ProjetosAtivos()
         {
-             return AllowList.Where(x => x.Ativo && DenyList.All(y => y.Id != x.Id)).ToList(); 
+             return AllowList.Where(x => x.Ativo && DenyList.All(y => y.ProjetoId != x.ProjetoId)).ToList(); 
         }
 
         public Projeto GetProjetoById(string id)
         {
-            return ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(id));
+            return ProjetosAtivos().FirstOrDefault(x => x.ProjetoId.Equals(id));
         }
     }
     

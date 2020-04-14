@@ -516,7 +516,7 @@ namespace DashBoardAgil.DashBoardApi.Common.HtmlHelpers
         }
 
         /// <summary>
-        /// Obtém o Valor do Id Principal da Grid.
+        /// Obtém o Valor do ProjetoId Principal da Grid.
         /// </summary>
         /// <param name="link">Link Atual.</param>
         /// <returns></returns>

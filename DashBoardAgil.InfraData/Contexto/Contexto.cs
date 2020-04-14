@@ -226,7 +226,7 @@ namespace DashBoardAgil.InfraData.Contexto
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
 
             modelBuilder.Properties()
-               .Where(p => p.Name == p.ReflectedType.Name + "Id")
+               .Where(p => p.Name == p.ReflectedType.Name + "ProjetoId")
                .Configure(p => p.IsKey());
 
             modelBuilder.Properties<string>()

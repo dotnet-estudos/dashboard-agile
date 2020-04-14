@@ -68,11 +68,11 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                                             ? 
                                             _user.projetosRedmine.Where(x => 
                                             (strLike != null && x.Identifier.Contains(strLike)) || 
-                                            (strLike == null)).Select(x => new SelectListItem() { Value = x.Id, Text = x.Descricao }).ToList() 
+                                            (strLike == null)).Select(x => new SelectListItem() { Value = x.ProjetoId.ToString(), Text = x.Descricao }).ToList() 
                                             : 
                                             GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => 
                                             (strLike != null && x.Identifier.Contains(strLike)) 
-                                            || (strLike == null)).Select(x => new SelectListItem() { Value = x.Id, Text = x.Descricao }).ToList();
+                                            || (strLike == null)).Select(x => new SelectListItem() { Value = x.ProjetoId.ToString(), Text = x.Descricao }).ToList();
                 GetSelectedListWithAll(selected, todos, list);
                 var select = new SelectList(list.OrderBy(x => x.Text), "Value",
                           "Text", selected);
@@ -105,7 +105,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                                        Nome = e.ToString()
                                    };
 
-                var select = new SelectList(tipoContagem, "Id", "Nome", selected.GetHashCode());
+                var select = new SelectList(tipoContagem, "ProjetoId", "Nome", selected.GetHashCode());
                 ViewBag.SelectTipoContagem = select;
 
                 return select;
@@ -217,14 +217,14 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                                {
                                    var pro = new Projeto()
                                    {
-                                       Id = x.Id,
-                                       Identifier = _Redmine.GetObject<Project>(x.IdProjeto, new NameValueCollection()).Identifier.ToString()
+                                       ProjetoId = x.ProjetoId,
+                                       Identifier = _Redmine.GetObject<Project>(x.IdExterno, new NameValueCollection()).Identifier.ToString()
                                    };
                                    _user.projetosRedmine.Add(pro);
                                }
                                catch
                                {
-                                   _user.projetosRedmine.Add(new Projeto() { Id = x.IdProjeto, Identifier = x.Identifier });
+                                   _user.projetosRedmine.Add(new Projeto() { IdExterno = x.IdExterno, Identifier = x.Identifier });
                                }
                            });
                 }

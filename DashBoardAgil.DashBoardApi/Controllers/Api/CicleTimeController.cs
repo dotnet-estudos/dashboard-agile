@@ -24,7 +24,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         {
             #region processo
             //var proj =
-            //   GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+            //   GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.ProjetoId.Equals(time));
             var proj = _RedmineService.GetTime(time);
 
             var processo = _RedmineService.GetProcessoTeam(proj);
@@ -120,12 +120,12 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
             var list = new List<Projeto>(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList);
 
-            list.Add(new Projeto() { Id = "543", Identifier = "aghuse-sustentacao" });
+            list.Add(new Projeto() { IdExterno = "543", Identifier = "aghuse-sustentacao" });
 
             var leads = new List<object>();
 
-            list.Where(x => teams.Contains(x.Id)).ToList().ForEach(team =>
-            //list.Where(x => x.Id.Equals("543")).ToList().ForEach(team =>
+            list.Where(x => teams.Contains(x.IdExterno)).ToList().ForEach(team =>
+            //list.Where(x => x.ProjetoId.Equals("543")).ToList().ForEach(team =>
             {
 
                 datas.ForEach(data =>
@@ -133,7 +133,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                     var parmTemp = new NameValueCollection
                     {
                         {RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime) data.dataIni).ToString("yyyy-MM-dd"), ((DateTime) data.dataFim).ToString("yyyy-MM-dd"))},
-                        {RedmineKeys.PROJECT_ID, String.Format("{0}", team.Id)},
+                        {RedmineKeys.PROJECT_ID, String.Format("{0}", team.ProjetoId)},
                         {RedmineKeys.STATUS_ID, StatusRedmine.Fechado.GetHashCode().ToString()}
                     };
                     // var parmTempAnalise = new NameValueCollection(parmTemp) {{RedmineKeys.STATUS_ID, "*"}};

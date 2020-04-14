@@ -31,6 +31,11 @@ namespace DashBoardAgil.Services.Service
             _manager = new RedmineExtensions(host, user, pass);
         }
 
+        public RedmineService()
+        {
+
+        }
+
         public List<Issue> GetObjectsById(string[] ids)
         {
             List<Issue> issues = new List<Issue>();
@@ -81,7 +86,7 @@ namespace DashBoardAgil.Services.Service
             var parameters = new NameValueCollection { { RedmineKeys.STATUS_ID, Global.Instance.ConcatenarLista("|", Constantes.FaseProducao) } };
             if (GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Any(x => x.Ativo))
             {
-                parameters.Add(RedmineKeys.SUBPROJECT_ID, String.Format("!{0}", Global.Instance.ConcatenarLista("|", GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Where(x => x.Ativo).Select(x => x.Id.ToString()).ToList())));
+                parameters.Add(RedmineKeys.SUBPROJECT_ID, String.Format("!{0}", Global.Instance.ConcatenarLista("|", GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Where(x => x.Ativo).Select(x => x.ProjetoId.ToString()).ToList())));
             }
 
             foreach (var projectId in projetos)
@@ -124,7 +129,7 @@ namespace DashBoardAgil.Services.Service
                   try
                   {
                       time = team.Identifier;
-                      nameTime = String.Format("{0}", team.Id);
+                      nameTime = String.Format("{0}", team.ProjetoId);
 
                       var processo = GetProcessoTeam(team);
 
@@ -170,11 +175,26 @@ namespace DashBoardAgil.Services.Service
             var _time = db.Projetos
                 .Include(x => x.CustonFields)
                 .Include(x => x.CustonFields.Select(y => y.Projeto))
-                .FirstOrDefault(x => x.Id == time);
+                .FirstOrDefault(x => x.ProjetoId.ToString() == time || x.IdExterno == time );
             return _time;
         }
+
+        public List<Projeto> GetTime()
+        {
+            var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
+
+            var _time = db.Projetos
+                .Include(x => x.CustonFields)
+                .ToList();
+                
+                
+            return _time;
+        }
+
         public Processo GetProcessoTeam(Projeto team)
         {
+            if (team == null) return null;
+
             var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
 
             var processo = db.Processos
@@ -210,7 +230,7 @@ namespace DashBoardAgil.Services.Service
                   try
                   {
                       time = team.Identifier;
-                      nameTime = String.Format("{0}", team.Id);
+                      nameTime = String.Format("{0}", team.ProjetoId);
                       var processo = GetProcessoTeam(team);
 
                       lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
@@ -577,7 +597,7 @@ namespace DashBoardAgil.Services.Service
 
         public LeadTimeControl GetCicleTimeTeam(NameValueCollection parms, StatusRedmine statusDe, StatusRedmine statusPara, int primeiroSalto = 5, int quantidadeSaltos = 10, bool leadTime = false, Projeto idTeam = null )
         {
-            var team = idTeam; //GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(idTeam) || x.Id.Equals(idTeam));
+            var team = idTeam; //GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(idTeam) || x.ProjetoId.Equals(idTeam));
 
             var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
 
@@ -753,7 +773,7 @@ namespace DashBoardAgil.Services.Service
             //                                                  && y.Details.Any(det => det.Property.Equals("attr")
             //                                                  && det.Name.Equals(RedmineKeys.STATUS_ID)
             //                                                  && subFase.StatusRedmine.GetHashCode().ToString().Contains(det.NewValue))))
-            //                                  .Select(x => x.Id).ToList());
+            //                                  .Select(x => x.ProjetoId).ToList());
             //              // listFluxo.Add(new { Semana = semana, Quantidade = count });
 
             //          });
@@ -979,21 +999,21 @@ namespace DashBoardAgil.Services.Service
             var retorno = new ConsumoHorasControl();
             var paramProj = new NameValueCollection { { RedmineKeys.ID, "todos" } };
             var projetcosRedmine = _manager.GetObjects<Project>(paramProj);
-            var projetoHoraContradata = projetcosRedmine.Where(x => (x.Parent != null || GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Any(y => y.Id.Equals(x.Id.ToString()))) && (x.CustomFields != null && x.CustomFields.Any(y => y.Id == 143 && y.Values != null && y.Values.Any(z => z.Info != ""))));
+            var projetoHoraContradata = projetcosRedmine.Where(x => (x.Parent != null || GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Any(y => y.ProjetoId.Equals(x.Id.ToString()))) && (x.CustomFields != null && x.CustomFields.Any(y => y.Id == 143 && y.Values != null && y.Values.Any(z => z.Info != ""))));
 
 
             if (time != null && !time.Equals(""))
             {
-                var maxIdProj = Convert.ToInt32(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Max(x => x.Id));
-                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => time.Equals("0") || x.Id.Equals(time)).ToList().ForEach(_time =>
+                var maxIdProj = Convert.ToInt32(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Max(x => x.ProjetoId));
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => time.Equals("0") || x.ProjetoId.Equals(time)).ToList().ForEach(_time =>
                  {
-                     //var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.Id.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.Id) ?? false))).Select(
-                     var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.IdProjeto.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.IdProjeto) ?? false))).Select(
+                     //var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.ProjetoId.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.ProjetoId.ToString().Equals(_time.ProjetoId.ToString()) || (proj.Parent?.ProjetoId.ToString().Equals(_time.ProjetoId) ?? false))).Select(
+                     var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.IdExterno.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.IdExterno) ?? false))).Select(
                          pro =>
                              new Projeto()
                              {
-                                 Id = maxIdProj++.ToString(),
-                                 IdProjeto = pro.Id.ToString(),
+                                 ProjetoId = maxIdProj++,
+                                 IdExterno = pro.Id.ToString(),
                                  Identifier = pro.Identifier,
                                  Descricao = pro.Name.ToString(),
                                  HorasContratadas = int.Parse(pro.CustomFields.FirstOrDefault(cus => cus.Id == 143)?.Values.FirstOrDefault()?.Info ?? "0")
@@ -1002,7 +1022,7 @@ namespace DashBoardAgil.Services.Service
                      retorno.Projetos.AddRange(listProjTime.ToList());
 
                      var lst = GetListAlocacoes(parms, _time, listProjTime.ToList());
-                     lst.ForEach(x => x.Team = new IdentificableName() { Id = int.Parse(_time.Id ?? "0"), Name = _time.Identifier });
+                     lst.ForEach(x => x.Team = new IdentificableName() { Id = _time.ProjetoId , Name = _time.Identifier });
                      retorno.HorasAlocadas.AddRange(lst);
                  });
             }
@@ -1019,13 +1039,13 @@ namespace DashBoardAgil.Services.Service
 
                 listProjetos.ForEach(pr =>
                 {
-                    var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, pr.IdProjeto } };
+                    var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, pr.IdExterno } };
                     lancamentos.AddRange(_manager.GetObjects<TimeEntry>(parm));
                 });
             }
             else
             {
-                var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, projeto.IdProjeto } };
+                var parm = new NameValueCollection(_parametros) { { RedmineKeys.PROJECT_ID, projeto.IdExterno } };
                 lancamentos.AddRange(_manager.GetObjects<TimeEntry>(parm));
             }
 
@@ -1035,7 +1055,7 @@ namespace DashBoardAgil.Services.Service
                     Id = x.Id,
                     Chamado = Global.ReflectObjec(x.Issue, new IdentificableName()),
                     Projeto = Global.ReflectObjec(x.Project, new IdentificableName()),
-                    // Team = new IdentificableName() {Id = int.Parse(team.Parent.Id??"0"), Name = team.Parent.Identifier},
+                    // Team = new IdentificableName() {ProjetoId = int.Parse(team.Parent.ProjetoId??"0"), Name = team.Parent.Identifier},
                     Usuario = Global.ReflectObjec(x.User, new IdentificableName()),
                     Comentario = x.Comments,
                     Horas = (double)x.Hours,
@@ -1044,13 +1064,13 @@ namespace DashBoardAgil.Services.Service
                 }));
 
             if (listProjetos != null)
-                ConsumoH.AddRange(listProjetos.Where(x => !ConsumoH.Any(y => y.Projeto.Id.ToString().Equals(x.Id))).ToList().Select(item =>
+                ConsumoH.AddRange(listProjetos.Where(x => !ConsumoH.Any(y => y.Projeto.Id.ToString().Equals(x.ProjetoId))).ToList().Select(item =>
                         new ConsumoHoras()
                         {
                             Id = 0,
                             Chamado = new IdentificableName() { Id = 0, Name = "Sem Chamado" },
-                            Projeto = new IdentificableName() { Id = int.Parse(item.IdProjeto), Name = item.Identifier },
-                            // Team = new IdentificableName() {Id = int.Parse(team.Parent.Id??"0"), Name = team.Parent.Identifier},
+                            Projeto = new IdentificableName() { Id = int.Parse(item.IdExterno), Name = item.Identifier },
+                            // Team = new IdentificableName() {ProjetoId = int.Parse(team.Parent.ProjetoId??"0"), Name = team.Parent.Identifier},
                             Usuario = new IdentificableName() { Id = 0, Name = "Sem Usuário" },
                             Comentario = string.Empty,
                             Horas = 0,

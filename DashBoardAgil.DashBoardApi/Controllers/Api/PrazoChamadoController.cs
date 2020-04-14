@@ -23,8 +23,8 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             {
                 if (time.IsNullOrWhiteSpace()) throw new Exception("Time é Obrigatório");
 
-                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(time));
-                //.ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(time)) ?? null;
+                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(time));
+                //.ProjetosAtivos().FirstOrDefault(x => x.ProjetoId.Equals(time)) ?? null;
 
                 _nameValueDefault.Add(RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")));
 

@@ -11,6 +11,7 @@ using Redmine.Net.Api;
 using Microsoft.Ajax.Utilities;
 using Redmine.Net.Api.Types;
 using WebGrease.Css.Extensions;
+using DashBoardAgil.Services;
 
 namespace DashBoardAgil.DashBoardApi.Controllers.Api
 {
@@ -21,9 +22,11 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             if (project.IsNullOrWhiteSpace())
                 return new { status = false, mensagem = "Time/Projeto é Obrigatório", SlaControl = new SlaControl() };
 
+            var proj = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.ProjetoId.ToString().Equals(time));
+
             var _parametros = new NameValueCollection
                              {
-                               // {RedmineKeys.PROJECT_ID, time}
+                               // {RedmineKeys.PROJECT_ID, proj.ide}
               
                                 {RedmineKeys.SPENT_ON, String.Format("><{0}|{1}", dataIni.ToString("yyyy-MM-dd"), dataFim.ToString("yyy-MM-dd")) }
                                 , {RedmineKeys.SORT, "spent_on:desc" }
@@ -32,7 +35,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
                               };
 
 
-            var ConsumoHoras = _RedmineService.ConsumptionHoursByProject(_parametros, project, time);
+            var ConsumoHoras = _RedmineService.ConsumptionHoursByProject(_parametros, project, proj.Identifier);
 
             return new {status = true, ConsumoHoras = ConsumoHoras, filtro = new { project, time, dataIni, dataFim } };
         }

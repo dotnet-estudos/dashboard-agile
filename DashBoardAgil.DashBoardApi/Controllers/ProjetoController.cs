@@ -49,7 +49,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Descricao,IdProjeto,Identifier,Ativo,HorasContratadas,QuantidadeDesenvolvedores,ProcessoId")] Projeto projeto)
+        public ActionResult Create([Bind(Include = "ProjetoId,Descricao,IdExterno,Identifier,Ativo,HorasContratadas,QuantidadeDesenvolvedores,ProcessoId")] Projeto projeto)
         {
             if (ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         // obter mais detalhes, consulte https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Descricao,IdProjeto,Identifier,Ativo,HorasContratadas,QuantidadeDesenvolvedores,ProcessoId")] Projeto projeto)
+        public ActionResult Edit([Bind(Include = "ProjetoId,Descricao,IdExterno,Identifier,Ativo,HorasContratadas,QuantidadeDesenvolvedores,ProcessoId")] Projeto projeto)
         {
             if (ModelState.IsValid)
             {

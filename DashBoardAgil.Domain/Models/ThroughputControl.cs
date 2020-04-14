@@ -60,7 +60,7 @@ namespace DashBoardAgil.Domain.Models
                 //var tipoChamado = from TipoChamadoRedmine e in Enum.GetValues(typeof(TipoChamadoRedmine))
                 //                   select new
                 //                   {
-                //                       Id = e.GetHashCode(),
+                //                       ProjetoId = e.GetHashCode(),
                 //                       Nome = e.ToString(),
                 //                       tipo = e
                 //                   };

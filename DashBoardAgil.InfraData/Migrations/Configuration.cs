@@ -21,7 +21,7 @@ namespace DashBoardAgil.InfraData.Migrations
             //  to avoid creating duplicate seed data.
             SeedProcessos(context);
             SeedFases(context);
-            SeedTipoChamdo(context);
+           // SeedTipoChamdo(context);
             SeedProjetos(context);
             SeedCustonFieldProjetos(context);
             context.SaveChangesSeed();
@@ -31,11 +31,38 @@ namespace DashBoardAgil.InfraData.Migrations
         {
             if(!context.Processos.Any())
             {
-                context.Processos.AddOrUpdate(p => p.ProcessoId,
+                context.Processos.AddOrUpdate(//p => p.ProcessoId,
                 new Processo
                 {
+                    ProcessoId= 1,
                     Nome = "Sustentação"
-                });
+                },
+                new Processo
+                {
+                    ProcessoId =2,
+                    Nome = "Fiplan Projeto"
+                },
+                new Processo
+                {
+                    ProcessoId = 9,
+                    Nome = "SAC Digital"
+                },
+                new Processo
+                {
+                    ProcessoId = 10,
+                    Nome = "Fiplan Sustentação"
+                },
+                 new Processo
+                 {
+                     ProcessoId = 12,
+                     Nome = "Kanban Projeto - Upstream"
+                 },
+                  new Processo
+                  {
+                      ProcessoId = 13,
+                      Nome = "Kanban Projeto - DownStream"
+                  }
+                );
 
                
             }
@@ -45,29 +72,35 @@ namespace DashBoardAgil.InfraData.Migrations
         {
             if(!context.Fases.Any())
             {
-                context.Fases.AddOrUpdate(f => f.FaseId,
+                context.Fases.AddOrUpdate(//f => f.FaseId,
                 new Fase
                 {
+                    FaseId= 1,
                     Descricao = "Backlog",
                 },
                 new Fase
                 {
+                    FaseId=2,
                     Descricao = "Desenvolvimento",
                 },
                 new Fase
                 {
+                    FaseId = 3,
                     Descricao = "Pré-Homologação",
                 },
                 new Fase
                 {
+                    FaseId = 4,
                     Descricao = "Homologação",
                 },
                 new Fase
                 {
+                    FaseId = 5,
                     Descricao = "Produção",
                 },
                 new Fase
                 {
+                    FaseId = 6,
                     Descricao = "Fechamento",
                 });
             }
@@ -129,9 +162,9 @@ namespace DashBoardAgil.InfraData.Migrations
                 context.Projetos.AddOrUpdate(
                     new Projeto()
                     {
-                        Id = "1",
+                        ProjetoId = 1,
                         Descricao = "Time Traiket",
-                        IdProjeto = "519",
+                        IdExterno = "519",
                         Identifier = "time-traiket",
                         Ativo = true,
                         HorasContratadas = 0,
@@ -140,9 +173,9 @@ namespace DashBoardAgil.InfraData.Migrations
                     },
                     new Projeto()
                     {
-                        Id = "2",
+                        ProjetoId = 2,
                         Descricao = "FIPLAN PROJETO - Todo",
-                        IdProjeto = "539",
+                        IdExterno = "539",
                         Identifier = "projeto-fiplan",
                         Ativo = false,
                         HorasContratadas = 0,
@@ -152,9 +185,9 @@ namespace DashBoardAgil.InfraData.Migrations
                     },
                     new Projeto()
                     {
-                    Id = "3",
+                    ProjetoId = 3,
                         Descricao = "FIPLAN SUSTENTAÇÃO - Todo",
-                        IdProjeto = "539",
+                        IdExterno = "539",
                         Identifier = "projeto-fiplan",
                         Ativo = false,
                         HorasContratadas = 0,
@@ -164,9 +197,9 @@ namespace DashBoardAgil.InfraData.Migrations
                     },
                     new Projeto()
                     {
-                    Id = "4",
+                    ProjetoId = 4,
                         Descricao = "FIPLAN PROJETO - SEFAZ",
-                        IdProjeto = "539",
+                        IdExterno = "539",
                         Identifier = "projeto-fiplan",
                         Ativo = false,
                         HorasContratadas = 0,
@@ -176,9 +209,9 @@ namespace DashBoardAgil.InfraData.Migrations
                     },
                     new Projeto()
                     {
-                    Id = "5",
+                    ProjetoId = 5,
                         Descricao = "FIPLAN SUSTENTAÇÃO - SEFAZ",
-                        IdProjeto = "539",
+                        IdExterno = "539",
                         Identifier = "projeto-fiplan",
                         Ativo = false,
                         HorasContratadas = 0,
@@ -188,9 +221,9 @@ namespace DashBoardAgil.InfraData.Migrations
                     },
                     new Projeto()
                     {
-                    Id = "6",
+                    ProjetoId = 6,
                         Descricao = "FIPLAN PROJETO - SEPLAN",
-                        IdProjeto = "539",
+                        IdExterno = "539",
                         Identifier = "projeto-fiplan",
                         Ativo = false,
                         HorasContratadas = 0,
@@ -200,9 +233,9 @@ namespace DashBoardAgil.InfraData.Migrations
                     },
                     new Projeto()
                     {
-                    Id = "7",
+                    ProjetoId = 7,
                         Descricao = "FIPLAN SUSTENTAÇÃO - SEPLAN",
-                        IdProjeto = "539",
+                        IdExterno = "539",
                         Identifier = "projeto-fiplan",
                         Ativo = false,
                         HorasContratadas = 0,
@@ -212,9 +245,9 @@ namespace DashBoardAgil.InfraData.Migrations
                     },
                     new Projeto()
                     {
-                    Id = "8",
+                    ProjetoId = 8,
                         Descricao = "FIPLAN PROJETO - SPF",
-                        IdProjeto = "539",
+                        IdExterno = "539",
                         Identifier = "projeto-fiplan",
                         Ativo = false,
                         HorasContratadas = 0,
@@ -224,16 +257,52 @@ namespace DashBoardAgil.InfraData.Migrations
                     },
                     new Projeto()
                     {
-                    Id = "9",
+                        ProjetoId = 9,
                         Descricao = "FIPLAN SUSTENTAÇÃO - SPF",
-                        IdProjeto = "539",
+                        IdExterno = "539",
                         Identifier = "projeto-fiplan",
                         Ativo = false,
                         HorasContratadas = 0,
                         QuantidadeDesenvolvedores = 1,
                         ProcessoId = 10,
                         
-                    }
+                    },
+                    new Projeto()
+                    {
+                        ProjetoId = 10,
+                        Descricao = "Gotham - Upstream",
+                        IdExterno = "584",
+                        Identifier = "time-espinha-mole",
+                        Ativo = false,
+                        HorasContratadas = 0,
+                        QuantidadeDesenvolvedores = 3,
+                        ProcessoId = 12,
+
+                    },
+                      new Projeto()
+                      {
+                          ProjetoId = 11,
+                          Descricao = "Gotham - DownStream",
+                          IdExterno = "584",
+                          Identifier = "time-espinha-mole",
+                          Ativo = false,
+                          HorasContratadas = 0,
+                          QuantidadeDesenvolvedores = 3,
+                          ProcessoId = 13,
+
+                      },
+                       new Projeto()
+                       {
+                           ProjetoId = 12,
+                           Descricao = "Gotham - DownStream",
+                           IdExterno = "584",
+                           Identifier = "time-espinha-mole",
+                           Ativo = false,
+                           HorasContratadas = 0,
+                           QuantidadeDesenvolvedores = 3,
+                           ProcessoId = 13,
+
+                       }
                 );
             }
         }
@@ -247,37 +316,37 @@ namespace DashBoardAgil.InfraData.Migrations
                     {
                         Campo = "cf_252",
                         Valor = "SEFAZ",
-                        ProjetoId = "4"
+                        ProjetoId = 4
                     },
                     new CustonFieldProjeto()
                     {
                         Campo = "cf_252",
                         Valor = "SEFAZ",
-                        ProjetoId = "5"
+                        ProjetoId = 5
                     },
                     new CustonFieldProjeto()
                     {
                         Campo = "cf_252",
                         Valor = "SEPLAN",
-                        ProjetoId = "6"
+                        ProjetoId = 6
                     },
                     new CustonFieldProjeto()
                     {
                         Campo = "cf_252",
                         Valor = "SEPLAN",
-                        ProjetoId = "7"
+                        ProjetoId = 7
                     },
                     new CustonFieldProjeto()
                     {
                         Campo = "cf_252",
                         Valor = "SPF",
-                        ProjetoId = "8"
+                        ProjetoId = 8
                     },
                     new CustonFieldProjeto()
                     {
                         Campo = "cf_252",
                         Valor = "SPF",
-                        ProjetoId = "9"
+                        ProjetoId = 9
                     }
                 );
             }

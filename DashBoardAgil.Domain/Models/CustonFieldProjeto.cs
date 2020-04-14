@@ -14,7 +14,7 @@ namespace DashBoardAgil.Domain.Models
         public int CFId { get; set; }
         public string Campo { get; set; }
         public string Valor { get; set; }
-        public string ProjetoId { get; set; }
+        public int ProjetoId { get; set; }
         public virtual Projeto Projeto { get; set; }
     }
 }

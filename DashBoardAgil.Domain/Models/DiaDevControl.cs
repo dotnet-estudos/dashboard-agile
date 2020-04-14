@@ -127,7 +127,7 @@ namespace DashBoardAgil.Domain.Models
                                                           ) ?? false
                             select new
                             {
-                                // act.Id,
+                                // act.ProjetoId,
                                 // act.CreatedOn,
                                 chamado = act,
                                 //aceite = act.Journals?.Any(x => (x.CreatedOn >= DataIni && x.CreatedOn <= DataFim) && 

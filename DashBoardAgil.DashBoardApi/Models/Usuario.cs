@@ -54,7 +54,7 @@ namespace DashBoardAgil.DashBoardApi.Models
         {
             get
             {
-                var projs = this.Memberships.Select(x => new Projeto() { Id = x.Project.Id.ToString(), Identifier = x.Project.Id.ToString() }).ToList();
+                var projs = this.Memberships.Select(x => new Projeto() { IdExterno = x.Project.Id.ToString(), Identifier = x.Project.Id.ToString() }).ToList();
                 return projs;
             }
             set { _projetos = value; }

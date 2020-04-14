@@ -53,25 +53,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contexto\Contexto.cs" />
-    <Compile Include="Migrations\201909061850505_Initial.cs" />
-    <Compile Include="Migrations\201909061850505_Initial.Designer.cs">
-      <DependentUpon>201909061850505_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202004131559239_Inicial.cs" />
+    <Compile Include="Migrations\202004131559239_Inicial.Designer.cs">
+      <DependentUpon>202004131559239_Inicial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.cs" />
-    <Compile Include="Migrations\201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.Designer.cs">
-      <DependentUpon>201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910151217355_Desenvolvimento_PFS.cs" />
-    <Compile Include="Migrations\201910151217355_Desenvolvimento_PFS.Designer.cs">
-      <DependentUpon>201910151217355_Desenvolvimento_PFS.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910151725211_Add-tipochamado-processotipo.cs" />
-    <Compile Include="Migrations\201910151725211_Add-tipochamado-processotipo.Designer.cs">
-      <DependentUpon>201910151725211_Add-tipochamado-processotipo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201910151738006_Add-tipochamado-processotipo-2.cs" />
-    <Compile Include="Migrations\201910151738006_Add-tipochamado-processotipo-2.Designer.cs">
-      <DependentUpon>201910151738006_Add-tipochamado-processotipo-2.cs</DependentUpon>
+    <Compile Include="Migrations\202004131617118_AlterCustomField.cs" />
+    <Compile Include="Migrations\202004131617118_AlterCustomField.Designer.cs">
+      <DependentUpon>202004131617118_AlterCustomField.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -87,20 +75,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201909061850505_Initial.resx">
-      <DependentUpon>201909061850505_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202004131559239_Inicial.resx">
+      <DependentUpon>202004131559239_Inicial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.resx">
-      <DependentUpon>201909261744486_Coluna_BackLog_Cliente_ValidadoPO_Table_PFS.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910151217355_Desenvolvimento_PFS.resx">
-      <DependentUpon>201910151217355_Desenvolvimento_PFS.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910151725211_Add-tipochamado-processotipo.resx">
-      <DependentUpon>201910151725211_Add-tipochamado-processotipo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201910151738006_Add-tipochamado-processotipo-2.resx">
-      <DependentUpon>201910151738006_Add-tipochamado-processotipo-2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202004131617118_AlterCustomField.resx">
+      <DependentUpon>202004131617118_AlterCustomField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

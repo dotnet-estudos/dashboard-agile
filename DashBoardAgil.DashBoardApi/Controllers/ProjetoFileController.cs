@@ -22,7 +22,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         public ActionResult Details(string id, string tipo)
         {
             GlobalConfig.Instance.CarregarConfig();
-            return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Concat(GlobalConfig.Instance.ConfiguracaoRedmine.DenyList).ToList().FirstOrDefault(x => x.Id == id));
+            return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Concat(GlobalConfig.Instance.ConfiguracaoRedmine.DenyList).ToList().FirstOrDefault(x => x.ProjetoId.ToString() == id));
         }
 
         // GET: Projeto/Create
@@ -64,7 +64,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
         {
             GlobalConfig.Instance.CarregarConfig();
             ViewBag.Tipo = ViewBag.Title = tipo;
-            return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Concat(GlobalConfig.Instance.ConfiguracaoRedmine.DenyList).ToList().FirstOrDefault(x => x.Id == id));
+            return View(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Concat(GlobalConfig.Instance.ConfiguracaoRedmine.DenyList).ToList().FirstOrDefault(x => x.ProjetoId.ToString() == id));
         }
 
         // POST: Projeto/Edit/5
@@ -76,7 +76,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                 GlobalConfig.Instance.CarregarConfig();
                 if (Tipo.Equals("Habilitado"))
                 {
-                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id == id);
+                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.ToString() == id);
                     if (edit != null)
                     {
                         GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Remove(edit);
@@ -96,7 +96,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                 }
                 else
                 {
-                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.FirstOrDefault(x => x.Id == id);
+                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.FirstOrDefault(x => x.ProjetoId.ToString() == id);
                     if (edit != null)
                     {
                         GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Remove(edit);
@@ -138,12 +138,12 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                 GlobalConfig.Instance.CarregarConfig();
                 if (Tipo.Equals("Habilitado"))
                 {
-                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id == id);
+                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.ToString() == id);
                     GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Remove(edit);
                 }
                 else
                 {
-                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.FirstOrDefault(x => x.Id == id);
+                    var edit = GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.FirstOrDefault(x => x.ProjetoId.ToString() == id);
                     GlobalConfig.Instance.ConfiguracaoRedmine.DenyList.Remove(edit);
                 }
 
