@@ -105,7 +105,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
                                        Nome = e.ToString()
                                    };
 
-                var select = new SelectList(tipoContagem, "ProjetoId", "Nome", selected.GetHashCode());
+                var select = new SelectList(tipoContagem, "Id", "Nome", selected.GetHashCode());
                 ViewBag.SelectTipoContagem = select;
 
                 return select;

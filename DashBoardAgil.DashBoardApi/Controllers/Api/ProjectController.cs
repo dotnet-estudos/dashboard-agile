@@ -24,7 +24,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
             var retorno = _Redmine.GetObjects<Project>(param);
 
-            var Parent = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(id));
+            var Parent = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.ToString().Equals(id));
 
              var ret = retorno.Where(x => ((!parent || parent && (x.Parent?.Id.ToString() ?? "1") == (Parent?.IdExterno ?? "0"))) &&
                                           (customField == 0 || x.CustomFields != null && x.CustomFields.Any(y => y.Id == customField && y.Values != null && y.Values.Any(z=>z.Info != "") ))

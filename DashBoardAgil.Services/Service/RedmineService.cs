@@ -792,11 +792,19 @@ namespace DashBoardAgil.Services.Service
                           weekList.ForEach(semana =>
                           {
                               var count = chamados.Where(ch => (pfs.Situacao == SituacaoSubFase.Abertura && ((DateTime)ch.CreatedOn).GetWeekOfYear() == semana) ||
-                                                       //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() == semana) ||
-                                                        ch.Journals.Any(y => ((pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null? (DateTime)ch.ClosedOn : (DateTime)y.CreatedOn)).GetWeekOfYear() == semana
-                                                                    && y.Details.Any(det => det.Property.Equals("attr")
+                                                        //(pfs.Situacao == SituacaoSubFase.Fechamento && ch.ClosedOn != null && ((DateTime)ch.ClosedOn).GetWeekOfYear() == semana) ||
+                                                        ch.Journals.Any(y =>
+                                                                   ((pfs.Situacao == SituacaoSubFase.Fechamento ? (((DateTime)y.CreatedOn)).GetWeekOfYear() <= semana : (((DateTime)y.CreatedOn)).GetWeekOfYear() == semana)
+
+                                                                   ) && y.Details.Any(det => det.Property.Equals("attr")
+
                                                                     && det.Name.Equals(RedmineKeys.STATUS_ID)
-                                                                    && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue)))).Select(x => x.Id).ToList();
+                                                                    && pfs.StatusRedmine.GetHashCode().ToString().Equals(det.NewValue))))
+
+                                                     .Select(x => x.Id)
+                                                     //.Where(ch => !dicSerieFase.Any(dic => dic.Key.Value == semana && !dic.Value.Value.Contains(ch)))
+                                                     .ToList();
+
                               //listFluxo.Add(new { Semana = semana, Quantidade = count });
                               var chave = new KeyValuePair<int, int>(pfs.SubFaseId, semana);
                               var value = new KeyValuePair<int, List<int>>(pfs.FaseId, count);
@@ -947,10 +955,10 @@ namespace DashBoardAgil.Services.Service
             if (time != null && !time.Equals(""))
             {
                 var maxIdProj = Convert.ToInt32(GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Max(x => x.ProjetoId));
-                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => time.Equals("0") || x.ProjetoId.Equals(time)).ToList().ForEach(_time =>
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => time.Equals("0") || x.ProjetoId.ToString().Equals(time)).ToList().ForEach(_time =>
                  {
                      //var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.ProjetoId.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.ProjetoId.ToString().Equals(_time.ProjetoId.ToString()) || (proj.Parent?.ProjetoId.ToString().Equals(_time.ProjetoId) ?? false))).Select(
-                     var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.IdExterno.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.IdExterno) ?? false))).Select(
+                     var listProjTime = projetoHoraContradata.Where(proj => (project == null || project.Equals("0") || project.Equals("") || proj.Id.ToString().Equals(project) || proj.Identifier.Equals(project)) && (proj.Id.ToString().Equals(_time.IdExterno.ToString()) || (proj.Parent?.Id.ToString().Equals(_time.IdExterno) ?? false))).Distinct().Select(
                          pro =>
                              new Projeto()
                              {
@@ -961,9 +969,21 @@ namespace DashBoardAgil.Services.Service
                                  HorasContratadas = int.Parse(pro.CustomFields.FirstOrDefault(cus => cus.Id == 143)?.Values.FirstOrDefault()?.Info ?? "0")
                              }
                          );
+
                      retorno.Projetos.AddRange(listProjTime.ToList());
 
                      var lst = GetListAlocacoes(parms, _time, listProjTime.ToList());
+
+                     var listNew = lst.Select(x => x.Projeto).Distinct().Where(x => listProjTime.Select(y => y.IdExterno).Contains(x.Id.ToString())).ToList().Select(x=>
+                      new Projeto()
+                      {
+                          ProjetoId = maxIdProj++,
+                          IdExterno = x.Id.ToString(),
+                          Identifier = x.Name,
+                          Descricao = x.Name,
+                          HorasContratadas = int.Parse(projetoHoraContradata.FirstOrDefault(pro=>pro.Id == x.Id)?.CustomFields?.FirstOrDefault(cus => cus.Id == 143)?.Values?.FirstOrDefault()?.Info ?? "0")
+                      });
+                     retorno.Projetos.AddRange(listNew);
                      lst.ForEach(x => x.Team = new IdentificableName() { Id = _time.ProjetoId, Name = _time.Identifier });
                      retorno.HorasAlocadas.AddRange(lst);
                  });
@@ -1011,7 +1031,7 @@ namespace DashBoardAgil.Services.Service
                         {
                             Id = 0,
                             Chamado = new IdentificableName() { Id = 0, Name = "Sem Chamado" },
-                            Projeto = new IdentificableName() { Id = item.ProjetoId, Name = item.Identifier },
+                            Projeto = new IdentificableName() { Id = int.Parse(item.IdExterno), Name = item.Identifier },
                             // Team = new IdentificableName() {ProjetoId = int.Parse(team.Parent.ProjetoId??"0"), Name = team.Parent.Identifier},
                             Usuario = new IdentificableName() { Id = 0, Name = "Sem Usuário" },
                             Comentario = string.Empty,

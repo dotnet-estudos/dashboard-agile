@@ -28,7 +28,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         {
            
             var proj =
-               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(id));
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.ToString().Equals(id));
 
             var parametros = new NameValueCollection
             {
@@ -57,7 +57,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         {
             try
             {
-                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(time));
+                var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.ToString().Equals(time));
                 //.ProjetosAtivos().FirstOrDefault(x => x.ProjetoId.Equals(time));
 
 
@@ -110,7 +110,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
                 var retorno = new List<SlaControl>();
 
-                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.ProjetoId.Equals(time) || time.Equals("0")).ForEach(
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.ProjetoId.ToString().Equals(time) || time.Equals("0")).ForEach(
                     (team) =>
                     {
                         // var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().FirstOrDefault(x => x.Identifier.Equals(team.Identifier));
