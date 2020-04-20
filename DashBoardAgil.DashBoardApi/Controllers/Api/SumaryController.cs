@@ -9,6 +9,7 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Services;
 using DashBoardAgil.Services.Util;
+using Microsoft.Ajax.Utilities;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using WebApi.OutputCache.V2;
@@ -21,9 +22,10 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         [CacheOutput(ServerTimeSpan = 1*(60*60))]
         public List<SumaryChamdo> Get(string time = null)
         {
+            if (time.Equals("0") || time.IsNullOrWhiteSpace()) return null;
             #region processo
             var proj =
-               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.ProjetoId.ToString().Equals(time));
 
             var processo = _RedmineService.GetProcessoTeam(proj);
             var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();

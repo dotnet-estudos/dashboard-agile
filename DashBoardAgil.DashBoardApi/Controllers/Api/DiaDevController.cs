@@ -35,7 +35,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             var diaDevControl = new List<DiaDevControl>();
             var lancamentoTotais = new List<Alocacao>();
 
-            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.Id.Equals(time) || time.Equals("0")).ForEach(
+            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.ProjetoId.Equals(time) || time.Equals("0")).ForEach(
                     (team) =>
                     {
                         var parm = new NameValueCollection(_parametros);
@@ -90,8 +90,8 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool aceitePO)
         {
-            var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(time));
-            //.ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(time)) ?? null;
+            var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(time));
+            //.ProjetosAtivos().FirstOrDefault(x => x.ProjetoId.Equals(time)) ?? null;
 
             if (time.IsNullOrWhiteSpace())
                 return new { status = false, mensagem = "Time é Obrigatório", SlaControl = new SlaControl() };

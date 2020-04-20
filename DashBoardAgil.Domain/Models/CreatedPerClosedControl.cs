@@ -5,7 +5,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Domain.Interfaces.Abstracoes;
 
 namespace DashBoardAgil.Domain.Models

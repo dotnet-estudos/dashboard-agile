@@ -9,7 +9,7 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Util;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.Services.Service;
 
@@ -153,8 +153,8 @@ namespace DashBoardAgil.Aplication
             Debugar.WriteLine(String.Format("Serviço Configurado para Rodar em: {0} {1}(s)", GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.ExecTime, GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.TipoContagemTempo.ToString()));
 
 
-            //_manager.GerarCfdTeams();
-            //_manager.GerarThroughputReject();
+            _manager.GerarCfdTeams();
+            _manager.GerarThroughputReject();
 
 
             #endregion
@@ -206,7 +206,7 @@ namespace DashBoardAgil.Aplication
 
                     Debugar.WriteLine(string.Format("{0} - {1} - {2}", "Hora", DateTime.Now, "Objeto Mananger Criado"), GlobalConfig.Instance.Categoria);
 
-                    var projetos = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().Select(x => x.Id).ToArray();
+                    var projetos = GlobalConfig.Instance.ConfiguracaoRedmine.ProjetosAtivos().Select(x => x.ProjetoId.ToString()).ToArray();
                     
                     var result = _manager.FecharChamadosAvaliarProducao(projetos, GlobalConfig.Instance.ConfiguracaoRedmine.Parametro.Prazo);
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using DashBoardAgil.Services.Extensions;

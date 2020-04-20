@@ -49,13 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Enums\Flag.cs" />
-    <Compile Include="Enums\PerfilDash.cs" />
-    <Compile Include="Enums\PrioridadeRedmine.cs" />
-    <Compile Include="Enums\SituacaoSubFase.cs" />
-    <Compile Include="Enums\StatusRedmine.cs" />
-    <Compile Include="Enums\TipoChamadoRedmine.cs" />
-    <Compile Include="Enums\TipoContagem.cs" />
     <Compile Include="Interfaces\Abstracoes\IdentificableIssue.cs" />
     <Compile Include="Interfaces\Abstracoes\IdentificableName.cs" />
     <Compile Include="Interfaces\IRedmineService.cs" />
@@ -110,6 +103,9 @@
       <Project>{831b3b56-9d25-402b-9106-71c5ac1b02a6}</Project>
       <Name>DashBoardAgil.CrossCutting</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Enums\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

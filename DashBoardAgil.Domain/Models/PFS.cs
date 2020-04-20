@@ -1,4 +1,4 @@
-﻿using DashBoardAgil.Domain.Enums;
+﻿using DashBoardAgil.CrossCutting.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

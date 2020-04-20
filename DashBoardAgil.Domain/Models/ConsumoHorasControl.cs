@@ -37,7 +37,7 @@ namespace DashBoardAgil.Domain.Models
         }
         private object GetOptionByProject(int id)
         {
-            var proj = Projetos.FirstOrDefault(x => x.Id == id.ToString());
+            var proj = Projetos.FirstOrDefault(x => x.ProjetoId.ToString().Equals(id));
             if (proj != null && proj.HorasContratadas > 0)
             {
                 var options = new

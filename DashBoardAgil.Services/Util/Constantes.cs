@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
 using DashBoardAgil.CrossCutting;

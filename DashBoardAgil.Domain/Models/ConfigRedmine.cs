@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Domain.Models
 {
@@ -31,12 +31,12 @@ namespace DashBoardAgil.Domain.Models
         [field: NonSerialized()]
         public virtual List<Projeto> ProjetosAtivos()
         {
-             return AllowList.Where(x => x.Ativo && DenyList.All(y => y.Id != x.Id)).ToList(); 
+             return AllowList.Where(x => x.Ativo && DenyList.All(y => y.ProjetoId != x.ProjetoId)).ToList(); 
         }
 
         public Projeto GetProjetoById(string id)
         {
-            return ProjetosAtivos().FirstOrDefault(x => x.Id.Equals(id));
+            return ProjetosAtivos().FirstOrDefault(x => x.ProjetoId.Equals(id));
         }
     }
     

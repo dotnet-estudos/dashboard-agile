@@ -4,6 +4,9 @@ using DashBoardAgil.Domain.Models;
 using DashBoardAgil.CrossCutting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using DashBoardAgil.Domain.Interfaces;
+using System.Collections.Generic;
+using DashBoardAgil.Services.Service;
 
 namespace DashBoardAgil.Services
 {
@@ -28,9 +31,17 @@ namespace DashBoardAgil.Services
 				return i_instance;
 			}
 		}
-        #endregion
 
-        private readonly string PathLog =  Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Temp");
+		public GlobalConfig()
+		{
+			_redmineService = new RedmineService();
+			LocalProjeto = new List<Projeto>();
+			LocalProjeto = _redmineService.GetTime();
+		}
+
+		#endregion
+
+		private readonly string PathLog =  Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Temp");
         string pathConfig = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,"config.json");
 
         #region Propriedades do json de config
@@ -38,6 +49,8 @@ namespace DashBoardAgil.Services
 	    public string Categoria => "GlobalConfig";
 
 	    public ConfigRedmine ConfiguracaoRedmine { get; set; }
+		private IRedmineService _redmineService;
+		private List<Projeto> LocalProjeto { get; set; }
 
 		#endregion
 
@@ -48,15 +61,21 @@ namespace DashBoardAgil.Services
 			{
 				string json = sr.ReadToEnd();
 				ConfiguracaoRedmine = JsonConvert.DeserializeObject<ConfigRedmine>(json);
+				//var db = new DashBoardAgil.InfraData.Contexto.Contexto(false);
+				ConfiguracaoRedmine.AllowList = LocalProjeto;
+
+
 			}
 		}
 
 	    public void GravarConfig()
 	    {
-	        var ConfigRedmine = JsonConvert.SerializeObject(ConfiguracaoRedmine);
+			LocalProjeto = _redmineService.GetTime();
+			var ConfigRedmine = JsonConvert.SerializeObject(ConfiguracaoRedmine);
 
             Global.Instance.GravarArquivo(System.AppDomain.CurrentDomain.BaseDirectory, ConfigRedmine, "config.json");
             GlobalConfig.Instance.CarregarConfig();
+
 	    }
 
     }

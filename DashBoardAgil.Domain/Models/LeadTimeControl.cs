@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Domain.Interfaces.Abstracoes;
 using DashBoardAgil.Domain.Util;
 using Redmine.Net.Api.Types;
@@ -267,22 +267,22 @@ namespace DashBoardAgil.Domain.Models
                     //{
                     //    var datesFase = UniversoChamados.Select(uni => new
                     //    {
-                    //        chamado = uni.Id,
+                    //        chamado = uni.ProjetoId,
                     //        fase = flux,
                     //        dateIn = RedmineUtil.GetDateByStatus(uni, (StatusRedmine)flux.EStatusRedmine),
                     //        dateFim = RedmineUtil.GetDateByStatus(uni, (StatusRedmine)flux.EStatusRedmine, true)
                     //    });
                     //    var resultDic = datesFase.Where(x => x.dateIn != null).Select(dic =>((DateTime)(dic.dateFim ?? DateTime.Now)).Subtract((DateTime)dic.dateIn).TotalHours);
-                    //    dicClicleTime.Add(flux.Id, resultDic.Any() ? Math.Round(resultDic.Average()/24, 2, MidpointRounding.AwayFromZero) : 0);
+                    //    dicClicleTime.Add(flux.ProjetoId, resultDic.Any() ? Math.Round(resultDic.Average()/24, 2, MidpointRounding.AwayFromZero) : 0);
                     //});
 
                     //var dicClicleFase = processo.Fluxo.Where(fluxo => fluxo.FasePai == null && fluxo.SubFases.Any(x => !x.StatusFechamento))
                     //                                  .Select((flux) =>new{
                     //                                                        name = flux.Descricao,
-                    //                                                        y =  dicClicleTime.Any(x => flux.SubFases.Any(y => y.Id == x.Key))? 
-                    //                                                                 dicClicleTime.Where(x => flux.SubFases.Any(y => y.Id == x.Key)).Average(x => x.Value):
+                    //                                                        y =  dicClicleTime.Any(x => flux.SubFases.Any(y => y.ProjetoId == x.Key))? 
+                    //                                                                 dicClicleTime.Where(x => flux.SubFases.Any(y => y.ProjetoId == x.Key)).Average(x => x.Value):
                     //                                                                 0,
-                    //                                                        drilldown = flux.Id.ToString()
+                    //                                                        drilldown = flux.ProjetoId.ToString()
                     //                                                       }).ToList();
 
                     //var drilldown = processo.Fluxo.Where(
@@ -290,8 +290,8 @@ namespace DashBoardAgil.Domain.Models
                     //    .Select(flux =>new {
                                
                     //                name = flux.Descricao,
-                    //                id = flux.Id.ToString(),
-                    //                data = dicClicleTime.Where(x => flux.SubFases.Any(y => y.Id == x.Key)).Select(x => new  { name= subfases.FirstOrDefault(s => s.Id == x.Key).Descricao, y= x.Value, value = x.Value }).ToArray()
+                    //                id = flux.ProjetoId.ToString(),
+                    //                data = dicClicleTime.Where(x => flux.SubFases.Any(y => y.ProjetoId == x.Key)).Select(x => new  { name= subfases.FirstOrDefault(s => s.ProjetoId == x.Key).Descricao, y= x.Value, value = x.Value }).ToArray()
                     //        });
 
                     //var retorno = new

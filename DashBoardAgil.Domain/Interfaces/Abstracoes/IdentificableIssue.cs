@@ -1,6 +1,6 @@
 ﻿using System;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 
 namespace DashBoardAgil.Domain.Interfaces.Abstracoes
 {

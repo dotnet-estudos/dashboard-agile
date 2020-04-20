@@ -5,7 +5,7 @@ using System.Web;
 using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Services;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using Redmine.Net.Api.Types;
 
 namespace DashBoardAgil.DashBoardApi.Models
@@ -55,7 +55,7 @@ namespace DashBoardAgil.DashBoardApi.Models
         {
             get
             {
-                var projs = this.Memberships.Select(x => new Projeto() { Id = x.Project.Id.ToString(), Identifier = x.Project.Id.ToString() }).ToList();
+                var projs = this.Memberships.Select(x => new Projeto() { ProjetoId = x.Project.Id, Identifier = x.Project.Id.ToString() }).ToList();
                 return projs;
             }
             set { _projetos = value; }

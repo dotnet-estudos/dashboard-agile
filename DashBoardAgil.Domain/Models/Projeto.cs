@@ -12,21 +12,21 @@ namespace DashBoardAgil.Domain.Models
         public Projeto()
         {
             CustonFields = new List<CustonFieldProjeto>();
-            Slas = new List<SlaProjeto>();
+           // Slas = new List<SlaProjeto>();
         }
         [Required]
-        public string Id { get; set; }
+        public int ProjetoId { get; set; }
         [Required]
         public string Descricao { get; set; }
         [Required]
-        public string IdProjeto { get; set; }
+        public string IdExterno { get; set; }
         [Required]
         public string Identifier { get; set; }
         public bool Ativo { get; set; }
         public int HorasContratadas { get; set; }
         public List<CustonFieldProjeto> CustonFields { get; set; }
-        public List<SlaProjeto> Slas { get; set; }
-        public Projeto Parent { get; set; }
+        //public List<SlaProjeto> Slas { get; set; }
+        //public Projeto Parent { get; set; }
         public int QuantidadeDesenvolvedores { get; set; }
 
         public int ProcessoId { get; set; }
@@ -34,7 +34,7 @@ namespace DashBoardAgil.Domain.Models
 
         public override string ToString()
         {
-            return string.Format("{0} - {1} ({2}-{3})", IdProjeto, Descricao, Id, Identifier);
+            return string.Format("{0} - {1} ({2}-{3})", IdExterno, Descricao, ProjetoId, Identifier);
         }
     }
 }

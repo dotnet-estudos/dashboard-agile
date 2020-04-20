@@ -21,8 +21,11 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool throughput=false)
         {
             #region processo
+
+            if (time.Equals("0") || time.IsNullOrWhiteSpace()) return null;
+
             var proj =
-               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.ProjetoId.ToString().Equals(time));
 
             var processo = _RedmineService.GetProcessoTeam(proj);
             var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using Redmine.Net.Api.Types;
 
 namespace DashBoardAgil.Domain.Interfaces
@@ -28,6 +28,7 @@ namespace DashBoardAgil.Domain.Interfaces
         CreatedClosedControl GetCreatedClosed(NameValueCollection parms, DateTime DataIni, DateTime DataFim);
 	    EntregasControl GetEntregasPeriodo(NameValueCollection parms, Projeto projeto, DateTime dataIni, DateTime dataFim);
         Processo GetProcessoTeam(Projeto time);
+        List<Projeto> GetTime();
 
 
 

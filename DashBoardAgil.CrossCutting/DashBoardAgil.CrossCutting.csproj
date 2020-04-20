@@ -61,6 +61,13 @@
     <Compile Include="ConstantesCC.cs" />
     <Compile Include="CriptografiaAES.cs" />
     <Compile Include="Debugar.cs" />
+    <Compile Include="Enums\Flag.cs" />
+    <Compile Include="Enums\PerfilDash.cs" />
+    <Compile Include="Enums\PrioridadeRedmine.cs" />
+    <Compile Include="Enums\SituacaoSubFase.cs" />
+    <Compile Include="Enums\StatusRedmine.cs" />
+    <Compile Include="Enums\TipoChamadoRedmine.cs" />
+    <Compile Include="Enums\TipoContagem.cs" />
     <Compile Include="Enums\UsuarioPerfil.cs" />
     <Compile Include="Global.cs" />
     <Compile Include="Object\Feriado.cs" />

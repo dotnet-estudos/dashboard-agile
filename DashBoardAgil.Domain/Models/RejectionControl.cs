@@ -5,7 +5,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Domain.Util;
 
 namespace DashBoardAgil.Domain.Models

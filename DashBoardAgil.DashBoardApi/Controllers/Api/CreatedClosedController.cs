@@ -8,7 +8,7 @@ using System.Web.Http;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Services;
 using Microsoft.Ajax.Utilities;
 using Redmine.Net.Api;
@@ -25,7 +25,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
             #region processo
             var proj =
-               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Id.Equals(time));
+               GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(time));
 
             var processo = _RedmineService.GetProcessoTeam(proj);
             var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();

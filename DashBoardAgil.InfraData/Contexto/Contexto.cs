@@ -44,6 +44,10 @@ namespace DashBoardAgil.InfraData.Contexto
         public virtual DbSet<PFS> PFS { get; set; }
         public virtual DbSet<TipoChamado> TipoChamado { get; set; }
         public virtual  DbSet<ProcessoTipo> ProcessoTipo  { get; set; }
+        public virtual DbSet<Projeto> Projetos { get; set; }
+
+        public virtual DbSet<CustonFieldProjeto> CustonFieldProjeto { get; set; }
+
         public virtual DbSet<Log> Logs { get; set; }
 
         private string GetPrimaryKeyValue(object entry)
@@ -223,7 +227,7 @@ namespace DashBoardAgil.InfraData.Contexto
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
 
             modelBuilder.Properties()
-               .Where(p => p.Name == p.ReflectedType.Name + "Id")
+               .Where(p => p.Name == p.ReflectedType.Name + "ProjetoId")
                .Configure(p => p.IsKey());
 
             modelBuilder.Properties<string>()

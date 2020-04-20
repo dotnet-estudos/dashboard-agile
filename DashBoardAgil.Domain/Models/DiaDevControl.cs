@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using DashBoardAgil.CrossCutting;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using Newtonsoft.Json;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
@@ -127,7 +127,7 @@ namespace DashBoardAgil.Domain.Models
                                                           ) ?? false
                             select new
                             {
-                                // act.Id,
+                                // act.ProjetoId,
                                 // act.CreatedOn,
                                 chamado = act,
                                 //aceite = act.Journals?.Any(x => (x.CreatedOn >= DataIni && x.CreatedOn <= DataFim) && 

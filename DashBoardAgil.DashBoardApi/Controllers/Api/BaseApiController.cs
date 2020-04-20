@@ -13,7 +13,7 @@ using DashBoardAgil.CrossCutting;
 using DashBoardAgil.DashBoardApi.Models;
 using DashBoardAgil.DashBoardApi.Util;
 using DashBoardAgil.Services;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Domain.Interfaces;
 using DashBoardAgil.InfraData.Contexto;
 using DashBoardAgil.Services.Service;

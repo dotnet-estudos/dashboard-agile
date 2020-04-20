@@ -23,9 +23,9 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
        [CacheOutput(ServerTimeSpan = 1 * (60))]
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool dashboard = true)
         {
-
+            if (time.Equals("0") || time.IsNullOrWhiteSpace()) return null;
             var proj =
-                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+                GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.ProjetoId.ToString().Equals(time));
             #region processo
             var processo = _RedmineService.GetProcessoTeam(proj);
             var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();

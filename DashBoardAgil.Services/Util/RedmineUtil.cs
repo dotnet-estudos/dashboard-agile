@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Domain.Models;
-using DashBoardAgil.Domain.Enums;
+using DashBoardAgil.CrossCutting.Enums;
 using DashBoardAgil.Services.Util;
 using Redmine.Net.Api;
 using Redmine.Net.Api.Types;
