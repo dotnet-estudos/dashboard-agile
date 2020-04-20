@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DashBoardAgil.Domain.Models;
 using DashBoardAgil.InfraData.Contexto;
+using DashBoardAgil.Services;
 
 namespace DashBoardAgil.DashBoardApi.Controllers
 {
@@ -55,6 +56,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             {
                 db.Projetos.Add(projeto);
                 db.SaveChanges();
+                GlobalConfig.Instance.GravarConfig();
                 return RedirectToAction("Index");
             }
 
@@ -89,6 +91,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             {
                 db.Entry(projeto).State = EntityState.Modified;
                 db.SaveChanges();
+                GlobalConfig.Instance.GravarConfig();
                 return RedirectToAction("Index");
             }
             ViewBag.ProcessoId = new SelectList(db.Processos, "ProcessoId", "Nome", projeto.ProcessoId);
@@ -118,6 +121,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers
             Projeto projeto = db.Projetos.Find(id);
             db.Projetos.Remove(projeto);
             db.SaveChanges();
+            GlobalConfig.Instance.GravarConfig();
             return RedirectToAction("Index");
         }
 
