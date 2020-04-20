@@ -79,6 +79,17 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             return comulativeFlow;
         }
 
+        
+    }
+}
+            var comulativeFlow = dashboard ?
+                                 JsonConvert.DeserializeObject(Global.Instance.LerArquivo(Path.Combine(ConstantesCC.PATH_CFD_DIAGRAM, String.Format("{0}.json", time)))) :
+                                _RedmineService.GetCumulativeFlowDiagram(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim), processo);
+
+            //Debugar.WriteLine(string.Format("Fim: {0}", DateTime.Now.ToString("G")));
+            return comulativeFlow;
+        }
+
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool dashboard,  int day)
         {
 
