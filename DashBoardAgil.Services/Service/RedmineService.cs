@@ -885,7 +885,7 @@ namespace DashBoardAgil.Services.Service
 
                 });
 
-                var cfdControl = new CumulativeFlowDiagramControl(processo, listChamados);
+                var cfdControl = new CumulativeFlowDiagramControl(processo, listChamados, chamados);
 
                     Debugar.WriteLine(String.Format("{0} - {1}", "Terminou ",
                         DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")));

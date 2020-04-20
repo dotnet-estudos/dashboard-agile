@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using DashBoardAgil.CrossCutting;
 using DashBoardAgil.Domain.Interfaces.Abstracoes;
+using Redmine.Net.Api.Types;
 
 namespace DashBoardAgil.Domain.Models
 {
     public class CumulativeFlowDiagramControl
     {
-        public CumulativeFlowDiagramControl(Processo processo, List<CumulativeFlowDiagram> listChamados)
+        public CumulativeFlowDiagramControl(Processo processo, List<CumulativeFlowDiagram> listChamados, List<Issue> chamados)
         {
             Processo = processo;
             ListChamados = listChamados;
+            Chamados = chamados;
         }
         private List<CumulativeFlowDiagram> ListChamados { get;  }
+        private List<Issue> Chamados { get; }
         private Processo Processo { get; set; }
         public List<CumulativeFlowDiagram> ComulativeFlow
         {
@@ -39,7 +42,15 @@ namespace DashBoardAgil.Domain.Models
             }
         }
 
-       
+        public dynamic ComulativeFlow2
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+
 
     }
 }

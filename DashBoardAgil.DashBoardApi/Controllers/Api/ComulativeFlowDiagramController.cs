@@ -79,6 +79,60 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             return comulativeFlow;
         }
 
-        
+        public Object Get(string time, DateTime dataIni, DateTime dataFim, bool dashboard,  int day)
+        {
+
+            var proj = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.Identifier.Equals(time) || x.Id.Equals(time));
+
+            #region processo
+            var processo = _RedmineService.GetProcessoTeam(proj);
+            var lststr = processo.ProcessoTipo.Select(x => x.TipoChamado.IdExterno).ToList();
+            #endregion
+
+            var parm = new NameValueCollection
+                {
+                    {RedmineKeys.TRACKER_ID, Global.Instance.ConcatenarLista("|", lststr)},
+                    {RedmineKeys.STATUS_ID, "*"}
+                };
+
+            #region Data
+            if (dataIni != null && dataFim != null)
+            {
+                parm.Add(RedmineKeys.CREATED_ON, String.Format("><{0}|{1}", ((DateTime)dataIni).ToString("yyyy-MM-dd"), ((DateTime)dataFim).ToString("yyyy-MM-dd")));
+            }
+            else if (dataIni != null && dataFim == null)
+            {
+                parm.Add(RedmineKeys.CREATED_ON, String.Format(">={0}", ((DateTime)dataIni).ToString("yyyy-MM-dd")));
+            }
+            else if (dataIni == null && dataFim != null)
+            {
+                parm.Add(RedmineKeys.CREATED_ON, String.Format("<={0}", ((DateTime)dataFim).ToString("yyyy-MM-dd")));
+            }
+            #endregion
+
+            #region time
+            if (!time.IsNullOrWhiteSpace() && proj.Identifier != null)
+            {
+                parm.Add(RedmineKeys.PROJECT_ID, String.Format("{0}", proj.Identifier));
+            }
+            else
+            {
+                return new { status = false, mensage = "erro" };
+            }
+            #endregion
+
+            //verificar os custons fields dos times
+            proj.CustonFields.ForEach(custon => {
+                parm.Add(String.Format("{0}", custon.Campo), String.Format("{0}", custon.Valor));
+            });
+            //Fim verificar os custons fields dos times
+            // Debugar.WriteLine(string.Format("Inicio: {0}", DateTime.Now.ToString("G")));
+            //dashboard = false;
+
+            var comulativeFlow = _RedmineService.GetCumulativeFlowDiagram2(parm, CrossCutting.Util.GetWeekList(dataIni, dataFim), processo);
+
+            //Debugar.WriteLine(string.Format("Fim: {0}", DateTime.Now.ToString("G")));
+            return comulativeFlow;
+        }
     }
 }

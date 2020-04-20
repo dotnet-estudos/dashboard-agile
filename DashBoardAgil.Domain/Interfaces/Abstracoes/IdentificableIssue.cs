@@ -17,7 +17,7 @@ namespace DashBoardAgil.Domain.Interfaces.Abstracoes
         public TipoChamadoRedmine Tipo { get; set; }
         public string TipoString => this.Tipo.GetDisplayName();
         public PrioridadeRedmine Prioridade { get; set; }
-        public string PrioridadeString => this.Prioridade.GetDisplayName();
+        public string PrioridadeString => this.Prioridade != null ? this.Prioridade.GetDisplayName() : "";
         public IdentificableName Versao { get; set; }
         public IdentificableName Status { get; set; }
        

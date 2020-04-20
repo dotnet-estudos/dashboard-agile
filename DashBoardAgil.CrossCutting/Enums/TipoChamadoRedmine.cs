@@ -9,6 +9,9 @@ namespace DashBoardAgil.CrossCutting.Enums
 {
     public enum TipoChamadoRedmine
     {
+        [Display(Name = "")]
+        NaoEncontrado = 0,
+        
         #region CSOL-1
         [Display(Name = "Evolutiva")]
         Evolutiva = 83,

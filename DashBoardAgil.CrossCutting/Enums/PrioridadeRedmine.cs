@@ -9,6 +9,8 @@ namespace DashBoardAgil.CrossCutting.Enums
 {
     public enum PrioridadeRedmine
     {
+        [Display(Name = "")]
+        NaoEncontrado = 0,
         [Display(Name = "Programada")]
         Programada = 3,
         [Display(Name = "Padrão")]

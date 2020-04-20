@@ -4,6 +4,8 @@ namespace DashBoardAgil.CrossCutting.Enums
 {
     public enum StatusRedmine
     {
+        [Display(Name = "")]
+        NaoEncontrado = 0,
         [Display(Name = "Novo")]
         Novo = 1,
         [Display(Name = "Aberto")]
