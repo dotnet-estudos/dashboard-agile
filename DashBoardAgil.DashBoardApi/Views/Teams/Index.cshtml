@@ -1,0 +1,69 @@
+﻿@model IEnumerable<DashBoardAgil.Domain.Models.Projeto>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Processo.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descricao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdExterno)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Identifier)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ativo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.HorasContratadas)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuantidadeDesenvolvedores)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Processo.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descricao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdExterno)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Identifier)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ativo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.HorasContratadas)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.QuantidadeDesenvolvedores)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ProjetoId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ProjetoId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ProjetoId })
+        </td>
+    </tr>
+}
+
+</table>

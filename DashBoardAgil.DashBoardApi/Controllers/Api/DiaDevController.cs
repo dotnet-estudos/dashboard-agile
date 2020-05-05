@@ -35,7 +35,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
             var diaDevControl = new List<DiaDevControl>();
             var lancamentoTotais = new List<Alocacao>();
 
-            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.ProjetoId.Equals(time) || time.Equals("0")).ForEach(
+            GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.Where(x => x.ProjetoId.ToString().Equals(time) || time.Equals("0")).ForEach(
                     (team) =>
                     {
                         var parm = new NameValueCollection(_parametros);
@@ -90,7 +90,7 @@ namespace DashBoardAgil.DashBoardApi.Controllers.Api
 
         public Object Get(string time, DateTime dataIni, DateTime dataFim, bool aceitePO)
         {
-            var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.Equals(time));
+            var projeto = GlobalConfig.Instance.ConfiguracaoRedmine.AllowList.FirstOrDefault(x => x.ProjetoId.ToString().Equals(time));
             //.ProjetosAtivos().FirstOrDefault(x => x.ProjetoId.Equals(time)) ?? null;
 
             if (time.IsNullOrWhiteSpace())
