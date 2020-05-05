@@ -209,7 +209,7 @@ namespace DashBoardAgil.Services.Service
         {
             Debugar.WriteLine("Iniciando ... ", "GerarThroughputReject");
 
-            var dataIni = new DateTime(DateTime.Now.Year, 1, 1);
+            var dataIni = new DateTime(DateTime.Now.Year, 1, 1); 
             var dataFim = DateTime.Now;
             var lsitTipo = from TipoChamadoRedmine e in Enum.GetValues(typeof(TipoChamadoRedmine))
                            select new { Id = e.GetHashCode(), Nome = e.ToString() };
