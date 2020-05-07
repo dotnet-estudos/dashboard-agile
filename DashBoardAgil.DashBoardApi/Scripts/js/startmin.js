@@ -309,8 +309,9 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage, _avarageMedia
             x: 100,
             y: 70,
             floating: true,
-            backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
-            borderWidth: 1
+            backgroundColor: 'rgb(255,255,255, .1)',//(Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+            
+            borderWidth: 0
         },
         plotOptions: {
             scatter: {
@@ -333,8 +334,16 @@ function renderDispersionDiagram(div, _title, _subtitle, _avarage, _avarageMedia
                 tooltip: {
                     headerFormat: '<b>{series.name} </b><br>',
                     pointFormat: 'Chamado: <b>#{point.name} </b>, {point.y} Lead Time'//Dia:{point.x} , 
-                }
+                },
+                point: {
+                  events: {
+                      click: function () {
+                          if ($.isNumeric(this.name))
+                          window.open("http://redmine.example.com/issues/"+this.name );
+                      }
             }
+            }
+            },
         },
         series: _serie//[{}] 
     });
@@ -447,10 +456,13 @@ function renderRejectionThroughput(div, _title, _subtitle, _Categoria, _serie, _
 
     var year = new Date().getFullYear();
 
+    
+
     Highcharts.chart(div, {
 
         chart: {
-            type: 'column'
+            type: 'column',
+            
         },
 
         title: {
@@ -460,13 +472,18 @@ function renderRejectionThroughput(div, _title, _subtitle, _Categoria, _serie, _
             text: _subtitle
         },
         legend: {
+            enable: false,
             labelFormatter: function () {
-                return this.name + ' (' + this.userOptions.stack + ')';
+                var title = this.name;
+                if (this.userOptions && this.userOptions.stack) {
+                    title = title + ' (' + this.userOptions.stack + ')';
+                }
+                return title; //this.name + (this.userOptions.stack ? ' (' + this.userOptions.stack + ')' : '');
             }
         },
-        xAxis: {
-            categories: _Categoria
-        },
+        //xAxis: {
+        //    categories: _Categoria
+        //},
 
         yAxis: {
             allowDecimals: false,
@@ -510,9 +527,15 @@ function renderRejectionThroughput(div, _title, _subtitle, _Categoria, _serie, _
 
         tooltip: {
             formatter: function () {
-                return '<b> Semana: ' + this.x + '</b>  (<i>' + getDateRangeOfWeek(this.x, year)+ '</i>)</b><br/>' +
-                    '<b>' + this.series.userOptions.stack + ': <span style="color:' + this.series.color + '"> ∎ </span><i><b>' + this.series.name + ':</b></i> ' + this.y + ' (<b>' + this.percentage.toFixed(1) + '%</b>)<br/>' +
-                    '<b>Total:</b> ' + this.point.stackTotal;
+                if (this.series.userOptions.stack)
+                return  '<b> Semana: ' + this.x + '</b>  (<i>' + getDateRangeOfWeek(this.x, year) + '</i>)</b><br/>' +
+                        '<b>' + this.series.userOptions.stack + ': <span style="color:' + this.series.color + '"> ∎ </span><i><b>' + this.series.name + ':</b></i> ' + this.y + ' (<b>' + this.percentage.toFixed(1) + '%</b>)<br/>' +
+                        '<b>Total:</b> ' + this.point.stackTotal;
+
+
+                return '<b> Semana: ' + this.x + '</b>  (<i>' + getDateRangeOfWeek(this.x, year) + '</i>)</b><br/>' +
+                       '<b>' + this.series.name + ': <span style="color:' + this.series.color + '"><i><b> </i> ' + this.y + '</b></i>';
+
             },
             //pointFormat: '<b> Semana: {point.x}</b><br/>'+'<span style="color:{series.color}"></span> {series.name}</span>: <b>{point.percentage:.1f}%</b> ({point.y})<br/>',
             //pointformat: '<b> Semana: {point.x}</b><br/><b> {point.series.userOptions.stack} : <span style="color:{series.color};">{point.series.name}:</span>{point.y}(<b>{point.percentage:.1f} %</b>)<br/><b>Total:</b> {point.point.stackTotal}'

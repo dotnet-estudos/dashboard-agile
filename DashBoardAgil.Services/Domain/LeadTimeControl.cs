@@ -194,7 +194,14 @@ namespace DashBoardAgil.Services.Domain
                     into tipo
                               select new
                               {
-                                  name = tipo.Key.TipoString,
+                                  regression= true,
+                                  regressionSettings= new
+                                  {
+                                      type= "linear",
+                                      color= string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tipo.Key.Tipo, true,0.9)),
+                                      name=  string.Format("Tendência: {0}", tipo.Key.TipoString)
+                                  },
+                                 name = tipo.Key.TipoString,
                                   color = string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tipo.Key.Tipo, true)),
                                   data = tipo.Select(x => new { x = x.CreatedOn.DayOfYear, y = x.LeadBrutoDays, name = x.IdChamado })
                               };

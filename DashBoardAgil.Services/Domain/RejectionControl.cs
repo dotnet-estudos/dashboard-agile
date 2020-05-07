@@ -25,7 +25,7 @@ namespace DashBoardAgil.Services.Domain
         public int TotalChamados => Rejections.Count;
         public string RejectionsRate => Rejections.Any(x => x.HasRejection) ? (double.Parse(this.Rejections.Count(x => x.HasRejection).ToString()) / double.Parse(this.Rejections.Count.ToString())).ToString("P") : "0.0 %";
         public string RejectionsRateWeek => Rejections.Any(x => x.HasRejection) ? (double.Parse(this.Rejections.Count(x => x.HasRejection).ToString()) / double.Parse(this.WeekList.Count.ToString()) * 100   ).ToString() + "%" : "0.0 %";
-
+    
         public object ByDay
         {
             get
@@ -64,13 +64,28 @@ namespace DashBoardAgil.Services.Domain
 
                 tipoChamado.ToList().ForEach(tip =>
                 {
-                    var serie = new List<int>();
+                    var serie = new List<object>();
                     week.ForEach(w =>
                     {
+                        var listData = new List<int>();
                         var count = chamadosDiaTipo.Where(x => x.Tipo == tip.tipo && x.Dia.GetWeekOfYear() == w).Sum(x=>x.Total);
-                        serie.Add(count);
+                        listData.Add(w);
+                        listData.Add(count);
+                        serie.Add(listData.ToArray());
+
+                        //serie.Add(count);
                     });
-                    retorno.Add(new { name = tip.Nome, data = serie.ToArray(), stack = "Rejeiçao", color = string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tip.tipo, true)), });
+                    retorno.Add(new
+                    {
+                        //regression = true,
+                        //regressionSettings = new
+                        //{
+                        //    type = "linear",
+                        //    color = string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tip.tipo, true, 0.9)),
+                        //    name = string.Format("Tendência (Rejeiçao): {0}", tip.Nome)
+                        //},
+                        name = tip.Nome, data = serie.ToArray(), stack = "Rejeiçao", color = string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tip.tipo, true)),
+                    });
                 });
 
                 return retorno;

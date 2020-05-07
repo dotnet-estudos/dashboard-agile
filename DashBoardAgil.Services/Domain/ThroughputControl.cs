@@ -75,17 +75,64 @@ namespace DashBoardAgil.Services.Domain
                                   select new { Dia = grp.Key.Date,  Tipo = grp.Key.Tipo, Total = grp.Count() });
 
 
+
+                var serieGeral = new List<object>();
+                week.ForEach(w =>
+                {
+                    var listData = new List<int>();
+                    var count = chamadosDiaTipo.Where(x => x.Dia.GetWeekOfYear() == w).Sum(x => x.Total);
+                    listData.Add(w);
+                    listData.Add(count);
+                    serieGeral.Add(listData.ToArray());
+                });
+
+                retorno.Add(new
+                {
+                    regression = true,
+                    regressionSettings = new
+                    {
+                        type = "linear",
+                        color = "rgba(55,136,174,.9)",
+                        name = string.Format("Tendência (Throughput)")
+                    },
+                    name = "Throughput Gereal",
+                    data = serieGeral.ToArray(),
+                    stack = "Gereal",
+                    color = "rgba(55,136,174,.9)"
+                });
+
+
+
                 tipoChamado.ToList().ForEach(tip=>
                 {
-                    var serie = new List<int>();
+                    var serie = new List<object>();
                     week.ForEach(w =>
                     {
+                        var listData = new List<int>();
                         var count = chamadosDiaTipo.Where(x => x.Tipo == tip.tipo && x.Dia.GetWeekOfYear() == w).Sum(x => x.Total);
-                        serie.Add(count);
+                        listData.Add(w);
+                        listData.Add(count);
+                        serie.Add(listData.ToArray());
+
                     });
-                    retorno.Add(new { name= tip.Nome, data = serie.ToArray(), stack = "Throughput", color= string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tip.tipo, false)), });
+                    retorno.Add(new
+                    {
+                        //regression = true,
+                        //regressionSettings = new
+                        //{
+                        //    type = "linear",
+                        //    color = string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tip.tipo, true, 0.9)),
+                        //    name = string.Format("Tendência (Throughput): {0}", tip.Nome)
+                        //},
+                        name = tip.Nome, data = serie.ToArray(), stack = "Throughput", color= string.Format("rgba({0})", RedmineUtil.GetRgbRgbaByTipoChamado(tip.tipo, false)),
+                    });
                 });
-                
+
+
+              
+
+             
+
                 return retorno;
             }
         }
