@@ -169,3 +169,7 @@ Este é um projeto de 2019–2020 mantido como registro; ele não recebeu atuali
 ## Equipe
 
 Desenvolvido por **Uhitlei Barbosa**, com contribuições de Fabricio Silva, Vinícius Hipólito, Hugo Carneiro e Edno Fedulo.
+
+## Licença
+
+Distribuído sob a [licença MIT](LICENSE).

@@ -1,0 +1,6 @@
+# Bibliotecas de terceiros copiadas para o projeto (jQuery, Bootstrap, Highcharts,
+# Font Awesome...) não entram na estatística de linguagens do GitHub.
+**/Scripts/** linguist-vendored
+**/scripts/** linguist-vendored
+**/Content/** linguist-vendored
+**/fonts/** linguist-vendored
